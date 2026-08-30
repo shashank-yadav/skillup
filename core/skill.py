@@ -91,6 +91,28 @@ def extract_insight_delta(raw_text: str) -> dict:
     }
 
 
+def extract_supervisor_directive(raw_text: str) -> dict | None:
+    """Pull {"diagnosis": ..., "directive": ...} out of a supervisor agent's
+    response, tolerating a stray code fence or surrounding prose. Returns None
+    if the response can't be parsed, so the caller can fall back to a default."""
+    text = strip_code_fence(raw_text).strip()
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if not match:
+        return None
+    try:
+        data = json.loads(match.group(0))
+    except json.JSONDecodeError:
+        return None
+    directive = data.get("directive")
+    if not isinstance(directive, str) or not directive.strip():
+        return None
+    diagnosis = data.get("diagnosis")
+    return {
+        "diagnosis": diagnosis.strip() if isinstance(diagnosis, str) and diagnosis.strip() else "(none given)",
+        "directive": directive.strip(),
+    }
+
+
 def apply_delta(insights: list[str], delta: dict) -> tuple[list[str], list[str]]:
     """Returns (new_insights, actually_added) -- near-duplicates and over-cap
     additions are silently dropped, so `actually_added` may be a subset of

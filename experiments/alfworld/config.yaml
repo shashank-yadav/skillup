@@ -22,7 +22,11 @@ experiment:
   # Validation slice for iterative trainer strategies, drawn from "valid_seen".
   # Distinct from both the training split and the final valid_unseen eval set.
   num_dev_tasks: 60                     # gated: per round, evaluated on the full skill
-  avo_dev_tasks_per_candidate: 20       # avo: per candidate per generation
+  avo_dev_tasks_per_candidate: 40       # avo: per candidate per generation -- raised from 20 after
+                                         # finding the 20-task gate's ~10pp sampling noise let a lineage
+                                         # "win" its own gate on noise alone, producing a final skill that
+                                         # scored worse on the real 134-task holdout than a lower dev-score
+                                         # candidate from an earlier run
   trainer_rounds: 3
 
 paths:

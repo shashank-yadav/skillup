@@ -1,75 +1,340 @@
 {
+  "naive": [
+    {
+      "round": 1,
+      "accepted": true,
+      "skill": "---\nname: alfworld\ndescription: Strategies for completing interactive household tasks in ALFWorld.\n---\n\n# ALFWorld\n\nComplete the requested household task efficiently.\n\n## General Strategies\n\n### Locating and Interacting with Objects\n\n*   **Explore systematically:** When an object is not immediately visible, systematically explore containers (drawers, cabinets, fridges) and surfaces.\n*   **Use `examine` and `look`:** Use `examine` on specific objects to understand their state or contents. Use `look` to get a general sense of the surroundings.\n*   **Open and close containers:** To access items within containers, use `open [container]` and `close [container]`.\n*   **Take and move objects:** Use `take [object] from [location]` to pick up an item and `move [object] to [location]` to place it.\n*   **Check inventory:** Use `inventory` to see what items the agent is currently carrying.\n\n### Object Manipulation and State Changes\n\n*   **Cleaning:** Use `clean [object] with [cleaning_tool/location]` to clean an item.\n*   **Heating/Cooling:** Use `heat [object] with [appliance]` or `cool [object] with [appliance]` to change an item's temperature.\n*   **Using appliances:** Some tasks require using appliances like microwaves or toasters.\n\n### Task Completion\n\n*   **Follow task instructions precisely:** Ensure all parts of the task are addressed (e.g., \"clean and put\").\n*   **Verify completion:** After performing an action, use `examine` on the target location or object to confirm the task is complete.\n\n## Common Pitfalls and How to Avoid Them\n\n*   **Missing objects:** If an object is not found in an expected location, try searching other nearby containers or surfaces.\n*   **Incorrect appliance usage:** Ensure the correct appliance is used for heating or cooling.\n*   **Redundant actions:** Avoid repeatedly performing the same action if it doesn't change the state or progress the task. For example, if an object is already in the desired location, do not repeatedly move it there.\n*   **Not opening containers:** Ensure containers are opened before attempting to interact with items inside them.\n*   **Forgetting to take items:** Before moving an item to a new location, ensure it has been picked up using the `take` command.\n*   **Ignoring object states:** Pay attention to object states (e.g., \"clean,\" \"hot,\" \"cold\") as they may be relevant to the task.\n*   **Over-reliance on `examine`:** While `examine` is useful, sometimes a simple `look` is sufficient to understand the environment.\n*   **Incorrectly using `move`:** The `move` command is for placing items, not for picking them up. Use `take` to pick up items.\n*   **Not closing containers:** After interacting with a container, it's often good practice to close it."
+    }
+  ],
+  "gated": [
+    {
+      "round": 0,
+      "action": "baseline",
+      "dev_success_rate": 0.25,
+      "accepted": true
+    },
+    {
+      "round": 1,
+      "dev_success_rate": 0.2833333333333333,
+      "accepted": true,
+      "added": [
+        "When cleaning an item, use the sinkbasin if available."
+      ],
+      "removed": []
+    },
+    {
+      "round": 2,
+      "dev_success_rate": 0.26666666666666666,
+      "accepted": false,
+      "added": [],
+      "removed": []
+    },
+    {
+      "round": 3,
+      "dev_success_rate": 0.25,
+      "accepted": false,
+      "added": [],
+      "removed": []
+    }
+  ],
+  "expel": [
+    {
+      "round": 1,
+      "accepted": true,
+      "added": [
+        "When an object is not found in its expected location, search nearby or in similar locations.",
+        "If a task requires an object to be in a specific state (e.g., clean, hot, cool), ensure that state is achieved before proceeding."
+      ],
+      "removed": []
+    },
+    {
+      "round": 2,
+      "accepted": true,
+      "added": [],
+      "removed": []
+    },
+    {
+      "round": 3,
+      "accepted": true,
+      "added": [],
+      "removed": []
+    }
+  ],
   "avo": [
     {
       "generation": 0,
       "lineage": 1,
-      "dev_success_rate": 0.25,
+      "dev_success_rate": 0.175,
       "added": [
-        "When an object is not found in the current location, search in other accessible locations."
+        "When an object is described as 'clean', ensure it is cleaned before being moved to its destination if a cleaning action is available.",
+        "If an object is not found in the current location, search in other accessible locations."
       ],
       "removed": []
     },
     {
       "generation": 0,
       "lineage": 2,
-      "dev_success_rate": 0.2,
+      "dev_success_rate": 0.25,
       "added": [
-        "When an object is in a container, open the container before attempting to interact with the object inside.",
-        "If an object is not found in the expected location, search nearby locations."
+        "If an object is not found in a container, check other containers of the same type."
       ],
       "removed": []
     },
     {
       "generation": 0,
       "lineage": 3,
-      "dev_success_rate": 0.15,
+      "dev_success_rate": 0.275,
       "added": [
-        "When an object is not found in a container, check other similar containers.",
-        "If an object is not found in its expected location, search nearby locations."
+        "When an object is described as 'clean', it implies it has undergone a cleaning process, and this state should be maintained or verified if the task requires it.",
+        "If an object is described as 'hot' or 'cold', this state might be relevant to the task and should be considered or potentially altered."
       ],
       "removed": []
     },
     {
       "generation": 1,
       "lineage": 1,
-      "dev_success_rate": 0.2,
-      "accepted": false,
+      "dev_success_rate": 0.275,
+      "accepted": true,
       "added": [
-        "If an object is not found in the current location, check containers in the current location before searching other locations."
+        "If an object is described as 'hot' or 'cold', apply the appropriate heating or cooling action before proceeding if such an action is available."
       ],
       "removed": [
-        "When an object is not found in the current location, search in other accessible locations."
+        "If an object is not found in the current location, search in other accessible locations."
       ],
       "stagnation_intervention": false
     },
     {
       "generation": 1,
       "lineage": 2,
-      "dev_success_rate": 0.15,
-      "accepted": false,
-      "added": [
-        "If an object is not found in the current location, check containers in the current location before searching other locations."
-      ],
-      "removed": [
-        "If an object is not found in the expected location, search nearby locations."
-      ],
+      "dev_success_rate": 0.325,
+      "accepted": true,
+      "added": [],
+      "removed": [],
       "stagnation_intervention": false
     },
     {
       "generation": 1,
       "lineage": 3,
-      "dev_success_rate": 0.2,
+      "dev_success_rate": 0.3,
       "accepted": true,
       "added": [],
       "removed": [
-        "If an object is not found in a container, check other similar containers."
+        "If an object is described as 'hot' or 'cold', this state might be relevant to the task and should be considered or potentially altered."
       ],
       "stagnation_intervention": false
     },
     {
       "generation": 1,
       "lineage": "crossover",
-      "dev_success_rate": 0.15,
+      "dev_success_rate": 0.275,
+      "accepted": false,
+      "parents": [
+        2,
+        3
+      ],
+      "replaced": 1
+    },
+    {
+      "generation": 2,
+      "lineage": 1,
+      "dev_success_rate": 0.2,
+      "accepted": false,
+      "added": [],
+      "removed": [
+        "If an object is described as 'hot' or 'cold', apply the appropriate heating or cooling action before proceeding if such an action is available."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 2,
+      "dev_success_rate": 0.225,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 3,
+      "dev_success_rate": 0.275,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": "crossover",
+      "dev_success_rate": 0.275,
+      "accepted": false,
+      "parents": [
+        2,
+        3
+      ],
+      "replaced": 1
+    },
+    {
+      "generation": 3,
+      "lineage": 1,
+      "dev_success_rate": 0.2,
+      "accepted": false,
+      "added": [],
+      "removed": [
+        "If an object is described as 'hot' or 'cold', apply the appropriate heating or cooling action before proceeding if such an action is available."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": 2,
+      "dev_success_rate": 0.35,
+      "accepted": true,
+      "added": [
+        "If a task requires an object to be in a specific state (e.g., clean, hot, cold), perform the necessary action to achieve that state before moving the object."
+      ],
+      "removed": [
+        "If an object is not found in a container, check other containers of the same type."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": 3,
+      "dev_success_rate": 0.3,
+      "accepted": false,
+      "added": [
+        "If a task requires an object to be in a specific state (e.g., clean, hot, cold), perform the necessary action to achieve that state before moving the object."
+      ],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": "crossover",
+      "dev_success_rate": 0.325,
+      "accepted": true,
+      "parents": [
+        2,
+        3
+      ],
+      "replaced": 1
+    }
+  ],
+  "avo_rounds3_dev20_backup": [
+    {
+      "generation": 0,
+      "lineage": 1,
+      "dev_success_rate": 0.2,
+      "added": [
+        "When an object is described as 'clean', it implies it has undergone a cleaning process.",
+        "If an object is described as 'hot' or 'cold', it refers to its temperature."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 0,
+      "lineage": 2,
+      "dev_success_rate": 0.25,
+      "added": [
+        "When an object is described as 'clean', it implies it has undergone a cleaning process.",
+        "If an object is described as 'hot' or 'cold', it is a state that may be relevant to the task."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 0,
+      "lineage": 3,
+      "dev_success_rate": 0.25,
+      "added": [
+        "When an object is not found in the immediate vicinity, search in containers or other logical locations.",
+        "If an object is described as 'clean', 'hot', or 'cold', consider if a state change is required before or after manipulation."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 1,
+      "lineage": 1,
+      "dev_success_rate": 0.25,
+      "accepted": true,
+      "added": [],
+      "removed": [
+        "If an object is described as 'hot' or 'cold', it refers to its temperature."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 2,
+      "dev_success_rate": 0.35,
+      "accepted": true,
+      "added": [],
+      "removed": [
+        "If an object is described as 'hot' or 'cold', it is a state that may be relevant to the task."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 3,
+      "dev_success_rate": 0.25,
+      "accepted": false,
+      "added": [
+        "If an object's state is relevant to the task (e.g., 'clean', 'hot', 'cold'), check its state before proceeding."
+      ],
+      "removed": [
+        "If an object is described as 'clean', 'hot', or 'cold', consider if a state change is required before or after manipulation."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": "crossover",
+      "dev_success_rate": 0.25,
+      "accepted": false,
+      "parents": [
+        2,
+        1
+      ],
+      "replaced": 3
+    },
+    {
+      "generation": 2,
+      "lineage": 1,
+      "dev_success_rate": 0.35,
+      "accepted": true,
+      "added": [
+        "If an object's state is relevant to the task (e.g., 'clean', 'hot', 'cold'), check its state before proceeding."
+      ],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 2,
+      "dev_success_rate": 0.2,
+      "accepted": false,
+      "added": [
+        "If an object's state is relevant to the task (e.g., 'clean', 'hot', 'cold'), check its state before proceeding."
+      ],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 3,
+      "dev_success_rate": 0.25,
+      "accepted": false,
+      "added": [],
+      "removed": [
+        "If an object is described as 'clean', 'hot', or 'cold', consider if a state change is required before or after manipulation."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": "crossover",
+      "dev_success_rate": 0.25,
       "accepted": false,
       "parents": [
         1,
@@ -78,90 +343,42 @@
       "replaced": 3
     },
     {
-      "generation": 2,
+      "generation": 3,
       "lineage": 1,
       "dev_success_rate": 0.2,
-      "accepted": false,
-      "added": [
-        "If an object is not found in the current location, check containers in the current location before searching other locations."
-      ],
-      "removed": [
-        "When an object is not found in the current location, search in other accessible locations."
-      ],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 2,
-      "lineage": 2,
-      "dev_success_rate": 0.2,
-      "accepted": false,
-      "added": [
-        "If an object is not found in the current location, check containers in the current location before searching other locations."
-      ],
-      "removed": [
-        "If an object is not found in the expected location, search nearby locations."
-      ],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 2,
-      "lineage": 3,
-      "dev_success_rate": 0.15,
       "accepted": false,
       "added": [],
       "removed": [
-        "If an object is not found in a container, check other similar containers."
+        "If an object's state is relevant to the task (e.g., 'clean', 'hot', 'cold'), check its state before proceeding."
       ],
       "stagnation_intervention": false
-    },
-    {
-      "generation": 2,
-      "lineage": "crossover",
-      "dev_success_rate": 0.15,
-      "accepted": false,
-      "parents": [
-        1,
-        2
-      ],
-      "replaced": 3
-    },
-    {
-      "generation": 3,
-      "lineage": 1,
-      "dev_success_rate": 0.15,
-      "accepted": false,
-      "added": [
-        "If an object is not found in the current location, check containers in the current location before searching other locations."
-      ],
-      "removed": [],
-      "stagnation_intervention": true
     },
     {
       "generation": 3,
       "lineage": 2,
       "dev_success_rate": 0.25,
-      "accepted": true,
-      "added": [
-        "If an object is not found in the current location, consider if it needs to be interacted with in a specific way (e.g., cleaned, heated) before moving it."
-      ],
+      "accepted": false,
+      "added": [],
       "removed": [],
-      "stagnation_intervention": true
+      "stagnation_intervention": false
     },
     {
       "generation": 3,
       "lineage": 3,
-      "dev_success_rate": 0.2,
-      "accepted": false,
+      "dev_success_rate": 0.3,
+      "accepted": true,
       "added": [
-        "When an object is not found in its immediate surroundings, consider looking in locations that are typically associated with that type of object (e.g., kitchen items in the kitchen)."
+        "If an object is not found in the current location, search in nearby locations or containers."
       ],
-      "removed": [],
-      "stagnation_intervention": true
+      "removed": [
+        "If an object is described as 'clean', 'hot', or 'cold', consider if a state change is required before or after manipulation."
+      ],
+      "stagnation_intervention": false
     },
     {
       "generation": 3,
       "lineage": "crossover",
-      "dev_success_rate": 0.25,
+      "dev_success_rate": 0.4,
       "accepted": true,
       "parents": [
         1,

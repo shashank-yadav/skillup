@@ -15,10 +15,11 @@ from core import skill
 from core.trainer import TrainerContext, dev_eval, format_episode_failures, format_trajectory_group, register
 
 PROMPT_PATH = Path(__file__).parent / "prompts" / "avo.md"
+SUPERVISOR_PROMPT_PATH = Path(__file__).parent / "prompts" / "avo_supervisor.md"
 DEFAULT_POPULATION_SIZE = 3
 STAGNATION_PATIENCE = 2
 _EDIT_BUDGET_NORMAL = "Propose at most 2 additions and at most 2 removals this generation."
-_EDIT_BUDGET_STAGNATION = (
+_EDIT_BUDGET_STAGNATION_FALLBACK = (
     "This lineage has stagnated -- no lineage has improved in the last couple of "
     "generations. Propose a more exploratory change: at most 4 additions, and try a "
     "substantially different angle than what is already in the current insights or the "
@@ -33,16 +34,14 @@ def run(ctx: TrainerContext) -> dict:
     success_block = format_trajectory_group(successes)
     failed_block = format_trajectory_group(failures)
     template = PROMPT_PATH.read_text()
+    supervisor_template = SUPERVISOR_PROMPT_PATH.read_text()
 
     preamble, seed_insights = skill.parse_insights(ctx.current_skill)
 
-    def score(insights: list[str], label: str):
-        env = ctx.make_env()
-        s, results = dev_eval(env, ctx, skill.render_insights(preamble, insights), ctx.dev_tasks)
-        env.close()
-        return s, results
+    def score(insights: list[str]):
+        return dev_eval(ctx, skill.render_insights(preamble, insights), ctx.dev_tasks)
 
-    def propose(lineage_id: int, insights: list[str], dev_failures: str, knowledge_base: list[str], stagnant: bool) -> dict:
+    def propose(lineage_id: int, insights: list[str], dev_failures: str, knowledge_base: list[str], edit_budget_note: str) -> dict:
         kb_text = "\n".join(f"- {k}" for k in knowledge_base[-10:]) if knowledge_base else "(none yet)"
         prompt = template.format(
             lineage_id=lineage_id,
@@ -51,7 +50,7 @@ def run(ctx: TrainerContext) -> dict:
             failed_trajectories=failed_block,
             dev_failures=dev_failures,
             knowledge_base=kb_text,
-            edit_budget_note=_EDIT_BUDGET_STAGNATION if stagnant else _EDIT_BUDGET_NORMAL,
+            edit_budget_note=edit_budget_note,
         )
         raw_text, _usage = ctx.client.chat(
             model=ctx.model, messages=[{"role": "user", "content": prompt}],
@@ -59,15 +58,54 @@ def run(ctx: TrainerContext) -> dict:
         )
         return skill.extract_insight_delta(raw_text)
 
+    def supervise(gen: int, lineages: list[dict], knowledge_base: list[str], history: list[dict],
+                  stagnant_generations: int, best_so_far: float) -> dict:
+        """The AVO Supervisor Agent: called once per stagnant generation (not per
+        lineage) to diagnose *why* the population is stuck and prescribe a
+        directive for this generation's proposers -- a real LLM call that reasons
+        over the whole population's state, not a fixed fallback string."""
+        lineage_summaries = "\n\n".join(
+            f"Lineage {i + 1} (score {l['score']:.2f}):\n" + skill.format_insight_list(l["insights"])
+            for i, l in enumerate(lineages)
+        )
+        kb_text = "\n".join(f"- {k}" for k in knowledge_base[-15:]) if knowledge_base else "(none yet)"
+        recent = [
+            h for h in history
+            if h["generation"] >= max(0, gen - STAGNATION_PATIENCE - 1) and "dev_success_rate" in h
+        ]
+        recent_text = "\n".join(
+            f"- gen{h['generation']} lineage{h.get('lineage', '?')}: "
+            f"{'ACCEPTED' if h.get('accepted') else 'rejected'} "
+            f"(score {h['dev_success_rate']:.2f}), added={h.get('added')}, removed={h.get('removed')}"
+            for h in recent
+        ) if recent else "(none yet)"
+        prompt = supervisor_template.format(
+            population_size=len(lineages),
+            stagnant_generations=stagnant_generations,
+            best_so_far=best_so_far,
+            lineage_summaries=lineage_summaries,
+            knowledge_base=kb_text,
+            recent_history=recent_text,
+        )
+        raw_text, _usage = ctx.client.chat(
+            model=ctx.model, messages=[{"role": "user", "content": prompt}],
+            temperature=ctx.trainer_temperature, max_tokens=ctx.trainer_max_tokens,
+        )
+        parsed = skill.extract_supervisor_directive(raw_text)
+        if parsed is None:
+            return {"diagnosis": "(supervisor response unparseable -- used fallback directive)",
+                     "directive": _EDIT_BUDGET_STAGNATION_FALLBACK}
+        return parsed
+
     print(f"[avo] seeding population of {population_size} lineages ({ctx.dev_tasks} dev tasks each)...")
     lineages = []
     knowledge_base: list[str] = []
     history = []
 
     for i in range(population_size):
-        delta = propose(i + 1, seed_insights, "(no prior evaluation yet -- initial seeding round)", [], stagnant=False)
+        delta = propose(i + 1, seed_insights, "(no prior evaluation yet -- initial seeding round)", [], _EDIT_BUDGET_NORMAL)
         insights, added = skill.apply_delta(list(seed_insights), delta)
-        s, results = score(insights, label=f"avo gen0 lineage{i + 1}")
+        s, results = score(insights)
         lineages.append({"insights": insights, "score": s, "dev_failures": format_episode_failures(results)})
         history.append({"generation": 0, "lineage": i + 1, "dev_success_rate": s, "added": added, "removed": delta["remove"]})
         print(f"[avo] gen0 lineage{i + 1}: added={added!r} -> dev success rate {s:.2f}")
@@ -79,10 +117,22 @@ def run(ctx: TrainerContext) -> dict:
         stagnation_active = stagnant_generations >= STAGNATION_PATIENCE
         print(f"\n[avo] generation {gen}/{ctx.rounds}" + (" (stagnation intervention active)" if stagnation_active else ""))
 
+        if stagnation_active:
+            supervision = supervise(gen, lineages, knowledge_base, history, stagnant_generations, best_so_far)
+            edit_budget_note = supervision["directive"]
+            print(f"[avo] supervisor diagnosis: {supervision['diagnosis']}")
+            print(f"[avo] supervisor directive: {supervision['directive']}")
+            history.append({
+                "generation": gen, "lineage": "supervisor",
+                "diagnosis": supervision["diagnosis"], "directive": supervision["directive"],
+            })
+        else:
+            edit_budget_note = _EDIT_BUDGET_NORMAL
+
         for i, lineage in enumerate(lineages):
-            delta = propose(i + 1, lineage["insights"], lineage["dev_failures"], knowledge_base, stagnation_active)
+            delta = propose(i + 1, lineage["insights"], lineage["dev_failures"], knowledge_base, edit_budget_note)
             candidate_insights, added = skill.apply_delta(list(lineage["insights"]), delta)
-            candidate_score, candidate_results = score(candidate_insights, label=f"avo gen{gen} lineage{i + 1}")
+            candidate_score, candidate_results = score(candidate_insights)
 
             accepted = candidate_score > lineage["score"]
             history.append({
@@ -110,7 +160,7 @@ def run(ctx: TrainerContext) -> dict:
             ranked = sorted(range(population_size), key=lambda idx: lineages[idx]["score"], reverse=True)
             best_idx, second_idx, worst_idx = ranked[0], ranked[1], ranked[-1]
             merged_insights = skill.crossover(lineages[best_idx]["insights"], lineages[second_idx]["insights"])
-            merged_score, merged_results = score(merged_insights, label=f"avo gen{gen} crossover")
+            merged_score, merged_results = score(merged_insights)
             crossover_accepted = merged_score > lineages[worst_idx]["score"]
             history.append({
                 "generation": gen, "lineage": "crossover", "dev_success_rate": merged_score,

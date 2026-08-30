@@ -11,4 +11,4 @@ Observe the environment carefully before taking actions.
 
 ## Insights
 
-- When an object is not found in the current location, search in other accessible locations.
+- If a task requires an object to be in a specific state (e.g., clean, hot, cold), perform the necessary action to achieve that state before moving the object.

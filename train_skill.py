@@ -29,8 +29,6 @@ import json
 
 import environments  # noqa: F401 -- registers all environment plugins
 import trainers  # noqa: F401 -- registers all trainer strategies
-from core.backend import build_backend
-from core.environment import get as get_environment
 from core.llm import ModelClient
 from core.trainer import TrainerContext
 from core.trainer import get as get_trainer
@@ -50,17 +48,14 @@ def build_context(
     exp = config["experiment"]
     current_skill = resolve_path(env, config["paths"]["initial_skill_file"]).read_text()
 
-    make_env = None
-    backend = None
+    env_name = None
     dev_tasks = 0
     extra: dict = {}
     if strategy == "gated":
-        make_env = lambda: get_environment(env)(config, split="valid_seen")  # noqa: E731
-        backend = build_backend(config, harness)
+        env_name = env
         dev_tasks = exp["num_dev_tasks"]
     elif strategy == "avo":
-        make_env = lambda: get_environment(env)(config, split="valid_seen")  # noqa: E731
-        backend = build_backend(config, harness)
+        env_name = env
         dev_tasks = exp["avo_dev_tasks_per_candidate"]
         extra["population_size"] = exp.get("avo_population_size", 3)
 
@@ -72,10 +67,13 @@ def build_context(
         current_skill=current_skill,
         trajectories=trajectories,
         rounds=rounds,
-        make_env=make_env,
-        backend=backend,
+        env_name=env_name,
+        dev_split="valid_seen",
+        harness=harness,
+        config=config,
         dev_tasks=dev_tasks,
         max_steps=exp["max_steps"],
+        max_parallel_workers=config.get("max_parallel_workers", 10),
         extra=extra,
     )
 

@@ -24,9 +24,7 @@ def run(ctx: TrainerContext) -> dict:
     preamble, insights = skill.parse_insights(ctx.current_skill)
 
     print(f"[gated] baseline dev-eval ({ctx.dev_tasks} tasks)...")
-    env = ctx.make_env()
-    best_score, dev_results = dev_eval(env, ctx, skill.render_insights(preamble, insights), ctx.dev_tasks)
-    env.close()
+    best_score, dev_results = dev_eval(ctx, skill.render_insights(preamble, insights), ctx.dev_tasks)
     print(f"[gated] baseline dev success rate: {best_score:.2f}")
 
     best_insights = insights
@@ -54,9 +52,7 @@ def run(ctx: TrainerContext) -> dict:
         print(f"[gated] round {round_number}: add={added!r} remove={delta['remove']!r} "
               f"-- evaluating on {ctx.dev_tasks} dev tasks...")
 
-        env = ctx.make_env()
-        candidate_score, candidate_results = dev_eval(env, ctx, candidate_skill, ctx.dev_tasks)
-        env.close()
+        candidate_score, candidate_results = dev_eval(ctx, candidate_skill, ctx.dev_tasks)
 
         accepted = candidate_score > best_score
         history.append({

@@ -9,31 +9,33 @@ Complete the requested household task efficiently.
 
 ## General Strategies
 
-1.  **Locate the target object:** Before interacting with an object, first navigate to its location.
-2.  **Interact with containers:** If an object is inside a container (e.g., cabinet, drawer, fridge), open the container first.
-3.  **Handle state changes:** If an object needs to be cleaned or heated, perform that action before moving it to its final destination.
-4.  **Move objects:** Use the `move <object> to <location>` action to place items.
-5.  **Examine for information:** Use `examine <object>` to understand its properties or contents.
-6.  **Check inventory:** Use `inventory` to see what items you are currently carrying.
-7.  **Be thorough:** If an object is not found in an expected location, explore other potential locations.
-8.  **Close containers:** After interacting with a container, close it if it is open.
+### Locating and Interacting with Objects
 
-## Specific Actions
+*   **Explore systematically:** When an object is not immediately visible, systematically explore containers (drawers, cabinets, fridges) and surfaces.
+*   **Use `examine` and `look`:** Use `examine` on specific objects to understand their state or contents. Use `look` to get a general sense of the surroundings.
+*   **Open and close containers:** To access items within containers, use `open [container]` and `close [container]`.
+*   **Take and move objects:** Use `take [object] from [location]` to pick up an item and `move [object] to [location]` to place it.
+*   **Check inventory:** Use `inventory` to see what items the agent is currently carrying.
 
-### Navigation
+### Object Manipulation and State Changes
 
-*   `go to <location>`: Move to a specific location.
+*   **Cleaning:** Use `clean [object] with [cleaning_tool/location]` to clean an item.
+*   **Heating/Cooling:** Use `heat [object] with [appliance]` or `cool [object] with [appliance]` to change an item's temperature.
+*   **Using appliances:** Some tasks require using appliances like microwaves or toasters.
 
-### Object Interaction
+### Task Completion
 
-*   `take <object> from <location>`: Pick up an object.
-*   `move <object> to <location>`: Place an object in a location.
-*   `open <container>`: Open a container.
-*   `close <container>`: Close a container.
-*   `clean <object> with <location>`: Clean an object using a sink or basin.
-*   `heat <object> with <appliance>`: Heat an object using an appliance like a microwave.
-*   `examine <object>`: Get more information about an object.
+*   **Follow task instructions precisely:** Ensure all parts of the task are addressed (e.g., "clean and put").
+*   **Verify completion:** After performing an action, use `examine` on the target location or object to confirm the task is complete.
 
-### State Management
+## Common Pitfalls and How to Avoid Them
 
-*   `inventory`: Check the items currently being carried.
+*   **Missing objects:** If an object is not found in an expected location, try searching other nearby containers or surfaces.
+*   **Incorrect appliance usage:** Ensure the correct appliance is used for heating or cooling.
+*   **Redundant actions:** Avoid repeatedly performing the same action if it doesn't change the state or progress the task. For example, if an object is already in the desired location, do not repeatedly move it there.
+*   **Not opening containers:** Ensure containers are opened before attempting to interact with items inside them.
+*   **Forgetting to take items:** Before moving an item to a new location, ensure it has been picked up using the `take` command.
+*   **Ignoring object states:** Pay attention to object states (e.g., "clean," "hot," "cold") as they may be relevant to the task.
+*   **Over-reliance on `examine`:** While `examine` is useful, sometimes a simple `look` is sufficient to understand the environment.
+*   **Incorrectly using `move`:** The `move` command is for placing items, not for picking them up. Use `take` to pick up items.
+*   **Not closing containers:** After interacting with a container, it's often good practice to close it.

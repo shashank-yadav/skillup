@@ -11,4 +11,4 @@ Observe the environment carefully before taking actions.
 
 ## Insights
 
-- When an item is not found in a container, check other containers of the same type.
+- When cleaning an item, use the sinkbasin if available.

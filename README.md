@@ -14,7 +14,8 @@ The framework is deliberately generic:
 - **Training algorithms** are pluggable (`trainers/`) -- four strategies ship
   today (naive single-shot rewrite, a SkillOpt-style validation-gated
   editor, an ExpeL-style incremental insight accumulator, and an AVO-style
-  population search with crossover), each independently swappable.
+  population search with crossover and a real supervisor agent), each
+  independently swappable.
 - **Experiments** live under `experiments/<env>/` -- config, generated
   skills, trajectory data, and results for one environment, kept together
   and gitignored where it's regenerable.
@@ -244,6 +245,22 @@ avoids that since merging happens in Python, not in the model.
 Register it (`core.trainer.register("yourname", run)`), import it from
 `trainers/__init__.py`, and it's immediately available via
 `--strategy yourname`.
+
+## AVO's supervisor agent
+
+`avo` tracks whether the population's best dev score has improved each
+generation. When it hasn't for `STAGNATION_PATIENCE` generations in a row,
+a separate supervisor LLM call (`trainers/prompts/avo_supervisor.md`) is
+made -- given every lineage's current insights and score, the shared
+knowledge base, and recent accept/reject history -- to diagnose *why* the
+population is stuck (converged lineages proposing redundant edits, the same
+kind of edit repeatedly rejected, edits too timid to escape a local optimum,
+...) and prescribe a directive for that generation's proposers, which
+replaces the normal bounded-edit instruction for every lineage until the
+population improves again. This is a real agentic call, not a fixed
+fallback string, so its intervention differs based on what's actually
+happening in the population; a fixed exploratory-edit instruction is used
+only if that call's response fails to parse.
 
 ## Parallelization
 
