@@ -10,13 +10,14 @@ from dataclasses import dataclass, field
 from typing import Any, Callable
 
 from core.agent import run_episode
+from core.backend import Backend
 from core.environment import Environment
 from core.llm import ModelClient
 
 
 @dataclass
 class TrainerContext:
-    client: ModelClient
+    client: ModelClient          # for the trainer's own distillation call (always direct API)
     model: str
     trainer_temperature: float
     trainer_max_tokens: int
@@ -24,10 +25,8 @@ class TrainerContext:
     trajectories: list[dict]
     rounds: int
     make_env: Callable[[], Environment] | None = None  # fresh dev-eval environment, or None
+    backend: Backend | None = None  # rollout backend for dev-eval (gated/avo) -- api or an external harness
     dev_tasks: int = 0
-    agent_model: str = ""
-    agent_temperature: float = 0.0
-    agent_max_tokens: int = 0
     max_steps: int = 0
     extra: dict[str, Any] = field(default_factory=dict)
 
@@ -77,10 +76,7 @@ def format_trajectory_group(trajectories: list[dict]) -> str:
 def dev_eval(env: Environment, ctx: TrainerContext, skill_text: str, n_tasks: int) -> tuple[float, list]:
     """Run n_tasks fresh episodes under skill_text and return (success_rate, results)."""
     results = [
-        run_episode(
-            env, ctx.client, ctx.agent_model, ctx.agent_temperature, ctx.agent_max_tokens,
-            ctx.max_steps, skill_text=skill_text,
-        )
+        run_episode(env, ctx.backend, ctx.max_steps, skill_text=skill_text)
         for _ in range(n_tasks)
     ]
     success_rate = sum(1 for r in results if r.success) / len(results) if results else 0.0

@@ -17,8 +17,22 @@ model:
   request_timeout_s: 60
   max_retries: 3
 
-# Default concurrency for the in-process parallel runner (core/runner.py).
-# Environment stepping is fast local computation; the LLM API call is
-# I/O-bound, so this many concurrent threads give real wall-clock speedup,
-# up to whatever the API provider's concurrency limits allow.
+# Default concurrency for the parallel runner (core/runner.py), which splits
+# work across this many OS processes. Environment stepping is fast local
+# computation; the LLM API call is I/O-bound, so this gives real wall-clock
+# speedup, up to whatever the backend's own concurrency limits allow.
 max_parallel_workers: 25
+
+# Config for `--harness cli` (collect_trajectories.py / train_skill.py /
+# evaluate_skill.py), which routes action-selection through an external
+# harness's CLI instead of a direct API call -- so a skill can be trained or
+# evaluated using whatever tool someone already runs day to day. Not needed
+# for the default `--harness api`. {system_prompt} and {user_prompt} are
+# substituted in, shell-quoted, before the command runs.
+#
+# harness:
+#   cli:
+#     command: >-
+#       claude -p {user_prompt} --system-prompt {system_prompt}
+#       --tools "" --no-session-persistence --output-format text
+#     timeout_s: 120

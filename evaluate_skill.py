@@ -24,6 +24,11 @@ Usage:
     python evaluate_skill.py --env alfworld --merge
         Skip running anything; read whichever condition trajectory files (or
         complete shard sets) exist on disk and produce the combined report.
+
+Add --harness cli to route every action-selection call through an external
+harness's CLI (Claude Code, OpenCode, ...) instead of a direct API call --
+useful for checking a skill's effect against how a real harness actually
+behaves, not just a raw completion. See core/backend.py.
 """
 
 import argparse
@@ -189,23 +194,20 @@ def _run_shard(offset: int, count: int, args: dict) -> list[dict]:
     cross the process boundary, hence `args` rather than closures."""
     import environments  # noqa: F401 -- registers plugins in this process
     from core.agent import run_episode
+    from core.backend import build_backend
     from core.environment import get as get_environment
-    from core.llm import ModelClient
 
     config = args["config"]
     label = args["label"]
     absolute_offset = args["base_offset"] + offset
     env = get_environment(args["env"])(config, split="valid_unseen", offset=absolute_offset, count=count)
-    client = ModelClient(config)
-    model = config["model"]["agent_model"]
-    temperature = config["model"]["agent_temperature"]
-    max_tokens = config["model"]["agent_max_tokens"]
+    backend = build_backend(config, args["harness"])
     max_steps = config["experiment"]["max_steps"]
     skill_text = args["skill_text"]
 
     results = []
     for _ in range(count):
-        result = run_episode(env, client, model, temperature, max_tokens, max_steps, skill_text=skill_text)
+        result = run_episode(env, backend, max_steps, skill_text=skill_text)
         status = "SUCCESS" if result.success else "FAILURE"
         print(f"  [{label}] {status} ({len(result.steps)} steps, {result.total_tokens} tokens): {result.task}")
         results.append(result.to_json())
@@ -214,12 +216,12 @@ def _run_shard(offset: int, count: int, args: dict) -> list[dict]:
 
 
 def run_condition(
-    env: str, config: dict, label: str, skill_path, offset: int, n_tasks: int, max_workers: int,
+    env: str, config: dict, label: str, skill_path, offset: int, n_tasks: int, max_workers: int, harness: str,
 ) -> list[dict]:
     """Run n_tasks episodes (starting at `offset` within the eval split) for one
     condition, parallelized across max_workers processes via core.runner."""
     skill_text = skill_path.read_text() if skill_path else None
-    args = {"env": env, "config": config, "label": label, "skill_text": skill_text, "base_offset": offset}
+    args = {"env": env, "config": config, "label": label, "skill_text": skill_text, "base_offset": offset, "harness": harness}
     print(f"Condition: {label}" + (f" ({skill_path.name})" if skill_path else " (no skill)"))
     return run_parallel(_run_shard, n_tasks, max_workers, args)
 
@@ -237,6 +239,8 @@ def main():
                          help="Skip running anything; merge whichever condition trajectory files exist into the report.")
     parser.add_argument("--max-workers", type=int, default=None,
                          help="Override config.yaml's max_parallel_workers.")
+    parser.add_argument("--harness", default="api", choices=["api", "cli"],
+                         help="Backend for action selection: direct API, or an external harness's CLI.")
     args = parser.parse_args()
 
     config = load_config(args.env)
@@ -258,7 +262,7 @@ def main():
             offset, n_tasks = 0, total_tasks
             out_path = condition_path(args.env, config, args.condition)
 
-        results = run_condition(args.env, config, args.condition, skill_path, offset, n_tasks, max_workers)
+        results = run_condition(args.env, config, args.condition, skill_path, offset, n_tasks, max_workers, args.harness)
         write_jsonl(out_path, results)
         print(f"\nWrote {out_path}")
         return
@@ -288,13 +292,13 @@ def main():
     print(f"Skill variants: {', '.join(skill_variants)}\n")
 
     all_results = {}
-    baseline_results = run_condition(args.env, config, "baseline", None, 0, total_tasks, max_workers)
+    baseline_results = run_condition(args.env, config, "baseline", None, 0, total_tasks, max_workers, args.harness)
     write_jsonl(condition_path(args.env, config, "baseline"), baseline_results)
     all_results["baseline"] = baseline_results
 
     for label, skill_path in skill_variants.items():
         print()
-        results = run_condition(args.env, config, label, skill_path, 0, total_tasks, max_workers)
+        results = run_condition(args.env, config, label, skill_path, 0, total_tasks, max_workers, args.harness)
         write_jsonl(condition_path(args.env, config, label), results)
         all_results[label] = results
 

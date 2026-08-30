@@ -9,13 +9,15 @@ multi-turn chat state.
 This module only depends on the `core.environment.Environment` contract
 (reset/step/close plus the standard `info` dict keys) -- it has no knowledge
 of any specific environment. Environment-specific setup lives in
-`environments/<name>/env.py`.
+`environments/<name>/env.py`. Likewise it only depends on `core.backend.Backend`
+for turning a prompt into an action, not on how that answer was produced --
+a direct API call or an external harness's CLI both work the same way here.
 """
 
 from dataclasses import dataclass, field
 
+from core.backend import Backend
 from core.environment import Environment
-from core.llm import ModelClient
 
 BASE_INSTRUCTIONS = """You are an agent completing a task in an interactive text-based environment.
 
@@ -136,10 +138,7 @@ class EpisodeResult:
 
 def run_episode(
     env: Environment,
-    client: ModelClient,
-    model: str,
-    temperature: float,
-    max_tokens: int,
+    backend: Backend,
     max_steps: int,
     skill_text: str | None = None,
 ) -> EpisodeResult:
@@ -164,15 +163,7 @@ def run_episode(
                 f"something else."
             )
         user_prompt = format_step_prompt(task, history, observation, step_admissible, stuck_notice)
-        raw_text, usage = client.chat(
-            model=model,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
+        raw_text, usage = backend.chat(system_prompt, user_prompt)
         result.total_tokens += usage.get("total_tokens", 0)
         action = parse_action(raw_text, step_admissible)
 

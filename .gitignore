@@ -3,8 +3,10 @@
 __pycache__/
 *.pyc
 
-# Claude Code session-local state -- not part of the project.
-.claude/
+# Claude Code session-local state -- not part of the project. Note this is
+# scoped to the specific lock file, not all of .claude/: .claude/skills/ is
+# legitimate project config (this repo's own meta-skill) and should ship.
+.claude/scheduled_tasks.lock
 
 # Secrets -- never commit API keys or local env overrides.
 .env

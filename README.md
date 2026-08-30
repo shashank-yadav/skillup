@@ -21,6 +21,14 @@ The framework is deliberately generic:
 - **Parallel by default** -- `evaluate_skill.py` runs every condition across
   many concurrent OS processes automatically; no more hand-launching shard
   commands.
+- **Trainable through your own harness, not just the API** -- `--harness cli`
+  routes rollout through an external CLI tool (Claude Code, OpenCode, ...)
+  instead of a direct API call, so a skill reflects how that tool actually
+  behaves.
+
+This repo ships its own meta-skill (`.claude/skills/skill-rl/SKILL.md`) --
+if you're driving it from an agent that reads that convention (Claude Code,
+Codex, ...), it already knows the commands below.
 
 ## Quick start (ALFWorld)
 
@@ -90,6 +98,45 @@ Run a single strategy or condition directly when iterating:
 python train_skill.py --env alfworld --strategy gated
 python evaluate_skill.py --env alfworld --condition gated
 ```
+
+## Training through your own harness instead of the API
+
+By default every episode's action-selection call goes straight to the model
+API (`core/backend.py`'s `ApiBackend`). Pass `--harness cli` to route it
+through an external harness's CLI instead -- so training trajectories (and
+therefore the skill later distilled from them) come from how a tool you
+already use actually behaves, not from a raw completion:
+
+```bash
+python collect_trajectories.py --env alfworld --harness cli
+python train_skill.py --env alfworld --strategy gated --harness cli   # affects gated/avo's dev-eval rollouts
+python evaluate_skill.py --env alfworld --harness cli
+```
+
+This needs `harness.cli.command` set in `config.yaml` -- a shell command
+template with `{system_prompt}`/`{user_prompt}` placeholders (substituted in,
+shell-quoted, before running), not hardcoded to one product. For Claude
+Code, verified end to end:
+
+```yaml
+harness:
+  cli:
+    command: >-
+      claude -p {user_prompt} --system-prompt {system_prompt}
+      --tools "" --no-session-persistence --output-format text
+    timeout_s: 120
+```
+
+`--tools ""` and `--no-session-persistence` make Claude Code behave like a
+plain chat completion for this purpose -- one clean action back per call,
+no tool-use noise, no leftover session state. The same pattern (a
+print-and-exit mode, a way to force a system prompt, a way to disable tool
+use) should carry over to any similar CLI-based harness; only the command
+template changes. Expect ~5-10x the latency of a direct API call, since each
+turn spins up a fresh session, and note that usage/token accounting is
+unavailable for most external CLIs (`total_tokens` stays 0 for episodes run
+this way) and that every call spends whatever account the harness itself is
+configured to use.
 
 ## Using a trained skill in your own harness
 

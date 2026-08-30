@@ -3,7 +3,14 @@ against an environment's "train" split, until the configured success/failure
 quotas are filled.
 
 Usage:
-    python collect_trajectories.py --env alfworld
+    python collect_trajectories.py --env alfworld [--harness api|cli]
+
+`--harness cli` routes every action-selection call through an external
+harness's CLI (see core/backend.py and `harness.cli.command` in
+config.yaml) instead of a direct API call -- so the training trajectories
+this produces, and therefore the skill later distilled from them, come from
+whatever tool a person actually uses (Claude Code, OpenCode, ...), not just
+skill-rl's own loop.
 """
 
 import argparse
@@ -11,14 +18,16 @@ import json
 
 import environments  # noqa: F401 -- registers all environment plugins
 from core.agent import run_episode
+from core.backend import build_backend
 from core.environment import get as get_environment
-from core.llm import ModelClient
 from util import load_config, resolve_path
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--env", required=True, help="Registered environment name, e.g. 'alfworld'.")
+    parser.add_argument("--harness", default="api", choices=["api", "cli"],
+                         help="Backend for action selection: direct API, or an external harness's CLI.")
     args = parser.parse_args()
 
     config = load_config(args.env)
@@ -27,10 +36,7 @@ def main():
     env_factory = get_environment(args.env)
     env = env_factory(config, split="train")
 
-    client = ModelClient(config)
-    model = config["model"]["agent_model"]
-    temperature = config["model"]["agent_temperature"]
-    max_tokens = config["model"]["agent_max_tokens"]
+    backend = build_backend(config, args.harness)
     max_steps = config["experiment"]["max_steps"]
 
     target_success = exp["num_train_success"]
@@ -51,7 +57,7 @@ def main():
                 break
             episode += 1
 
-            result = run_episode(env, client, model, temperature, max_tokens, max_steps, skill_text=None)
+            result = run_episode(env, backend, max_steps, skill_text=None)
 
             if result.success and n_success >= target_success:
                 print(f"[{episode}] success quota full, skipping (task: {result.task})")
