@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Claude Code session-local state -- not part of the project.
+.claude/
+
+# Secrets -- never commit API keys or local env overrides.
+.env
+*.env
+.env.*
+
+# Generated experiment data: trajectories are large, regenerable, and
+# environment-specific -- not framework material. Skills and results
+# (experiments/*/skills/, experiments/*/results/) are intentionally NOT
+# ignored: they're small, human-readable, and useful as real examples of
+# what the framework produces.
+experiments/*/data/

@@ -1,0 +1,24 @@
+# Model / API settings -- shared across every environment and experiment.
+# Environment-specific knobs (task counts, split sizes, paths) live in
+# experiments/<env>/config.yaml instead.
+model:
+  provider: openrouter
+  api_base: "https://openrouter.ai/api/v1"
+  api_key_env: "OPENROUTER_API_KEY"   # env var holding the OpenRouter key
+  # Model used to drive the agent inside the environment.
+  agent_model: "google/gemini-2.5-flash-lite"
+  agent_temperature: 0.2
+  agent_max_tokens: 64
+  # Model used to distill trajectories into an updated SKILL.md.
+  # Defaults to agent_model if left null.
+  trainer_model: null
+  trainer_temperature: 0.3
+  trainer_max_tokens: 6000
+  request_timeout_s: 60
+  max_retries: 3
+
+# Default concurrency for the in-process parallel runner (core/runner.py).
+# Environment stepping is fast local computation; the LLM API call is
+# I/O-bound, so this many concurrent threads give real wall-clock speedup,
+# up to whatever the API provider's concurrency limits allow.
+max_parallel_workers: 25

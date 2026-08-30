@@ -1,0 +1,173 @@
+{
+  "avo": [
+    {
+      "generation": 0,
+      "lineage": 1,
+      "dev_success_rate": 0.25,
+      "added": [
+        "When an object is not found in the current location, search in other accessible locations."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 0,
+      "lineage": 2,
+      "dev_success_rate": 0.2,
+      "added": [
+        "When an object is in a container, open the container before attempting to interact with the object inside.",
+        "If an object is not found in the expected location, search nearby locations."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 0,
+      "lineage": 3,
+      "dev_success_rate": 0.15,
+      "added": [
+        "When an object is not found in a container, check other similar containers.",
+        "If an object is not found in its expected location, search nearby locations."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 1,
+      "lineage": 1,
+      "dev_success_rate": 0.2,
+      "accepted": false,
+      "added": [
+        "If an object is not found in the current location, check containers in the current location before searching other locations."
+      ],
+      "removed": [
+        "When an object is not found in the current location, search in other accessible locations."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 2,
+      "dev_success_rate": 0.15,
+      "accepted": false,
+      "added": [
+        "If an object is not found in the current location, check containers in the current location before searching other locations."
+      ],
+      "removed": [
+        "If an object is not found in the expected location, search nearby locations."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 3,
+      "dev_success_rate": 0.2,
+      "accepted": true,
+      "added": [],
+      "removed": [
+        "If an object is not found in a container, check other similar containers."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": "crossover",
+      "dev_success_rate": 0.15,
+      "accepted": false,
+      "parents": [
+        1,
+        2
+      ],
+      "replaced": 3
+    },
+    {
+      "generation": 2,
+      "lineage": 1,
+      "dev_success_rate": 0.2,
+      "accepted": false,
+      "added": [
+        "If an object is not found in the current location, check containers in the current location before searching other locations."
+      ],
+      "removed": [
+        "When an object is not found in the current location, search in other accessible locations."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 2,
+      "dev_success_rate": 0.2,
+      "accepted": false,
+      "added": [
+        "If an object is not found in the current location, check containers in the current location before searching other locations."
+      ],
+      "removed": [
+        "If an object is not found in the expected location, search nearby locations."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 3,
+      "dev_success_rate": 0.15,
+      "accepted": false,
+      "added": [],
+      "removed": [
+        "If an object is not found in a container, check other similar containers."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": "crossover",
+      "dev_success_rate": 0.15,
+      "accepted": false,
+      "parents": [
+        1,
+        2
+      ],
+      "replaced": 3
+    },
+    {
+      "generation": 3,
+      "lineage": 1,
+      "dev_success_rate": 0.15,
+      "accepted": false,
+      "added": [
+        "If an object is not found in the current location, check containers in the current location before searching other locations."
+      ],
+      "removed": [],
+      "stagnation_intervention": true
+    },
+    {
+      "generation": 3,
+      "lineage": 2,
+      "dev_success_rate": 0.25,
+      "accepted": true,
+      "added": [
+        "If an object is not found in the current location, consider if it needs to be interacted with in a specific way (e.g., cleaned, heated) before moving it."
+      ],
+      "removed": [],
+      "stagnation_intervention": true
+    },
+    {
+      "generation": 3,
+      "lineage": 3,
+      "dev_success_rate": 0.2,
+      "accepted": false,
+      "added": [
+        "When an object is not found in its immediate surroundings, consider looking in locations that are typically associated with that type of object (e.g., kitchen items in the kitchen)."
+      ],
+      "removed": [],
+      "stagnation_intervention": true
+    },
+    {
+      "generation": 3,
+      "lineage": "crossover",
+      "dev_success_rate": 0.25,
+      "accepted": true,
+      "parents": [
+        1,
+        2
+      ],
+      "replaced": 3
+    }
+  ]
+}

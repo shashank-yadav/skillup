@@ -1,0 +1,37 @@
+# ALFWorld-specific experiment configuration.
+environment: alfworld
+
+alfworld:
+  data_dir_env: "ALFWORLD_DATA"        # env var pointing at downloaded data
+  data_dir_default: "~/.cache/alfworld"
+  task_types: [1, 2, 3, 4, 5, 6]        # 1 pick&place ... 6 pick-two&place
+
+experiment:
+  seed: 42
+  max_steps: 40                         # per-episode step cap (generic across environments)
+  # Training data collection (collect_trajectories.py), drawn from the "train" split.
+  num_train_success: 40
+  num_train_fail: 40
+  max_train_episodes: 300               # safety cap while filling the quotas above
+  # Held-out evaluation (evaluate_skill.py), drawn from the "valid_unseen" split.
+  # Full split (134 games) rather than a 50-task subset -- at n=50, sample-to-sample
+  # variance was swamping any real effect between strategies (two separate 50-task
+  # runs gave opposite strategy rankings). Using the whole split removes the "which
+  # subset got picked" confound and shrinks confidence intervals substantially.
+  num_eval_tasks: 134
+  # Validation slice for iterative trainer strategies, drawn from "valid_seen".
+  # Distinct from both the training split and the final valid_unseen eval set.
+  num_dev_tasks: 60                     # gated: per round, evaluated on the full skill
+  avo_dev_tasks_per_candidate: 20       # avo: per candidate per generation
+  trainer_rounds: 3
+
+paths:
+  training_trajectories: "data/training/trajectories.jsonl"
+  eval_baseline_trajectories: "data/evaluation/baseline_trajectories.jsonl"
+  eval_skill_trajectories: "data/evaluation/skill_trajectories.jsonl"
+  skill_dir: "skills"
+  skill_file: "skills/SKILL.md"                 # naive strategy output
+  initial_skill_file: "skills/SKILL.initial.md"
+  trainer_rounds_log: "results/trainer_rounds.json"
+  results_summary: "results/summary.json"
+  results_table: "results/summary.txt"
