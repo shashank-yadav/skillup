@@ -1,0 +1,6 @@
+# Optional. Only needed for --env alfworld. Python 3.9-3.11 only (TextWorld's
+# native extension caps the interpreter version); other environments have no
+# such constraint. Also needs a one-time game-file download -- see
+# experiments/alfworld/config.yaml.
+alfworld
+textworld

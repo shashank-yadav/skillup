@@ -13,13 +13,16 @@ path for common operations.
 
 ## Setup (once)
 
+If `.venv` doesn't exist yet, run `./install.sh` from the repo root first --
+it creates the venv, installs dependencies, and installs this and the
+`distill-conversation` skill into every agent skills directory it finds
+(`~/.claude/skills`, `~/.codex/skills`, `~/.agents/skills`). Safe to rerun.
+
 ```bash
-source .venv/bin/activate          # created with python3.9-3.11 (ALFWorld's TextWorld dep caps this)
-export OPENROUTER_API_KEY=sk-or-...
+source .venv/bin/activate
+export OPENROUTER_API_KEY=sk-or-...   # ask the user for this if unset -- never invent one
 export ALFWORLD_DATA="$HOME/.cache/alfworld"   # only needed for the alfworld environment
 ```
-
-If `.venv` doesn't exist yet, follow the "Quick start" section of `README.md`.
 
 ## Core loop, for one environment (e.g. "alfworld")
 
@@ -67,11 +70,38 @@ first one mid-conversation, in this repo or any other project.
 python install_skill.py --env alfworld --strategy naive --target ~/.claude/skills
 ```
 
-Copies the trained `SKILL.md` to `<target>/<name>/SKILL.md`. This works
-as-is for Claude Code, Codex, OpenCode, or the shared `~/.agents/skills`
-convention -- they all read the same frontmatter + markdown shape this repo
-already produces. Use `--target ./.claude/skills` for a project-level
-install instead of a user-level one.
+Writes the trained `SKILL.md` to `<target>/<name>/SKILL.md`, versioned (see
+below). This works as-is for Claude Code, Codex, OpenCode, or the shared
+`~/.agents/skills` convention -- they all read the same frontmatter +
+markdown shape this repo already produces. Use `--target ./.claude/skills`
+for a project-level install instead of a user-level one.
+
+## Managing deployed skills: history, diff, rollback, merge
+
+Every write `install_skill.py` or `distill_conversation.py` makes to a
+`<target>/<name>/SKILL.md` is versioned by `core/skill_store.py` (full-text
+snapshots in `<target>/<name>/.skillup/history.jsonl` -- not git, since
+`~/.claude/skills` usually isn't a repo). A pre-existing hand-edited skill
+gets its current content adopted as v1 automatically the first time
+something writes to it. `skill_manager.py` is the CLI for that history:
+
+```bash
+python skill_manager.py list --target ~/.claude/skills                        # every skill: insights, version count, last update
+python skill_manager.py log my-project --target ~/.claude/skills              # version history
+python skill_manager.py diff my-project --target ~/.claude/skills             # previous vs. current (or --from N --to N)
+python skill_manager.py rollback my-project --target ~/.claude/skills --to 3  # revert (recorded as a new version, not a rewrite)
+python skill_manager.py merge other-name my-project --target ~/.claude/skills # fold one skill's insights into another
+```
+
+`merge` is the fix for the same project ending up distilled under two
+different `--name`s -- it dedupes near-identical insights the same way
+`core.skill.crossover` does for every trainer, and leaves the source skill
+in place unless you pass `--delete-src`.
+
+Skill *selection* at conversation start (which of several installed skills
+a harness actually loads) is not something this repo controls -- that's the
+harness's own job, matching its `description` frontmatter against what
+you're doing.
 
 ## Training through an external harness instead of the API
 

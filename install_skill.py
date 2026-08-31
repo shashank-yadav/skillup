@@ -11,9 +11,9 @@ Usage:
 """
 
 import argparse
-import shutil
 from pathlib import Path
 
+from core import skill_store
 from util import load_config, resolve_path
 
 
@@ -40,11 +40,17 @@ def main():
     name = args.name or (args.env if args.strategy == "naive" else f"{args.env}-{args.strategy}")
     target_root = Path(args.target).expanduser()
     target_dir = target_root / name
-    target_dir.mkdir(parents=True, exist_ok=True)
     dest = target_dir / "SKILL.md"
-    shutil.copy(source, dest)
+    version, created = skill_store.save_version(
+        target_dir, source.read_text(),
+        source=f"install_skill:{args.env}/{args.strategy}",
+        note="deployed trained skill",
+    )
 
-    print(f"Installed {source} -> {dest}")
+    if created:
+        print(f"Installed {source} -> {dest} (v{version})")
+    else:
+        print(f"{dest} already matches {source} (v{version}, no new version recorded)")
     print(f"Any Agent-Skills-compatible harness pointed at {target_root} will load this as skill '{name}'.")
 
 

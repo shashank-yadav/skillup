@@ -21,31 +21,33 @@ Skills produced here are plain `SKILL.md` files in the same Agent Skills
 convention those tools already read (`<skills-dir>/<name>/SKILL.md`).
 Installing one is a file copy, not an integration.
 
+## Install this by asking your agent
+
+You don't run any of this by hand. Point your agent (Claude Code, Codex,
+Cursor, OpenCode, whatever you already use) at wherever you have this repo
+checked out and paste this:
+
+> Set up SkillUp from this repo: run `./install.sh`, then check whether
+> `OPENROUTER_API_KEY` is set in this shell -- if not, ask me for it and
+> export it. Then tell me you're ready.
+
+That's the whole install. `install.sh` creates a virtualenv, installs
+dependencies, and copies this repo's two meta-skills into every agent
+skills directory it finds on your machine (`~/.claude/skills`,
+`~/.codex/skills`, and the shared `~/.agents/skills` convention) -- the
+only thing it can't do for you is hand over your OpenRouter API key, which
+is why the prompt above tells your agent to ask. Rerunning it is safe; it
+only ever updates its own files. Once it reports back, every command in
+this README is something you ask for in plain language, not something you
+type -- see below.
+
 ## Use it through your AI agent
 
-The commands in this README are meant to be run by your agent, not typed by
-you. This repo ships two meta-skills so an agent that reads the Agent
-Skills convention already knows what to do: `skillup` (train and evaluate
-skills against an environment or dataset) and `distill-conversation`
-(build a skill from a conversation, callable mid-conversation). Make them
-visible to your harness once, then just ask.
-
-```bash
-# Claude Code, current project: nothing to do, already read from .claude/skills/
-# Claude Code, every project:
-cp -r .claude/skills/skillup ~/.claude/skills/skillup
-cp -r .claude/skills/distill-conversation ~/.claude/skills/distill-conversation
-
-# Codex
-cp -r .claude/skills/skillup ~/.codex/skills/skillup
-cp -r .claude/skills/distill-conversation ~/.codex/skills/distill-conversation
-
-# OpenCode, Cursor, or any harness reading the shared convention
-cp -r .claude/skills/skillup ~/.agents/skills/skillup
-cp -r .claude/skills/distill-conversation ~/.agents/skills/distill-conversation
-```
-
-Then tell it what you want, in plain language:
+This repo ships two meta-skills so an agent that reads the Agent Skills
+convention already knows what to do once installed: `skillup` (train and
+evaluate skills against an environment or dataset) and
+`distill-conversation` (build a skill from a conversation, callable
+mid-conversation). Tell it what you want, in plain language:
 
 - "Train a skill for MBPP and evaluate it."
 - "Distill a skill from this conversation and save it as backend-service."
@@ -132,11 +134,13 @@ already knows the commands below.
 ## Quick start: train against a benchmark or dataset (MBPP)
 
 MBPP (Python programming problems) needs nothing beyond an API key and the
-`datasets` library, so it's the fastest way to see the whole pipeline run:
+core dependencies, so it's the fastest way to see the whole pipeline run.
+If your agent already ran `./install.sh` (see above), skip straight to
+"Usage" below -- this is the manual equivalent, for running by hand:
 
 ```bash
-python3.11 -m venv .venv && source .venv/bin/activate
-pip install datasets pyyaml requests
+./install.sh
+source .venv/bin/activate
 export OPENROUTER_API_KEY=sk-or-...
 ```
 
@@ -192,8 +196,8 @@ No environment, no setup beyond an API key. A transcript is a JSON list of
 log format.
 
 ```bash
-python3.11 -m venv .venv && source .venv/bin/activate
-pip install pyyaml requests
+./install.sh   # skip if your agent already ran this
+source .venv/bin/activate
 export OPENROUTER_API_KEY=sk-or-...
 
 python distill_conversation.py --transcript conv.json --target ~/.claude/skills --name my-project
@@ -291,6 +295,37 @@ For a harness with no native skill-loading at all, the file still works --
 paste its body into a system prompt or append it to your own instructions,
 the way `core.agent.build_system_prompt` does internally.
 
+## Managing skills: history, diff, rollback, merge
+
+`install_skill.py` and `distill_conversation.py` both write through
+`core/skill_store.py`, which versions every change to a deployed skill
+(full-text snapshots in `<target>/<name>/.skillup/history.jsonl`, not git --
+`~/.claude/skills` usually isn't a repo). Writing the exact same content
+twice is a no-op, not a new version, and a pre-existing hand-edited skill
+gets its current content adopted as v1 the first time something writes to
+it, so nothing is lost by turning this on after the fact.
+
+`skill_manager.py` is the CLI for that history:
+
+```bash
+python skill_manager.py list --target ~/.claude/skills                        # every skill: insights, versions, last update
+python skill_manager.py log my-project --target ~/.claude/skills              # what changed, and when
+python skill_manager.py diff my-project --target ~/.claude/skills             # previous vs. current (or --from N --to N)
+python skill_manager.py rollback my-project --target ~/.claude/skills --to 3  # revert -- recorded as a new version, not a rewrite
+python skill_manager.py merge other-name my-project --target ~/.claude/skills # fold one skill's insights into another
+```
+
+`merge` exists for a specific failure mode: distilling the same project
+under two different `--name`s by accident, ending up with two skills a
+harness might load inconsistently. It dedupes near-identical insights the
+same way every trainer's crossover step does, and leaves the source skill's
+directory in place unless you pass `--delete-src`.
+
+What this doesn't do is decide *which* installed skill a harness loads for
+a given conversation -- that's the harness's own job, matching each skill's
+`description` frontmatter against what you're doing. This only manages the
+history of each skill once it exists.
+
 ## Distilling a skill from a conversation, not a benchmark
 
 Everything in "Quick start: train against a benchmark or dataset" above
@@ -351,6 +386,7 @@ core/                    environment-agnostic framework
   agent.py                 the LLM agent loop (run_episode) -- no env-specific code
   llm.py                   OpenAI-compatible chat client (targets OpenRouter)
   skill.py                 skill file I/O + insight-list helpers shared by trainers
+  skill_store.py            version history for deployed skills (used by install/distill, not trainers)
   conversation.py          transcript-formatting helper shared by the two conversation scripts
   trainer.py                TrainerContext + trainer registry + shared dev-eval helpers
   runner.py                process-based parallel episode runner
@@ -373,6 +409,8 @@ experiments/<env>/        one environment's config + generated artifacts
 collect_trajectories.py, train_skill.py, evaluate_skill.py    entry points
 install_skill.py                                               drop a trained skill into any harness's skill dir
 distill_conversation.py, convert_conversation.py               build skills from conversations instead
+skill_manager.py                                               list/show/log/diff/rollback/merge deployed skills
+install.sh, requirements.txt, requirements-alfworld.txt        one-shot setup (see "Install this by asking your agent")
 ```
 
 ## Adding a new environment

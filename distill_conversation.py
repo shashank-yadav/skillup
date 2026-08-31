@@ -25,7 +25,7 @@ from pathlib import Path
 
 import yaml
 
-from core import skill
+from core import skill, skill_store
 from core.conversation import format_transcript
 from core.llm import ModelClient
 from util import trainer_model_name
@@ -88,7 +88,12 @@ def main():
         return
 
     new_insights, added = skill.apply_delta(list(insights), delta)
-    skill.save(skill_path, skill.render_insights(preamble, new_insights))
+    new_text = skill.render_insights(preamble, new_insights)
+    version, created = skill_store.save_version(
+        target_dir, new_text,
+        source=f"distill_conversation:{Path(args.transcript).name}",
+        note=f"+{len(added)} insight(s)" if added else "no new insights",
+    )
 
     print(f"\nAdded {len(added)} insight(s):")
     for text in added:
@@ -98,7 +103,10 @@ def main():
         print(f"Removed {len(removed)} insight(s):")
         for text in removed:
             print(f"  - {text}")
-    print(f"\nWrote {skill_path}")
+    if created:
+        print(f"\nWrote {skill_path} (v{version})")
+    else:
+        print(f"\n{skill_path} unchanged (still v{version})")
 
 
 if __name__ == "__main__":
