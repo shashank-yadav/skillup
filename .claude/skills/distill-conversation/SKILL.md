@@ -39,14 +39,13 @@ it mid-conversation, distill what's happened *so far*.
    `/tmp`). Plain text works too if JSON is inconvenient -- the script
    accepts either.
 
-2. **Run the distiller** (adjust the path to wherever it's actually
-   installed; `--target`/`--name` follow the same `<target>/<name>/SKILL.md`
+2. **Run the distiller** (`cd` into wherever SkillUp is checked out on this
+   machine first; `--target`/`--name` follow the same `<target>/<name>/SKILL.md`
    layout Claude Code, Codex, OpenCode, and `~/.agents/skills` all read):
 
    ```bash
-   cd /Users/shashankyadav/Projects/skill-rl
    source .venv/bin/activate
-   export OPENROUTER_API_KEY=sk-or-...   # only needed if not already set
+   export OPENROUTER_API_KEY=sk-or-...   # ask the user for this if it's not already set
    python distill_conversation.py \
      --transcript /path/to/excerpt.json \
      --target ~/.claude/skills \

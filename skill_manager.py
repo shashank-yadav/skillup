@@ -120,7 +120,6 @@ def cmd_rollback(args):
 
 
 def cmd_merge(args):
-    target = Path(args.target).expanduser()
     src_dir = _skill_dir(args.target, args.src)
     dst_dir = _skill_dir(args.target, args.dst)
 

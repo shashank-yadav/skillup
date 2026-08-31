@@ -3,6 +3,7 @@
 ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)
 ![Agent Skills compatible](https://img.shields.io/badge/Agent%20Skills-compatible-brightgreen)
 ![No weight updates](https://img.shields.io/badge/model%20weights-untouched-orange)
+![MIT license](https://img.shields.io/badge/license-MIT-lightgrey)
 
 **SkillUp gives your AI agent dynamic skills that evolve with every use.**
 
@@ -20,6 +21,24 @@ Code, Codex, OpenCode, Cursor, or whatever you use now; it plugs into them.
 Skills produced here are plain `SKILL.md` files in the same Agent Skills
 convention those tools already read (`<skills-dir>/<name>/SKILL.md`).
 Installing one is a file copy, not an integration.
+
+On a small, cheap model (`google/gemini-2.5-flash-lite`, not a frontier
+one), a skill trained here took MBPP from 39% to 51% and SearchQA from 50%
+to 74%, measured on held-out tasks the skill never saw during training.
+Full numbers, every benchmark, in [Does it work?](#does-it-work) below.
+
+## Contents
+
+- [Install this by asking your agent](#install-this-by-asking-your-agent)
+- [Use it through your AI agent](#use-it-through-your-ai-agent)
+- [Two ways to build a skill](#two-ways-to-build-a-skill)
+- [Does it work?](#does-it-work)
+- [Quick start: train against a benchmark (MBPP)](#quick-start-train-against-a-benchmark-or-dataset-mbpp)
+- [Quick start: distill from a conversation](#quick-start-distill-a-skill-from-a-conversation-you-already-had)
+- [Managing skills: history, diff, rollback, merge](#managing-skills-history-diff-rollback-merge)
+- [Project structure](#project-structure)
+- [Adding a new environment](#adding-a-new-environment)
+- [Adding a new training algorithm](#adding-a-new-training-algorithm)
 
 ## Install this by asking your agent
 
