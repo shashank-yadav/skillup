@@ -9,7 +9,8 @@ from environments import alfworld  # noqa: F401
 
 try:
     from environments import hf_dataset  # noqa: F401
+    from environments import livemathbench  # noqa: F401
 except ImportError:
     # Optional: needs `pip install datasets`. Not required for ALFWorld or
-    # any other environment that doesn't use this adapter.
+    # any other environment that doesn't use these plugins.
     pass

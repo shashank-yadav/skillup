@@ -200,7 +200,7 @@ def _run_shard(offset: int, count: int, args: dict) -> list[dict]:
     config = args["config"]
     label = args["label"]
     absolute_offset = args["base_offset"] + offset
-    env = get_environment(args["env"])(config, split="valid_unseen", offset=absolute_offset, count=count)
+    env = get_environment(config["environment"])(config, split="valid_unseen", offset=absolute_offset, count=count)
     backend = build_backend(config, args["harness"])
     max_steps = config["experiment"]["max_steps"]
     skill_text = args["skill_text"]
@@ -216,12 +216,12 @@ def _run_shard(offset: int, count: int, args: dict) -> list[dict]:
 
 
 def run_condition(
-    env: str, config: dict, label: str, skill_path, offset: int, n_tasks: int, max_workers: int, harness: str,
+    config: dict, label: str, skill_path, offset: int, n_tasks: int, max_workers: int, harness: str,
 ) -> list[dict]:
     """Run n_tasks episodes (starting at `offset` within the eval split) for one
     condition, parallelized across max_workers processes via core.runner."""
     skill_text = skill_path.read_text() if skill_path else None
-    args = {"env": env, "config": config, "label": label, "skill_text": skill_text, "base_offset": offset, "harness": harness}
+    args = {"config": config, "label": label, "skill_text": skill_text, "base_offset": offset, "harness": harness}
     print(f"Condition: {label}" + (f" ({skill_path.name})" if skill_path else " (no skill)"))
     return run_parallel(_run_shard, n_tasks, max_workers, args)
 
@@ -262,7 +262,7 @@ def main():
             offset, n_tasks = 0, total_tasks
             out_path = condition_path(args.env, config, args.condition)
 
-        results = run_condition(args.env, config, args.condition, skill_path, offset, n_tasks, max_workers, args.harness)
+        results = run_condition(config, args.condition, skill_path, offset, n_tasks, max_workers, args.harness)
         write_jsonl(out_path, results)
         print(f"\nWrote {out_path}")
         return
@@ -292,13 +292,13 @@ def main():
     print(f"Skill variants: {', '.join(skill_variants)}\n")
 
     all_results = {}
-    baseline_results = run_condition(args.env, config, "baseline", None, 0, total_tasks, max_workers, args.harness)
+    baseline_results = run_condition(config, "baseline", None, 0, total_tasks, max_workers, args.harness)
     write_jsonl(condition_path(args.env, config, "baseline"), baseline_results)
     all_results["baseline"] = baseline_results
 
     for label, skill_path in skill_variants.items():
         print()
-        results = run_condition(args.env, config, label, skill_path, 0, total_tasks, max_workers, args.harness)
+        results = run_condition(config, label, skill_path, 0, total_tasks, max_workers, args.harness)
         write_jsonl(condition_path(args.env, config, label), results)
         all_results[label] = results
 

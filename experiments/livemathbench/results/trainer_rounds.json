@@ -1,0 +1,501 @@
+{
+  "reflact": [
+    {
+      "step": 0,
+      "action": "baseline",
+      "rollout_hard": 0.25,
+      "gate_score": 0.25076923076923074
+    },
+    {
+      "step": 1,
+      "action": "accept_new_best",
+      "rollout_hard": 0.25,
+      "edit_budget": 4,
+      "added": [
+        "When presented with multiple valid statements, select the one that provides the most precise or strongest conclusion, often characterized by tighter bounds, more specific conditions, or more exact asymptotic behavior.",
+        "Evaluate options based on their precision and comprehensiveness, preferring statements that provide more detailed or complete information about the subject of the question.",
+        "Pay close attention to quantifiers and comparative terms such as 'strongest', 'exactly', 'at least', 'at most', 'bounded by', and 'converges to' when evaluating options.",
+        "Ensure the selected option is logically equivalent to the problem statement, verifying all conditions and quantifiers precisely."
+      ],
+      "removed": [],
+      "candidate_hard": 0.26666666666666666,
+      "candidate_gate_score": 0.2673036093418259,
+      "current_score": 0.2673036093418259,
+      "best_score": 0.2673036093418259
+    },
+    {
+      "step": 2,
+      "action": "accept_new_best",
+      "rollout_hard": 0.375,
+      "edit_budget": 4,
+      "added": [
+        "When multiple options appear correct, prioritize the one that provides the most definitive, comprehensive, and strongest conclusion, as indicated by precise quantifiers and scope.",
+        "Carefully evaluate each option against the problem statement, ensuring that the chosen conclusion is not only true but also the most specific and powerful statement among the given choices.",
+        "Prioritize options that offer the most precise or restrictive conditions, bounds, or asymptotic behaviors, as these represent the strongest statements.",
+        "Ensure the chosen statement is the 'strongest' by comparing the scope and precision of all valid options, not just by verifying individual conditions."
+      ],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2841238471673254,
+      "current_score": 0.2841238471673254,
+      "best_score": 0.2841238471673254
+    },
+    {
+      "step": 3,
+      "action": "reject",
+      "rollout_hard": 0.325,
+      "edit_budget": 4,
+      "added": [
+        "Distinguish between statements that provide lower bounds, upper bounds, or exact values, and select the one that offers the most restrictive or informative condition.",
+        "Consider whether an option's conclusion holds universally or under specific conditions, and whether it is independent of arbitrary choices or parameters, as these factors contribute to its strength."
+      ],
+      "removed": [],
+      "candidate_hard": 0.26666666666666666,
+      "candidate_gate_score": 0.2673202614379085,
+      "current_score": 0.2841238471673254,
+      "best_score": 0.2841238471673254
+    },
+    {
+      "step": 4,
+      "action": "accept_new_best",
+      "rollout_hard": 0.225,
+      "edit_budget": 4,
+      "added": [
+        "Evaluate options based on their precision, preferring statements with tighter bounds, more specific conditions, broader ranges of applicability, or more definitive existence/uniqueness claims.",
+        "Ensure the selected option is logically equivalent to the problem statement and represents the most powerful assertion among the valid choices, not merely a subset or weaker version."
+      ],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.28415300546448086,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 5,
+      "action": "reject",
+      "rollout_hard": 0.325,
+      "edit_budget": 4,
+      "added": [
+        "When multiple options appear correct, prioritize the one that provides the most definitive, comprehensive, and strongest conclusion. This involves evaluating options based on their precision, preferring statements with tighter bounds, more specific conditions, exact values or conditions over general ones, and broader ranges of applicability or more definitive existence/uniqueness claims.",
+        "Distinguish between statements that provide specific values or exact conditions versus those that provide general bounds or existence claims. The former are often stronger if proven and applicable."
+      ],
+      "removed": [],
+      "candidate_hard": 0.26666666666666666,
+      "candidate_gate_score": 0.26731770833333335,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 6,
+      "action": "reject",
+      "rollout_hard": 0.25,
+      "edit_budget": 4,
+      "added": [
+        "Ensure that the selected option precisely matches all stated conditions, including constraints on constants and their dependencies, and the exact nature of mappings and their domains/ranges."
+      ],
+      "removed": [],
+      "candidate_hard": 0.21666666666666667,
+      "candidate_gate_score": 0.217570281124498,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 7,
+      "action": "reject",
+      "rollout_hard": 0.275,
+      "edit_budget": 4,
+      "added": [
+        "When multiple options are correct, select the one that makes the most comprehensive, definitive, or strongest assertion, often by including conditions, properties, or scopes that are not present in weaker but still true options.",
+        "Evaluate the scope of sets or conditions mentioned (e.g., 'dense open set' vs. 'nonempty open set', specific values vs. ranges) to determine the strongest assertion."
+      ],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.28401826484018267,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 8,
+      "action": "reject",
+      "rollout_hard": 0.3,
+      "edit_budget": 1,
+      "added": [
+        "When multiple options are factually correct, rigorously compare their scope, precision, and quantifiers to identify the single strongest, most comprehensive, and powerful statement, encompassing others. Prioritize options that provide the most specific conditions, broadest applicability, or most definitive claims of existence or uniqueness, ensuring the selected option is not merely a true statement but the most powerful assertion among all valid choices, considering all conditions and implications."
+      ],
+      "removed": [],
+      "candidate_hard": 0.25,
+      "candidate_gate_score": 0.2506720430107527,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 8,
+      "action": "slow_update",
+      "applied": true,
+      "reasoning": "The previous epoch had no guidance. The current epoch's guidance, focused on 'strongest conclusion' and 'precision', seems to have been partially effective, as evidenced by the 2 improvements. However, the high number of persistent failures (13/20) and one regression indicates that the existing guidance is insufficient. The regression on task train[299] is particularly concerning, as the agent switched from a correct answer (A) to an incorrect one (B). The persistent failures suggest a systemic issue in understanding the nuances of mathematical statements, particularly in identifying the 'strongest' or most precise conclusion. The current guidance, while emphasizing precision, might be too general or not specific enough to guide the agent away from common pitfalls. The new guidance should focus on concrete strategies for comparing options, especially when multiple appear correct, and explicitly address the 'strongest conclusion' aspect by looking for tighter bounds, more specific conditions, or more definitive statements. It should also aim to prevent regressions by reinforcing correct reasoning patterns.",
+      "slow_update_content": "- When multiple options appear mathematically correct, always identify the one that provides the most specific, comprehensive, or strongest conclusion. This often involves comparing the scope of conditions, the precision of bounds, or the definitiveness of the statement.\n- Pay close attention to quantifiers ('for all', 'there exists'), inequalities ('<', '>', '\u2264', '\u2265'), and asymptotic behavior. The strongest conclusion will typically have the most restrictive or precise conditions and outcomes.\n- If a statement is a logical consequence of another, but weaker, it is not the strongest conclusion. For example, 'has non-empty interior' is weaker than 'contains a Euclidean ball of positive radius'.\n- When faced with a regression, re-evaluate the comparison of options. Ensure that the selected option is not just true, but demonstrably stronger than other true options based on the criteria of precision, scope, and definitiveness."
+    },
+    {
+      "step": 9,
+      "action": "reject",
+      "rollout_hard": 0.375,
+      "edit_budget": 4,
+      "added": [
+        "When comparing existence statements, prioritize those that assert the existence of infinitely many objects or properties, or that hold for all cases, over those that only assert the existence of a single object or property or hold for a subset of cases.",
+        "Prioritize statements that establish an 'if and only if' equivalence or a complete classification over those that state only a necessary condition or a partial result."
+      ],
+      "removed": [],
+      "candidate_hard": 0.26666666666666666,
+      "candidate_gate_score": 0.2677390527256479,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 10,
+      "action": "reject",
+      "rollout_hard": 0.35,
+      "edit_budget": 4,
+      "added": [
+        "When multiple options appear correct, actively seek the option that makes the most specific, precise, and powerful assertion, even if other options are also true. This often involves selecting statements with tighter bounds, more specific conditions, definitive claims about existence or uniqueness, or broader ranges of applicability.",
+        "Prioritize options that make definitive claims (e.g., existence, uniqueness, equivalence) over those that make weaker claims (e.g., 'at most one', 'if X then Y', 'may not hold')."
+      ],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.28398950131233597,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 11,
+      "action": "reject",
+      "rollout_hard": 0.275,
+      "edit_budget": 3,
+      "added": [
+        "Carefully distinguish between statements of necessity ('if') and sufficiency ('only if'), and evaluate claims of equivalence ('if and only if') by verifying both directions. Ensure the chosen option precisely matches the logical structure and scope of the conditions stated in the problem.",
+        "Distinguish between 'if and only if' statements (equivalences) and 'if...then...' statements (implications) when determining the strongest conclusion; implications are generally weaker unless they are the only true statement."
+      ],
+      "removed": [],
+      "candidate_hard": 0.26666666666666666,
+      "candidate_gate_score": 0.2679964539007092,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 12,
+      "action": "reject",
+      "rollout_hard": 0.275,
+      "edit_budget": 0,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.28415300546448086,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 13,
+      "action": "reject",
+      "rollout_hard": 0.275,
+      "edit_budget": 1,
+      "added": [
+        "When multiple options appear correct, prioritize the one that makes the strongest, most precise, and most comprehensive statement. This involves evaluating the scope of quantifiers (e.g., 'for all' vs. 'there exists'), the tightness of bounds, the specificity of conditions or constants (especially in asymptotic statements), and the overall completeness of the characterization, ensuring the selected option is not merely true but the most powerful assertion among all valid choices."
+      ],
+      "removed": [],
+      "candidate_hard": 0.23333333333333334,
+      "candidate_gate_score": 0.234,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 14,
+      "action": "reject",
+      "rollout_hard": 0.15,
+      "edit_budget": 1,
+      "added": [
+        "When multiple options appear correct, prioritize the one that makes the most specific, precise, and encompassing claim, considering all conditions, quantifiers, and the scope of its assertion. This includes favoring statements with tighter bounds, more specific conditions, broader ranges of applicability, or more definitive existence/uniqueness claims, and avoiding options qualified with weaker terms or that impose unstated conditions."
+      ],
+      "removed": [],
+      "candidate_hard": 0.26666666666666666,
+      "candidate_gate_score": 0.26735347985347985,
+      "current_score": 0.28415300546448086,
+      "best_score": 0.28415300546448086
+    },
+    {
+      "step": 15,
+      "action": "accept_new_best",
+      "rollout_hard": 0.25,
+      "edit_budget": 3,
+      "added": [
+        "When multiple options appear correct, rigorously compare their logical strength and scope. Prioritize options that make more definitive statements, cover broader conditions, or provide tighter bounds or more specific characterizations.",
+        "Evaluate the strength of a conclusion by considering the specificity of quantifiers (e.g., 'for all' vs. 'there exists', 'lim' vs. 'limsup'), the scope of variables or parameters involved, the precision of any associated constants or bounds, and the comprehensiveness of the assertion.",
+        "Distinguish between a statement that is true and a statement that is the strongest possible conclusion by examining the conditions under which it holds, the exact form of the conclusion itself, and whether it provides a constructive or quantitative bound."
+      ],
+      "removed": [
+        "Ensure the chosen statement is the 'strongest' by comparing the scope and precision of all valid options, not just by verifying individual conditions."
+      ],
+      "candidate_hard": 0.3,
+      "candidate_gate_score": 0.30050632911392405,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 16,
+      "action": "reject",
+      "rollout_hard": 0.3,
+      "edit_budget": 3,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 16,
+      "action": "slow_update",
+      "applied": true,
+      "reasoning": "The previous guidance focused on identifying the strongest conclusion among multiple correct options, emphasizing precision, scope, and definitiveness. This general principle seems to have been followed, as evidenced by the stable successes. However, the significant number of regressions and persistent failures indicates a systemic issue that the previous guidance did not adequately address. The regressions in tasks train[291] and train[296] suggest a potential over-correction or a misapplication of the 'strongest conclusion' rule, where a more specific but perhaps less generally applicable conclusion was chosen over a more broadly true but weaker one, or vice versa. The persistent failures across a wide range of tasks (14 out of 20) indicate that the agent is consistently failing to grasp the nuances of these complex mathematical statements. The previous guidance's emphasis on quantifiers and comparative terms is good, but it appears insufficient to prevent these failures. The new guidance needs to be more specific about how to compare options when multiple appear correct, particularly in cases where subtle differences in wording or scope can change the correctness or strength of a statement. It should also address the tendency to regress, suggesting a re-evaluation of the comparison process when a previously correct answer becomes incorrect.",
+      "slow_update_content": "- When multiple options appear mathematically correct, always identify the one that provides the most specific, comprehensive, or strongest conclusion. This often involves comparing the scope of conditions, the precision of bounds, or the definitiveness of the statement.\n- Pay close attention to quantifiers ('for all', 'there exists'), inequalities ('<', '>', '\u2264', '\u2265'), and asymptotic behavior. The strongest conclusion will typically have the most restrictive or precise conditions and outcomes.\n- If a statement is a logical consequence of another, but weaker, it is not the strongest conclusion. For example, 'has non-empty interior' is weaker than 'contains a Euclidean ball of positive radius'.\n- When faced with a regression, re-evaluate the comparison of options. Ensure that the selected option is not just true, but demonstrably stronger than other true options based on the criteria of precision, scope, and definitiveness.\n- For complex statements with multiple conditions and conclusions, break down each option into its constituent parts and compare them systematically against the problem statement and other options. Prioritize options that are universally true under the given conditions and offer the most precise or encompassing result."
+    },
+    {
+      "step": 17,
+      "action": "reject",
+      "rollout_hard": 0.4,
+      "edit_budget": 3,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 18,
+      "action": "reject",
+      "rollout_hard": 0.375,
+      "edit_budget": 3,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.3,
+      "candidate_gate_score": 0.30050632911392405,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 19,
+      "action": "reject",
+      "rollout_hard": 0.225,
+      "edit_budget": 1,
+      "added": [],
+      "removed": [
+        "When comparing statements involving quantifiers, prioritize those with a uniform existential quantifier ('there exists') over those where the existential quantifier is dependent on other variables ('there exists I=I(X,F)').",
+        "When comparing statements involving quantifiers, prioritize those with a more restricted scope for universal quantifiers (e.g., 'dimension <= 3') over those with a broader scope (e.g., 'dimension <= 4'), provided the core assertion remains valid."
+      ],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 20,
+      "action": "reject",
+      "rollout_hard": 0.325,
+      "edit_budget": 3,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.3,
+      "candidate_gate_score": 0.30050632911392405,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 21,
+      "action": "reject",
+      "rollout_hard": 0.225,
+      "edit_budget": 1,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.3,
+      "candidate_gate_score": 0.30050632911392405,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 22,
+      "action": "reject",
+      "rollout_hard": 0.275,
+      "edit_budget": 2,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 23,
+      "action": "reject",
+      "rollout_hard": 0.2,
+      "edit_budget": 1,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.3,
+      "candidate_gate_score": 0.30050632911392405,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 24,
+      "action": "reject",
+      "rollout_hard": 0.375,
+      "edit_budget": 2,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.30050632911392405,
+      "best_score": 0.30050632911392405
+    },
+    {
+      "step": 25,
+      "action": "accept_new_best",
+      "rollout_hard": 0.35,
+      "edit_budget": 2,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.31666666666666665,
+      "candidate_gate_score": 0.3171729957805907,
+      "current_score": 0.3171729957805907,
+      "best_score": 0.3171729957805907
+    },
+    {
+      "step": 26,
+      "action": "reject",
+      "rollout_hard": 0.25,
+      "edit_budget": 2,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.3171729957805907,
+      "best_score": 0.3171729957805907
+    },
+    {
+      "step": 27,
+      "action": "reject",
+      "rollout_hard": 0.3,
+      "edit_budget": 2,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.3171729957805907,
+      "best_score": 0.3171729957805907
+    },
+    {
+      "step": 28,
+      "action": "reject",
+      "rollout_hard": 0.325,
+      "edit_budget": 2,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.3171729957805907,
+      "best_score": 0.3171729957805907
+    },
+    {
+      "step": 29,
+      "action": "reject",
+      "rollout_hard": 0.175,
+      "edit_budget": 2,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.3171729957805907,
+      "best_score": 0.3171729957805907
+    },
+    {
+      "step": 30,
+      "action": "reject",
+      "rollout_hard": 0.3,
+      "edit_budget": 1,
+      "added": [
+        "When multiple options appear correct, rigorously compare their logical strength and scope. Prioritize options that make more definitive statements, cover broader conditions, or provide tighter bounds or more specific characterizations. Evaluate the strength of a conclusion by considering the specificity of quantifiers (e.g., 'for all' vs. 'there exists', 'lim' vs. 'limsup'), the scope of variables or parameters involved, the precision of any associated constants or bounds, and the comprehensiveness of the assertion. Distinguish between a statement that is true and a statement that is the strongest possible conclusion by examining the conditions under which it holds, the exact form of the conclusion itself, and whether it provides a constructive or quantitative bound. Ensure the selected option is logically equivalent to the problem statement and represents the most powerful assertion among the valid choices, not merely a subset or weaker version."
+      ],
+      "removed": [
+        "When presented with multiple valid statements, select the one that provides the most precise or strongest conclusion, often characterized by tighter bounds, more specific conditions, or more exact asymptotic behavior.",
+        "Evaluate options based on their precision and comprehensiveness, preferring statements that provide more detailed or complete information about the subject of the question.",
+        "Pay close attention to quantifiers and comparative terms such as 'strongest', 'exactly', 'at least', 'at most', 'bounded by', and 'converges to' when evaluating options.",
+        "Ensure the selected option is logically equivalent to the problem statement, verifying all conditions and quantifiers precisely.",
+        "When multiple options appear correct, prioritize the one that provides the most definitive, comprehensive, and strongest conclusion, as indicated by precise quantifiers and scope.",
+        "Carefully evaluate each option against the problem statement, ensuring that the chosen conclusion is not only true but also the most specific and powerful statement among the given choices.",
+        "Prioritize options that offer the most precise or restrictive conditions, bounds, or asymptotic behaviors, as these represent the strongest statements.",
+        "Evaluate options based on their precision, preferring statements with tighter bounds, more specific conditions, broader ranges of applicability, or more definitive existence/uniqueness claims.",
+        "Ensure the selected option is logically equivalent to the problem statement and represents the most powerful assertion among the valid choices, not merely a subset or weaker version.",
+        "When multiple options appear correct, rigorously compare their logical strength and scope. Prioritize options that make more definitive statements, cover broader conditions, or provide tighter bounds or more specific characterizations.",
+        "Evaluate the strength of a conclusion by considering the specificity of quantifiers (e.g., 'for all' vs. 'there exists', 'lim' vs. 'limsup'), the scope of variables or parameters involved, the precision of any associated constants or bounds, and the comprehensiveness of the assertion.",
+        "Distinguish between a statement that is true and a statement that is the strongest possible conclusion by examining the conditions under which it holds, the exact form of the conclusion itself, and whether it provides a constructive or quantitative bound."
+      ],
+      "candidate_hard": 0.26666666666666666,
+      "candidate_gate_score": 0.26715686274509803,
+      "current_score": 0.3171729957805907,
+      "best_score": 0.3171729957805907
+    },
+    {
+      "step": 31,
+      "action": "reject",
+      "rollout_hard": 0.275,
+      "edit_budget": 1,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.2833333333333333,
+      "candidate_gate_score": 0.2838396624472574,
+      "current_score": 0.3171729957805907,
+      "best_score": 0.3171729957805907
+    },
+    {
+      "step": 32,
+      "action": "reject",
+      "rollout_hard": 0.4,
+      "edit_budget": 2,
+      "added": [
+        "When multiple options appear correct, rigorously compare their logical strength and scope, prioritizing the statement that makes the most definitive, encompassing, or powerful assertion. This includes distinguishing between statements that describe possibilities ('can have') and statements that assert certainties ('is', 'must have').",
+        "When multiple valid conclusions are presented, select the one that provides the most precise, comprehensive, and strongest statement. This involves carefully evaluating quantifiers (e.g., 'for all' vs. 'there exists'), the specificity of conditions and bounds, the scope of applicability, and the exact form of the conclusion, prioritizing definitive and restrictive assertions over weaker or more general ones."
+      ],
+      "removed": [
+        "When presented with multiple valid statements, select the one that provides the most precise or strongest conclusion, often characterized by tighter bounds, more specific conditions, or more exact asymptotic behavior.",
+        "Evaluate options based on their precision and comprehensiveness, preferring statements that provide more detailed or complete information about the subject of the question.",
+        "Pay close attention to quantifiers and comparative terms such as 'strongest', 'exactly', 'at least', 'at most', 'bounded by', and 'converges to' when evaluating options.",
+        "Ensure the selected option is logically equivalent to the problem statement, verifying all conditions and quantifiers precisely.",
+        "When multiple options appear correct, prioritize the one that provides the most definitive, comprehensive, and strongest conclusion, as indicated by precise quantifiers and scope.",
+        "Carefully evaluate each option against the problem statement, ensuring that the chosen conclusion is not only true but also the most specific and powerful statement among the given choices.",
+        "Prioritize options that offer the most precise or restrictive conditions, bounds, or asymptotic behaviors, as these represent the strongest statements.",
+        "Evaluate options based on their precision, preferring statements with tighter bounds, more specific conditions, broader ranges of applicability, or more definitive existence/uniqueness claims.",
+        "Ensure the selected option is logically equivalent to the problem statement and represents the most powerful assertion among the valid choices, not merely a subset or weaker version.",
+        "When multiple options appear correct, rigorously compare their logical strength and scope. Prioritize options that make more definitive statements, cover broader conditions, or provide tighter bounds or more specific characterizations.",
+        "Evaluate the strength of a conclusion by considering the specificity of quantifiers (e.g., 'for all' vs. 'there exists', 'lim' vs. 'limsup'), the scope of variables or parameters involved, the precision of any associated constants or bounds, and the comprehensiveness of the assertion.",
+        "Distinguish between a statement that is true and a statement that is the strongest possible conclusion by examining the conditions under which it holds, the exact form of the conclusion itself, and whether it provides a constructive or quantitative bound."
+      ],
+      "candidate_hard": 0.26666666666666666,
+      "candidate_gate_score": 0.267280163599182,
+      "current_score": 0.3171729957805907,
+      "best_score": 0.3171729957805907
+    },
+    {
+      "step": 32,
+      "action": "slow_update",
+      "applied": true,
+      "reasoning": "The previous guidance focused on identifying the strongest conclusion among options, which is a good general strategy for this type of question. However, the high rate of persistent failures (15 out of 20 tasks) indicates that this general strategy is insufficient. The agent is consistently failing to identify the correct answer, suggesting a deeper misunderstanding of how to compare the 'strength' of mathematical statements, or a failure to correctly parse the complex mathematical conditions and conclusions presented in the options. The previous guidance did not offer specific heuristics for comparing these complex statements beyond the general principle of 'strongest conclusion'. The persistent failures in tasks like train[280], train[281], train[282], etc., all involve intricate mathematical statements where subtle differences in quantifiers, conditions, or scope determine the 'strongest' conclusion. The previous guidance's points about logical consequence and precision are relevant but not sufficiently actionable for these complex cases. The new guidance needs to provide more concrete methods for comparing the logical strength of mathematical assertions, especially when they involve inequalities, quantifiers, and specific mathematical objects or properties. It should also emphasize a systematic breakdown of options to avoid superficial comparisons.",
+      "slow_update_content": "- When comparing options, rigorously analyze the logical strength of each statement. Prioritize conclusions that are more specific, cover broader conditions, or provide tighter bounds or more definitive characterizations.\n- Break down complex statements into their constituent logical parts (conditions, quantifiers, conclusions) and compare them systematically against the problem statement and other options.\n- If one statement is a logical consequence of another but is weaker (e.g., 'has non-empty interior' vs. 'contains a Euclidean ball of positive radius'), it is not the strongest conclusion.\n- Pay extremely close attention to quantifiers (e.g., 'for all', 'there exists', 'for every'), inequalities ('<', '>', '\u2264', '\u2265'), and the scope of variables or parameters.\n- When faced with a persistent failure, re-evaluate the comparison of options. Ensure that the selected option is not just true, but demonstrably stronger than other true options based on the criteria of precision, scope, and definitiveness.\n- For statements involving specific mathematical objects or properties, ensure you understand the precise definitions and implications of each option's claim about these objects/properties."
+    },
+    {
+      "step": 32,
+      "action": "final_reconcile",
+      "chose": "best_only",
+      "best_only_score": 0.3171729957805907,
+      "combined_score": 0.2671948356807512
+    }
+  ]
+}

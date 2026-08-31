@@ -33,7 +33,7 @@ def main():
     config = load_config(args.env)
     exp = config["experiment"]
 
-    env_factory = get_environment(args.env)
+    env_factory = get_environment(config["environment"])
     env = env_factory(config, split="train")
 
     backend = build_backend(config, args.harness)

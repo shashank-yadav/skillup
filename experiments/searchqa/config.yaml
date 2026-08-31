@@ -1,0 +1,39 @@
+# SearchQA -- one of the six benchmarks SkillOpt (Microsoft) evaluated on.
+# Closed-book trivia QA via the generic environments/hf_dataset adapter -- no
+# new environment code, just this config. Note this is deliberately
+# closed-book (question text only, no retrieved context passage), unlike
+# SkillOpt's presumably open-book/search-augmented setup -- see README for why.
+environment: hf_dataset
+
+hf_dataset:
+  dataset_name: "lucadiliello/searchqa"
+  dataset_config: null
+  prompt_column: "question"
+  answer_column: "answers"           # list of acceptable strings per row
+  answer_match: "normalized"         # SearchQA answers use optional "(Word) Rest" parentheticals
+  split_map:
+    train: "train"                                                   # 117k rows
+    valid_seen: {hf_split: "validation", offset: 0, count: 8500}      # first half of the 17k-row validation split
+    valid_unseen: {hf_split: "validation", offset: 8500}              # disjoint second half
+
+experiment:
+  seed: 42
+  max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap
+  num_train_success: 40
+  num_train_fail: 40
+  max_train_episodes: 300
+  num_eval_tasks: 100
+  num_dev_tasks: 60
+  avo_dev_tasks_per_candidate: 40
+  trainer_rounds: 3
+
+paths:
+  training_trajectories: "data/training/trajectories.jsonl"
+  eval_baseline_trajectories: "data/evaluation/baseline_trajectories.jsonl"
+  eval_skill_trajectories: "data/evaluation/skill_trajectories.jsonl"
+  skill_dir: "skills"
+  skill_file: "skills/SKILL.md"
+  initial_skill_file: "skills/SKILL.initial.md"
+  trainer_rounds_log: "results/trainer_rounds.json"
+  results_summary: "results/summary.json"
+  results_table: "results/summary.txt"

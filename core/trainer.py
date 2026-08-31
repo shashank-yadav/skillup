@@ -22,7 +22,6 @@ class TrainerContext:
     current_skill: str
     trajectories: list[dict]
     rounds: int
-    env_name: str | None = None    # e.g. "alfworld" -- for dev-eval (gated/avo); None if the strategy needs none
     dev_split: str = "valid_seen"
     harness: str = "api"
     config: dict | None = None     # the full merged experiment config, needed to rebuild env+backend per worker process
@@ -74,20 +73,22 @@ def format_trajectory_group(trajectories: list[dict]) -> str:
     return "\n\n".join(format_trajectory(t, i) for i, t in enumerate(trajectories, 1))
 
 
-def _dev_eval_worker(offset: int, count: int, args: dict) -> list:
+def _rollout_worker(offset: int, count: int, args: dict) -> list:
     """Runs in its own process (see core.runner.run_parallel) -- a fresh
     process doesn't inherit the parent's already-registered plugins, so this
     re-imports what it needs and rebuilds the environment/backend fresh from
     picklable arguments, the same pattern evaluate_skill.py's shard worker
-    uses. This is what makes gated/avo's dev-eval rounds fast regardless of
-    which environment is configured -- nothing here is ALFWorld-specific."""
+    uses. This is what makes gated/avo's dev-eval rounds (and reflact's live
+    train rollouts) fast regardless of which environment is configured --
+    nothing here is ALFWorld-specific."""
     import environments  # noqa: F401 -- registers plugins in this process
     from core.agent import run_episode
     from core.backend import build_backend
     from core.environment import get as get_environment
 
     config = args["config"]
-    env = get_environment(args["env_name"])(config, split=args["dev_split"], offset=offset, count=count)
+    absolute_offset = args["base_offset"] + offset
+    env = get_environment(config["environment"])(config, split=args["split"], offset=absolute_offset, count=count)
     backend = build_backend(config, args["harness"])
     try:
         return [
@@ -98,16 +99,30 @@ def _dev_eval_worker(offset: int, count: int, args: dict) -> list:
         env.close()
 
 
+def run_rollout(
+    ctx: TrainerContext, split: str, skill_text: str, n_tasks: int, base_offset: int = 0,
+) -> tuple[float, list]:
+    """Run n_tasks fresh episodes on `split` under skill_text, starting at
+    `base_offset` within that split, parallelized across
+    ctx.max_parallel_workers processes, and return (success_rate, results).
+    Generic over which split -- `dev_eval` below is just this pinned to
+    ctx.dev_split with base_offset=0; `reflact` (SkillOpt-style) also calls
+    this directly against the "train" split to get on-policy rollouts under
+    the *current* skill each step, advancing base_offset each step so it
+    samples a fresh batch instead of the same first n_tasks every time."""
+    args = {
+        "config": ctx.config, "split": split, "base_offset": base_offset,
+        "harness": ctx.harness, "max_steps": ctx.max_steps, "skill_text": skill_text,
+    }
+    results = run_parallel(_rollout_worker, n_tasks, ctx.max_parallel_workers, args)
+    success_rate = sum(1 for r in results if r.success) / len(results) if results else 0.0
+    return success_rate, results
+
+
 def dev_eval(ctx: TrainerContext, skill_text: str, n_tasks: int) -> tuple[float, list]:
     """Run n_tasks fresh episodes under skill_text, parallelized across
     ctx.max_parallel_workers processes, and return (success_rate, results)."""
-    args = {
-        "config": ctx.config, "env_name": ctx.env_name, "dev_split": ctx.dev_split,
-        "harness": ctx.harness, "max_steps": ctx.max_steps, "skill_text": skill_text,
-    }
-    results = run_parallel(_dev_eval_worker, n_tasks, ctx.max_parallel_workers, args)
-    success_rate = sum(1 for r in results if r.success) / len(results) if results else 0.0
-    return success_rate, results
+    return run_rollout(ctx, ctx.dev_split, skill_text, n_tasks)
 
 
 def format_episode_failures(results: list) -> str:

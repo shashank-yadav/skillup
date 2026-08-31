@@ -2,13 +2,16 @@
 using one of several pluggable trainer strategies.
 
 Usage:
-    python train_skill.py --env alfworld [--strategy naive|gated|expel|avo|all] [--rounds N] [--harness api|cli]
+    python train_skill.py --env alfworld [--strategy naive|gated|expel|avo|reflact|all] [--rounds N] [--harness api|cli]
 
 All strategies start from the same pristine skills/SKILL.initial.md, so their
 outputs are directly comparable. "naive" writes skills/SKILL.md (the
-PLAN.md-standard path); "gated", "expel", and "avo" write sibling
+PLAN.md-standard path); "gated", "expel", "avo", and "reflact" write sibling
 SKILL.<strategy>.md files so multiple strategies can coexist and be compared
-by evaluate_skill.py in one run.
+by evaluate_skill.py in one run. "reflact" (a port of Microsoft SkillOpt's
+core algorithm) is not included in --strategy all -- it rolls out live
+training episodes every round instead of reusing collect_trajectories.py's
+output, so it costs meaningfully more per round; run it explicitly.
 
 `--harness` only affects gated/avo's held-out dev-eval rollouts (the actual
 training trajectories always come from collect_trajectories.py, which has
@@ -48,16 +51,16 @@ def build_context(
     exp = config["experiment"]
     current_skill = resolve_path(env, config["paths"]["initial_skill_file"]).read_text()
 
-    env_name = None
     dev_tasks = 0
     extra: dict = {}
     if strategy == "gated":
-        env_name = env
         dev_tasks = exp["num_dev_tasks"]
     elif strategy == "avo":
-        env_name = env
         dev_tasks = exp["avo_dev_tasks_per_candidate"]
         extra["population_size"] = exp.get("avo_population_size", 3)
+    elif strategy == "reflact":
+        dev_tasks = exp.get("reflact_dev_tasks", exp.get("num_dev_tasks", 20))
+        extra = dict(exp.get("reflact", {}))  # all keys optional -- trainers/reflact.py has its own defaults
 
     return TrainerContext(
         client=client,
@@ -67,7 +70,6 @@ def build_context(
         current_skill=current_skill,
         trajectories=trajectories,
         rounds=rounds,
-        env_name=env_name,
         dev_split="valid_seen",
         harness=harness,
         config=config,
@@ -81,7 +83,7 @@ def build_context(
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--env", required=True, help="Registered environment name, e.g. 'alfworld'.")
-    parser.add_argument("--strategy", default="naive", choices=["naive", "gated", "expel", "avo", "all"])
+    parser.add_argument("--strategy", default="naive", choices=["naive", "gated", "expel", "avo", "reflact", "all"])
     parser.add_argument("--rounds", type=int, default=None)
     parser.add_argument("--harness", default="api", choices=["api", "cli"],
                          help="Backend for gated/avo's dev-eval rollouts: direct API, or an external harness's CLI.")
@@ -90,18 +92,25 @@ def main():
     config = load_config(args.env)
     rounds = args.rounds or config["experiment"]["trainer_rounds"]
 
+    strategy_names = ["naive", "gated", "expel", "avo"] if args.strategy == "all" else [args.strategy]
+    # "reflact" ignores ctx.trajectories entirely -- its Rollout stage is on-policy,
+    # rolling out the "train" split live under the current skill each step, so it
+    # needs no pre-collected trajectories file at all.
+    needs_trajectories = any(s != "reflact" for s in strategy_names)
+
     trajectories_path = resolve_path(args.env, config["paths"]["training_trajectories"])
-    if not trajectories_path.exists():
+    trajectories: list[dict] = []
+    if trajectories_path.exists():
+        trajectories = load_trajectories(str(trajectories_path))
+        print(f"Loaded {len(trajectories)} training trajectories "
+              f"({sum(1 for t in trajectories if t['success'])} success, "
+              f"{sum(1 for t in trajectories if not t['success'])} failure)")
+    elif needs_trajectories:
         raise SystemExit(
             f"No training trajectories found at {trajectories_path}. Run collect_trajectories.py first."
         )
-    trajectories = load_trajectories(str(trajectories_path))
-    print(f"Loaded {len(trajectories)} training trajectories "
-          f"({sum(1 for t in trajectories if t['success'])} success, "
-          f"{sum(1 for t in trajectories if not t['success'])} failure)")
 
     client = ModelClient(config)
-    strategy_names = ["naive", "gated", "expel", "avo"] if args.strategy == "all" else [args.strategy]
 
     all_history = {}
     for strat in strategy_names:

@@ -5,4 +5,4 @@ To add a new training algorithm: create `trainers/<name>.py` implementing
 and calling `register("<name>", run)` at import time, then import it below.
 """
 
-from trainers import avo, expel, gated, naive  # noqa: F401
+from trainers import avo, expel, gated, naive, reflact  # noqa: F401

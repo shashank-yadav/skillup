@@ -8,14 +8,18 @@ research motivation and design.
 
 The framework is deliberately generic:
 
-- **Environments** are pluggable (`environments/`) -- ALFWorld ships as the
-  reference implementation, but the agent loop and trainers never import
-  anything environment-specific.
-- **Training algorithms** are pluggable (`trainers/`) -- four strategies ship
-  today (naive single-shot rewrite, a SkillOpt-style validation-gated
-  editor, an ExpeL-style incremental insight accumulator, and an AVO-style
-  population search with crossover and a real supervisor agent), each
-  independently swappable.
+- **Environments** are pluggable (`environments/`) -- ALFWorld (multi-turn
+  embodied tasks), SearchQA and LiveMathematicianBench (single-turn QA/MCQ,
+  via a generic Hugging Face dataset adapter and a dedicated plugin,
+  respectively) ship as reference implementations, but the agent loop and
+  trainers never import anything environment-specific.
+- **Training algorithms** are pluggable (`trainers/`) -- five strategies ship
+  today: naive single-shot rewrite, a SkillOpt-style validation-gated editor,
+  an ExpeL-style incremental insight accumulator, an AVO-style population
+  search with crossover and a real supervisor agent, and `reflact`, a fuller
+  port of Microsoft SkillOpt's actual training algorithm (on-policy rollout,
+  per-minibatch reflection, hierarchical aggregation, a cosine-scheduled edit
+  budget, and epoch-boundary slow-update) -- each independently swappable.
 - **Experiments** live under `experiments/<env>/` -- config, generated
   skills, trajectory data, and results for one environment, kept together
   and gitignored where it's regenerable.
@@ -172,7 +176,7 @@ environments/            one subpackage per environment; each self-registers
   alfworld/env.py           ALFWorld plugin (wraps its TextWorld backend)
 
 trainers/                 one module per training algorithm; each self-registers
-  naive.py / gated.py / expel.py / avo.py
+  naive.py / gated.py / expel.py / avo.py / reflact.py
   prompts/                  each strategy's LLM prompt template
 
 experiments/<env>/        one environment's config + generated artifacts

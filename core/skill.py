@@ -23,6 +23,14 @@ INSIGHTS_HEADING = "## Insights"
 MAX_INSIGHTS = 12
 SIMILARITY_THRESHOLD = 0.75
 
+# A protected, marker-delimited region some trainers (currently reflact) append
+# to the rendered skill for epoch-level guidance -- ordinary per-round insight
+# edits never target this text; only the trainer's own slow-update stage
+# overwrites it wholesale. Kept in core/skill.py since it's a generic
+# text-region convention any trainer could reuse, not reflact-specific.
+SLOW_UPDATE_START = "<!-- SLOW_UPDATE_START -->"
+SLOW_UPDATE_END = "<!-- SLOW_UPDATE_END -->"
+
 
 def load(path: str | Path) -> str:
     return Path(path).read_text()
@@ -74,16 +82,25 @@ def crossover(insights_a: list[str], insights_b: list[str]) -> list[str]:
     return merged
 
 
-def extract_insight_delta(raw_text: str) -> dict:
-    """Pull {"add": [...], "remove": [...]} out of a model response, tolerating a
-    stray code fence or surrounding prose despite the prompt asking for bare JSON."""
+def extract_json(raw_text: str) -> dict | None:
+    """Pull a bare JSON object out of a model response, tolerating a stray code
+    fence or surrounding prose despite the prompt asking for bare JSON. Returns
+    None if nothing parseable is found, so callers can apply their own fallback."""
     text = strip_code_fence(raw_text).strip()
     match = re.search(r"\{.*\}", text, re.DOTALL)
     if not match:
-        return {"add": [], "remove": []}
+        return None
     try:
-        data = json.loads(match.group(0))
+        return json.loads(match.group(0))
     except json.JSONDecodeError:
+        return None
+
+
+def extract_insight_delta(raw_text: str) -> dict:
+    """Pull {"add": [...], "remove": [...]} out of a model response (see
+    `extract_json`)."""
+    data = extract_json(raw_text)
+    if data is None:
         return {"add": [], "remove": []}
     return {
         "add": [str(x) for x in data.get("add", []) if isinstance(x, str) and x.strip()],
@@ -93,15 +110,10 @@ def extract_insight_delta(raw_text: str) -> dict:
 
 def extract_supervisor_directive(raw_text: str) -> dict | None:
     """Pull {"diagnosis": ..., "directive": ...} out of a supervisor agent's
-    response, tolerating a stray code fence or surrounding prose. Returns None
-    if the response can't be parsed, so the caller can fall back to a default."""
-    text = strip_code_fence(raw_text).strip()
-    match = re.search(r"\{.*\}", text, re.DOTALL)
-    if not match:
-        return None
-    try:
-        data = json.loads(match.group(0))
-    except json.JSONDecodeError:
+    response (see `extract_json`). Returns None if the response can't be
+    parsed, so the caller can fall back to a default."""
+    data = extract_json(raw_text)
+    if data is None:
         return None
     directive = data.get("directive")
     if not isinstance(directive, str) or not directive.strip():
@@ -111,6 +123,31 @@ def extract_supervisor_directive(raw_text: str) -> dict | None:
         "diagnosis": diagnosis.strip() if isinstance(diagnosis, str) and diagnosis.strip() else "(none given)",
         "directive": directive.strip(),
     }
+
+
+def extract_slow_update_field(skill_text: str) -> str:
+    """Read the protected slow-update region's content, or "" if absent."""
+    start = skill_text.find(SLOW_UPDATE_START)
+    end = skill_text.find(SLOW_UPDATE_END)
+    if start == -1 or end == -1:
+        return ""
+    return skill_text[start + len(SLOW_UPDATE_START):end].strip()
+
+
+def replace_slow_update_field(skill_text: str, new_content: str) -> str:
+    """Overwrite the protected slow-update region with `new_content`, appending
+    it if the skill doesn't have one yet. Guarantees exactly one region."""
+    while SLOW_UPDATE_START in skill_text:
+        start = skill_text.find(SLOW_UPDATE_START)
+        end = skill_text.find(SLOW_UPDATE_END, start)
+        if end == -1:
+            skill_text = skill_text[:start]
+            break
+        skill_text = skill_text[:start] + skill_text[end + len(SLOW_UPDATE_END):]
+    skill_text = skill_text.rstrip()
+    if not new_content.strip():
+        return skill_text + "\n"
+    return f"{skill_text}\n\n{SLOW_UPDATE_START}\n{new_content.strip()}\n{SLOW_UPDATE_END}\n"
 
 
 def apply_delta(insights: list[str], delta: dict) -> tuple[list[str], list[str]]:

@@ -6,9 +6,10 @@ description: Operate this repo (skill-rl) -- a framework for distilling agent tr
 # skill-rl
 
 Trains and evaluates portable `SKILL.md` files -- no model weight updates.
-Environments and training algorithms are both pluggable; ALFWorld and four
-strategies (naive/gated/expel/avo) ship as references. See `README.md` for
-full depth; this skill is the fast path for common operations.
+Environments and training algorithms are both pluggable; ALFWorld/SearchQA/
+LiveMathematicianBench and five strategies (naive/gated/expel/avo/reflact)
+ship as references. See `README.md` for full depth; this skill is the fast
+path for common operations.
 
 ## Setup (once)
 
@@ -30,7 +31,9 @@ python evaluate_skill.py --env alfworld                     # -> experiments/alf
 
 - `--strategy all` trains naive/gated/expel/avo in one pass so `evaluate_skill.py`
   compares all of them against baseline in the same run; `--strategy naive`
-  (etc.) trains just one.
+  (etc.) trains just one. `reflact` isn't in `all` -- it rolls out live training
+  episodes every step instead of reusing pre-collected trajectories, so it
+  costs meaningfully more; run it explicitly with `--strategy reflact`.
 - `evaluate_skill.py` runs every condition in parallel across
   `max_parallel_workers` (config.yaml) OS processes automatically -- no
   manual shard orchestration needed. Read `results/summary.txt` for the

@@ -1,0 +1,44 @@
+# LiveMathematicianBench -- one of the six benchmarks SkillOpt (Microsoft)
+# evaluated on: multiple-choice questions about theorems from recent arXiv
+# math papers (graduate/research-level). Uses a dedicated environment plugin
+# (environments/livemathbench/env.py), not the generic hf_dataset adapter --
+# the task needs real prompt assembly (question + lettered choices) and
+# letter-only grading, which is out of scope for a thin prompt/answer adapter.
+environment: livemathbench
+
+livemathbench:
+  dataset_name: "LiveMathematicianBench/LiveMathematicianBench"
+  # Single physical "train" split (608 rows total) carved into three disjoint
+  # logical splits -- same idea as hf_dataset's dict-form split_map.
+  split_ranges:
+    train: {offset: 0, count: 300}
+    valid_seen: {offset: 300, count: 150}
+    valid_unseen: {offset: 450}   # count omitted -> rest of the split (158 rows)
+
+experiment:
+  seed: 42
+  max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap
+  num_train_success: 30
+  num_train_fail: 30
+  max_train_episodes: 300
+  num_eval_tasks: 100
+  num_dev_tasks: 60
+  avo_dev_tasks_per_candidate: 40
+  trainer_rounds: 3
+  reflact:
+    # SkillOpt's own livemathematicianbench config leaves train_size=0 ("derive
+    # from dataset" -- use the whole train split); our train split here is 300
+    # rows, so that's the equivalent value for the same total-step-count math
+    # trainers/reflact.py uses (steps_per_epoch = ceil(train_size/batch_size)).
+    reflact_train_size: 300
+
+paths:
+  training_trajectories: "data/training/trajectories.jsonl"
+  eval_baseline_trajectories: "data/evaluation/baseline_trajectories.jsonl"
+  eval_skill_trajectories: "data/evaluation/skill_trajectories.jsonl"
+  skill_dir: "skills"
+  skill_file: "skills/SKILL.md"
+  initial_skill_file: "skills/SKILL.initial.md"
+  trainer_rounds_log: "results/trainer_rounds.json"
+  results_summary: "results/summary.json"
+  results_table: "results/summary.txt"
