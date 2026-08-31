@@ -30,6 +30,7 @@ from pathlib import Path
 from core.environment import register
 from core.llm import ModelClient
 from core.skill import extract_json
+from util import REPO_ROOT
 
 PROMPT_PATH = Path(__file__).parent.parent.parent / "prompts" / "judge_conversation_response.md"
 
@@ -53,6 +54,8 @@ class ConversationJudgeEnvironment:
             raise ValueError(f"Unknown split '{split}', expected one of {list(split_map)}")
 
         episodes_path = Path(cfg["episodes_path"])
+        if not episodes_path.is_absolute():
+            episodes_path = REPO_ROOT / episodes_path
         all_episodes = json.loads(episodes_path.read_text())
         base = split_map[split]
         base_offset, base_count = base.get("offset", 0), base.get("count")

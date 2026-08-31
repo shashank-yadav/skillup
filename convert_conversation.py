@@ -59,9 +59,13 @@ CONFIG_TEMPLATE = """\
 environment: conversation_judge
 
 conversation_judge:
-  # Absolute -- worker processes have no notion of "this experiment's
-  # directory" the way util.resolve_path(env, ...) does for path fields
-  # elsewhere, since the environment plugin only ever sees the merged config.
+  # Relative to the repo root (not this experiment's directory, unlike the
+  # `paths:` section below) -- worker processes have no notion of "this
+  # experiment's directory" the way util.resolve_path(env, ...) does for
+  # path fields elsewhere, since the environment plugin only ever sees the
+  # merged config. environments/conversation_judge/env.py resolves this
+  # against util.REPO_ROOT, computed fresh wherever the repo is checked out,
+  # so this stays portable across machines instead of baking in a path.
   episodes_path: "{episodes_path}"
   split_map:
     valid_seen: {{offset: 0, count: {n_valid_seen}}}
@@ -172,7 +176,7 @@ def main():
     num_eval_tasks = max(1, n_valid_unseen) if n_valid_unseen else 0
     config_path = exp_dir / "config.yaml"
     config_path.write_text(CONFIG_TEMPLATE.format(
-        episodes_path=str(dev_pool_path.resolve()),
+        episodes_path=str(dev_pool_path.relative_to(REPO_ROOT)),
         n_valid_seen=n_valid_seen, n_valid_unseen=n_valid_unseen,
         num_dev_tasks=num_dev_tasks, num_eval_tasks=num_eval_tasks,
     ))

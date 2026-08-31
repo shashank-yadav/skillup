@@ -146,6 +146,43 @@ negative result, not a bug. That is why the framework ships five
 interchangeable strategies: you can measure which one earns its complexity
 on your task in an afternoon, instead of guessing.
 
+**The conversation-distillation path was checked the same way, not just
+asserted.** Everything above trains against a structured benchmark; the
+other half of this repo (`convert_conversation.py`) distills a skill from
+real conversations instead. To check that path holds up on data it wasn't
+designed around, it was run end to end against 120 real multi-turn
+conversations from the public OpenAssistant/oasst2 dataset, standing in
+for "conversations you already had": segmented into 157 episodes, 47 held
+out, trained, then scored by an LLM judge (`environments/conversation_judge`)
+against 23 held-out conversations never used for training:
+
+| Strategy | Held-out success | vs. baseline |
+|---|---|---|
+| Baseline (no skill) | 30.4% | -- |
+| `avo` | 30.4% | +0.0pp |
+| `gated` | 39.1% | +8.7pp |
+| `expel` | 39.1% | +8.7pp |
+| `naive` | 47.8% | +17.4pp |
+
+Read `naive`'s number with more caution than the others. It roughly
+tripled average response length (811 vs. 258 tokens) with a long, generic
+best-practices document rather than lessons traceable to specific
+corrections in the source conversations -- plausibly winning partly by
+being more thorough, not by having learned something specific; this is
+the same full-document-rewrite tendency noted elsewhere in this README.
+`gated` and `expel`'s smaller gains came from single, targeted insights
+instead (`gated`'s: "when asked to provide specific numerical data,
+prioritize verifiable sources," traceable to a real disagreement in the
+source conversations about Wikipedia's reliability). `avo`'s population
+search reached 0.85 on its own 20-task dev pool during training but
+didn't transfer to the held-out set at all -- an overfitting result the
+small dev pool made easy to reach, and the held-out check is exactly what
+caught it. At n=23, one flipped task is 4.3 percentage points, so treat
+this as a directional result, not a precise measurement. But directional
+is what the question needed: yes, distilling a skill from real
+conversations measurably changes held-out performance, in the same
+direction validation exists to catch when it doesn't.
+
 This repo ships its own meta-skill (`.claude/skills/skillup/SKILL.md`). An
 agent that reads the Agent Skills convention (Claude Code, Codex, ...)
 already knows the commands below.
