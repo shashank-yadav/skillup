@@ -4,7 +4,7 @@
 ![Agent Skills compatible](https://img.shields.io/badge/Agent%20Skills-compatible-brightgreen)
 ![No weight updates](https://img.shields.io/badge/model%20weights-untouched-orange)
 
-**SkillUp teaches your AI agent a new skill every time you use it.**
+**SkillUp gives your AI agent dynamic skills that evolve with every use.**
 
 Every new session with an AI agent starts from zero. It does not remember
 yesterday's correction, last week's working pattern, or the mistake it
