@@ -409,11 +409,11 @@ ungated-accumulation design. Suited to "learn from this conversation, right
 now."
 
 `convert_conversation.py` is for when there are enough past conversations to
-warrant validation. `reflact`/`avo` don't apply here: their gate needs a
-live, re-runnable environment to roll fresh episodes out against, and a
-past conversation isn't re-runnable. What conversations look like
-structurally is a fixed, pre-collected batch of labeled episodes, exactly
-what `gated`/`expel` already consume. So this script segments each
+warrant validation. `reflact` doesn't apply here: it rolls out fresh
+episodes against the live train split every step, and a past conversation
+isn't re-runnable. What conversations look like structurally is a fixed,
+pre-collected batch of labeled episodes, exactly what `gated`/`expel`/`avo`
+already consume (validated -- see "Does it work?" above). So this script segments each
 transcript into episodes (one per attempt, split on corrections so a
 mistake-then-fix becomes a failure episode followed by a success episode,
 not one episode that's vacuously "successful" because it ended well),

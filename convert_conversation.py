@@ -1,19 +1,18 @@
 """Convert a corpus of past AI-agent conversations into a trainable dataset
-for this repo's existing `gated`/`expel` trainers -- so a real batch of
-conversations gets the same validation-gated skill-editing every other
+for this repo's existing `gated`/`expel`/`avo` trainers -- so a real batch
+of conversations gets the same validation-gated skill-editing every other
 environment here gets, not a one-off script.
 
-Why not `reflact`/`avo`: those need a *live, re-runnable* environment (they
-roll out fresh episodes under the candidate skill and validate against a
-held-out split of the SAME environment). A past conversation isn't
-re-runnable -- there's no way to roll out "the same conversation" again
-under a new skill. What conversations actually look like structurally is a
-FIXED, pre-collected batch of labeled episodes, which is exactly what
-`gated`/`expel` already consume (their `ctx.trajectories`, loaded once, never
-re-rolled-out). Validation still needs held-out data to gate against, so
-this also builds a dev/eval pool served by a real (LLM-as-judge) Environment
-plugin -- see environments/conversation_judge/env.py for why that's a
-legitimate Environment rather than a special case.
+Why not `reflact`: it rolls out fresh TRAIN-split episodes under the
+candidate skill every step, and a past conversation isn't re-runnable --
+there's no way to roll out "the same conversation" again under a new skill.
+What conversations actually look like structurally is a FIXED, pre-collected
+batch of labeled episodes, which is exactly what `gated`/`expel`/`avo`
+already consume (`ctx.trajectories`, loaded once, never re-rolled-out; their
+validation gate only needs a held-out DEV split, not fresh train rollouts).
+So this also builds a dev/eval pool served by a real (LLM-as-judge)
+Environment plugin -- see environments/conversation_judge/env.py for why
+that's a legitimate Environment rather than a special case.
 
 Usage:
     python convert_conversation.py --transcripts conv1.json conv2.json --name my-project
