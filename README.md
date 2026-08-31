@@ -1,66 +1,63 @@
 # skill-rl
 
-**A framework for turning an AI agent's experience into a portable, reusable skill — from a benchmark environment, or from your own real conversations.**
+**A framework for turning an AI agent's experience, from a benchmark environment or from your own conversations, into a portable, reusable skill.**
 
-Every time you open a new session with a coding agent, it starts from
-zero. It doesn't remember the correction you gave it yesterday, the
-pattern that worked well last week, or the mistake it keeps making on
-your codebase specifically. skill-rl closes that gap: it turns experience
-— either from structured training environments, or from conversations you
-actually had — into a `SKILL.md`, a small portable strategy document your
-agent loads back in, so it gets better at *your* workflow instead of
-staying frozen at day one, every day.
+Every new session with a coding agent starts from zero. It does not
+remember yesterday's correction, last week's working pattern, or the
+mistake it keeps making on your codebase. skill-rl turns that experience,
+from a training environment or from your own conversations, into a
+`SKILL.md`: a portable strategy document your agent loads on the next
+session so it improves at your workflow instead of resetting every time.
 
-**This is not a new agent, a new harness, or a new model.** It doesn't
-replace Claude Code, Codex, OpenCode, Cursor, or whatever you already use
-— it plugs into them. Skills produced here are plain `SKILL.md` files in
-the same Agent Skills convention those tools already read (`<skills-dir>/<name>/SKILL.md`);
-dropping one in is a file copy, not an integration.
+**This is not a new agent, harness, or model.** It does not replace Claude
+Code, Codex, OpenCode, Cursor, or whatever you use now; it plugs into them.
+Skills produced here are plain `SKILL.md` files in the same Agent Skills
+convention those tools already read (`<skills-dir>/<name>/SKILL.md`).
+Installing one is a file copy, not an integration.
 
 ## Two ways to build a skill
 
-The point either way: you don't have to depend on a skill someone else
-wrote and hope it fits. You generate your own, from your own data, and
-*validate* it — measure whether it actually helps before you trust it —
-rather than taking a hand-authored file on faith.
+Both paths remove the need to depend on a skill someone else wrote and
+hope it fits. You generate your own from your own data, and validate it:
+measure whether it helps before you trust it, instead of taking a
+hand-authored file on faith.
 
 **Train against a dataset or environment.** Point skill-rl at a coding
 benchmark, a QA dataset, an interactive simulator, or any Hugging Face
-dataset, and it runs a real training loop: roll out episodes, distill what
-worked and what didn't into candidate skill edits, validate each candidate
-against held-out tasks before keeping it, repeat. Five different training
-algorithms ship out of the box, from a simple single-shot distillation to a
-full reimplementation of Microsoft's published SkillOpt method, so you can
-see which one actually earns its keep on your task before committing to
-it — refine an existing skill or create a new one from scratch, entirely
-from data you control.
+dataset. It runs a training loop: roll out episodes, distill what worked
+and what didn't into candidate skill edits, validate each candidate
+against held-out tasks before keeping it, repeat. Five training algorithms
+ship out of the box, from a single-shot distillation to a full
+reimplementation of Microsoft's published SkillOpt method, so you can
+measure which one earns its keep on your task before committing to it.
+Refine an existing skill or create one from scratch, from data you
+control.
 
-**Distill from a real conversation.** The most direct path when there's no
-formal dataset: you had a session with your agent, corrected it a few
-times, and don't want to make those corrections again next week. Point
-`distill_conversation.py` at the transcript and it extracts the
-generalizable lessons — what went wrong and what you said to fix it, what
-worked and was approved — into a skill your agent picks up automatically
-next time. Callable mid-conversation, in any harness, via a skill of its
-own (`.claude/skills/distill-conversation/`): just tell your agent to
-"remember this" and it does the rest. Have many past conversations instead
-of one? `convert_conversation.py` builds a proper held-out split and runs
-them through the same validation-gated trainer the benchmark results below
-use, instead of a single unchecked pass.
+**Distill from a conversation.** For when there's no formal dataset: you
+had a session with your agent, corrected it a few times, and don't want to
+repeat those corrections next week. Point `distill_conversation.py` at the
+transcript. It extracts the generalizable lessons, what went wrong and
+what you said to fix it, what worked and was approved, into a skill your
+agent loads next time. Callable mid-conversation in any harness through a
+skill of its own (`.claude/skills/distill-conversation/`): tell your agent
+to "remember this" and it handles the rest. For many past conversations,
+`convert_conversation.py` builds a held-out split and runs them through the
+same validation-gated trainer the benchmark results below use, instead of
+one unchecked pass.
 
-Both paths produce the same thing: a plain markdown file, immediately
-usable, that makes the *same, frozen* model measurably better — no
-fine-tuning, no weight updates, nothing to deploy but a text file.
+Both paths produce the same output: a plain markdown file that makes the
+same, frozen model measurably better. No fine-tuning, no weight updates,
+nothing to deploy but a text file.
 
-## Does it actually work?
+## Does it work?
 
-Yes, on 3 of 4 benchmarks tested, with real held-out evaluation (never seen
-during training) and every condition run under identical model/prompt/step
-settings so the skill text is the only variable. And every one of these
-numbers was produced by a **small, cheap model** (`google/gemini-2.5-flash-lite`)
-— not a frontier model doing the heavy lifting. The point of a skill is to
-let a model you can afford to run at volume behave like it learned
-something, without touching its weights:
+On 3 of 4 benchmarks tested, yes, measured with held-out evaluation data
+never seen during training, every condition run under identical model,
+prompt, and step settings so the skill text is the only variable. Every
+number below came from a **small, cheap model**
+(`google/gemini-2.5-flash-lite`), not a frontier model. A skill lets a
+model you can afford to run at volume perform as if it learned something,
+without touching its weights:
 
 | Benchmark | Baseline (no skill) | Best result | Best strategy |
 |---|---|---|---|
@@ -69,32 +66,28 @@ something, without touching its weights:
 | MBPP (Python programming) | 39.0% | **51.0%** (+12.0pp) | SkillOpt-style |
 | LiveMathematicianBench (research-level math MCQ) | 29.0% | 31.0% (+2.0pp) | single-shot rewrite |
 
-This isn't a novel idea working only in a toy setting, either. `reflact`
-here is a faithful port of Microsoft's published SkillOpt method (see
-below), and their own reported numbers on the *same benchmarks* -- at
-frontier-model scale -- show the same underlying algorithm producing much
-larger gains: LiveMathematicianBench **37.6% → 66.9%** (+29.3pp) with
-GPT-5.5, and a related SkillOpt-Lite variant reporting **31.2% → 58.8%**
-(+27.6pp) on GPT-4o and **36.6% → 73.6%** (+37.0pp) on GPT-5.5. The
-underlying method is real, published, and independently shown to work; what
-this repo adds is a from-scratch, verified-faithful implementation of it
-(plus four other strategies) that you can point at your own environment,
-dataset, or conversations with a model you can actually afford to run.
+`reflact` is a faithful port of Microsoft's published SkillOpt method (see
+below). Their own reported numbers on the same benchmarks, at
+frontier-model scale, show the same algorithm producing larger gains:
+LiveMathematicianBench **37.6% -> 66.9%** (+29.3pp) with GPT-5.5, and a
+related SkillOpt-Lite variant reporting **31.2% -> 58.8%** (+27.6pp) on
+GPT-4o and **36.6% -> 73.6%** (+37.0pp) on GPT-5.5. This repo adds a
+verified implementation of that method, plus four other strategies, that
+you can point at your own environment, dataset, or conversations with a
+model you can afford to run.
 
-The honest finding underneath the first table: **no single training algorithm
-wins everywhere.** A dead-simple single-shot rewrite beat every more
-sophisticated method on two of the four benchmarks; a fuller,
-validation-gated pipeline modeled on published research won on a third;
-and on the hardest benchmark (graduate-level math, where every question is
-about a genuinely different theorem), almost nothing helped at all — a
-real, informative negative result, not a bug. That's not a weakness of the
-framework, it's the actual point of having five interchangeable
-strategies: you can find out empirically which one earns its complexity on
-*your* task, in an afternoon, instead of guessing.
+**No single training algorithm wins everywhere.** A single-shot rewrite
+beat every more sophisticated method on two of the four benchmarks. A
+validation-gated pipeline modeled on published research won a third. On
+the hardest benchmark (graduate-level math, where every question covers a
+different theorem), almost nothing helped: an informative negative result,
+not a bug. That is why the framework ships five interchangeable
+strategies: you can measure which one earns its complexity on your task in
+an afternoon, instead of guessing.
 
-This repo ships its own meta-skill (`.claude/skills/skill-rl/SKILL.md`) —
-if you're driving it from an agent that reads that convention (Claude Code,
-Codex, ...), it already knows the commands below.
+This repo ships its own meta-skill (`.claude/skills/skill-rl/SKILL.md`). An
+agent that reads the Agent Skills convention (Claude Code, Codex, ...)
+already knows the commands below.
 
 ## Quick start: train against a benchmark or dataset (ALFWorld)
 
@@ -110,7 +103,7 @@ pip install alfworld pyyaml requests
 
 > On Apple Silicon, plain `pip install alfworld` (no `[full]`/`[vis]` extras)
 > works natively. The `[full]` extra pulls in `visdom`, which fails to build
-> on modern setuptools -- and isn't needed, since this only uses the text
+> on modern setuptools, and isn't needed, since this only uses the text
 > environment.
 
 Download the ALFWorld game files (a few GB, cached under `~/.cache/alfworld`
@@ -168,8 +161,8 @@ python evaluate_skill.py --env alfworld --condition gated
 ## Quick start: distill a skill from a conversation you already had
 
 No environment, no setup beyond an API key. A transcript is a JSON list of
-`{"role", "content"}` turns (or just plain text) -- not tied to one
-harness's log format.
+`{"role", "content"}` turns (or plain text) -- not tied to one harness's
+log format.
 
 ```bash
 python3.11 -m venv .venv && source .venv/bin/activate
@@ -179,48 +172,47 @@ export OPENROUTER_API_KEY=sk-or-...
 python distill_conversation.py --transcript conv.json --target ~/.claude/skills --name my-project
 ```
 
-That's it — `~/.claude/skills/my-project/SKILL.md` now exists (or was
-extended, if it already did), and any Agent-Skills-aware harness picks it
-up on its next session. Got many past conversations, not just one, and want
-real validation rather than a single unchecked pass? See
-["Distilling a skill from a real conversation"](#distilling-a-skill-from-a-real-conversation-not-a-benchmark)
-below for `convert_conversation.py`, which builds a proper train/held-out
-split and runs it through the same validation-gated trainer the benchmark
+`~/.claude/skills/my-project/SKILL.md` now exists (or was extended, if it
+already did), and any Agent-Skills-aware harness picks it up on its next
+session. For many past conversations instead of one, and validation
+instead of a single unchecked pass, see
+["Distilling a skill from a conversation"](#distilling-a-skill-from-a-conversation-not-a-benchmark)
+below for `convert_conversation.py`, which builds a train/held-out split
+and runs it through the same validation-gated trainer the benchmark
 results above use.
 
-The framework itself is deliberately generic underneath this:
+The framework itself is generic underneath this:
 
 - **Environments** are pluggable (`environments/`) -- ALFWorld (multi-turn
   embodied tasks), SearchQA and LiveMathematicianBench (single-turn QA/MCQ,
   via a generic Hugging Face dataset adapter and a dedicated plugin,
-  respectively), and MBPP (Python programming, with real code-execution
+  respectively), and MBPP (Python programming, with code-execution
   grading) ship as reference implementations, but the agent loop and
   trainers never import anything environment-specific.
 - **Training algorithms** are pluggable (`trainers/`) -- five strategies ship
   today: naive single-shot rewrite, a SkillOpt-style validation-gated editor,
   an ExpeL-style incremental insight accumulator, an AVO-style population
-  search with crossover and a real supervisor agent, and `reflact`, a fuller
-  port of Microsoft SkillOpt's actual training algorithm (on-policy rollout,
+  search with crossover and a supervisor agent, and `reflact`, a fuller
+  port of Microsoft SkillOpt's training algorithm (on-policy rollout,
   per-minibatch reflection, hierarchical aggregation, a cosine-scheduled edit
   budget, and epoch-boundary slow-update) -- each independently swappable.
 - **Experiments** live under `experiments/<env>/` -- config, generated
   skills, trajectory data, and results for one environment, kept together
   and gitignored where it's regenerable.
 - **Parallel by default** -- `evaluate_skill.py` runs every condition across
-  many concurrent OS processes automatically; no more hand-launching shard
+  many concurrent OS processes automatically; no hand-launching shard
   commands.
 - **Trainable through your own harness, not just the API** -- `--harness cli`
   routes rollout through an external CLI tool (Claude Code, OpenCode, ...)
-  instead of a direct API call, so a skill reflects how that tool actually
-  behaves.
+  instead of a direct API call, so a skill reflects how that tool behaves.
 
 ## Training through your own harness instead of the API
 
 By default every episode's action-selection call goes straight to the model
 API (`core/backend.py`'s `ApiBackend`). Pass `--harness cli` to route it
-through an external harness's CLI instead -- so training trajectories (and
+through an external harness's CLI instead, so training trajectories (and
 therefore the skill later distilled from them) come from how a tool you
-already use actually behaves, not from a raw completion:
+already use behaves, not from a raw completion:
 
 ```bash
 python collect_trajectories.py --env alfworld --harness cli
@@ -247,11 +239,11 @@ plain chat completion for this purpose -- one clean action back per call,
 no tool-use noise, no leftover session state. The same pattern (a
 print-and-exit mode, a way to force a system prompt, a way to disable tool
 use) should carry over to any similar CLI-based harness; only the command
-template changes. Expect ~5-10x the latency of a direct API call, since each
-turn spins up a fresh session, and note that usage/token accounting is
-unavailable for most external CLIs (`total_tokens` stays 0 for episodes run
-this way) and that every call spends whatever account the harness itself is
-configured to use.
+template changes. Expect roughly 5-10x the latency of a direct API call,
+since each turn spins up a fresh session, and note that usage/token
+accounting is unavailable for most external CLIs (`total_tokens` stays 0
+for episodes run this way) and that every call spends whatever account the
+harness itself is configured to use.
 
 ## Using a trained skill in your own harness
 
@@ -268,55 +260,55 @@ python install_skill.py --env alfworld --strategy naive --target ./.claude/skill
 ```
 
 For a harness with no native skill-loading at all, the file still works --
-just paste its body into a system prompt or append it to your own
-instructions, the way `core.agent.build_system_prompt` does internally.
+paste its body into a system prompt or append it to your own instructions,
+the way `core.agent.build_system_prompt` does internally.
 
-## Distilling a skill from a real conversation, not a benchmark
+## Distilling a skill from a conversation, not a benchmark
 
 Everything in "Quick start: train against a benchmark or dataset" above
-trains against a structured environment. These two scripts instead turn a
-real AI-agent conversation -- corrections included -- into a skill, no
-environment required:
+trains against a structured environment. These two scripts instead turn an
+AI-agent conversation, corrections included, into a skill, no environment
+required:
 
 ```bash
 # One conversation, right now: extend/create a skill in place.
 python distill_conversation.py --transcript conv.json --target ~/.claude/skills --name my-project
 
-# A corpus of conversations: proper train/dev split + gated.py's validation gate.
+# A corpus of conversations: train/dev split + gated.py's validation gate.
 python convert_conversation.py --transcripts conv1.json conv2.json ... --name my-project
 python train_skill.py --env my-project --strategy gated
 python evaluate_skill.py --env my-project
 ```
 
-A transcript is a JSON list of `{"role", "content"}` turns (or just plain
-text) -- not tied to one harness's log format.
+A transcript is a JSON list of `{"role", "content"}` turns (or plain text)
+-- not tied to one harness's log format.
 
 `distill_conversation.py` is a single LLM call per conversation: find
 corrections and confirmed successes, propose a bounded add/remove insight
 edit, apply it directly -- no validation gate, matching `expel`'s
-ungated-accumulation design. Good for "learn from this conversation, right
+ungated-accumulation design. Suited to "learn from this conversation, right
 now."
 
 `convert_conversation.py` is for when there are enough past conversations to
-warrant real validation. `reflact`/`avo` don't apply here: their gate needs
-a *live, re-runnable* environment to roll fresh episodes out against, and a
-past conversation isn't re-runnable. What conversations actually look like
-structurally is a fixed, pre-collected batch of labeled episodes -- exactly
+warrant validation. `reflact`/`avo` don't apply here: their gate needs a
+live, re-runnable environment to roll fresh episodes out against, and a
+past conversation isn't re-runnable. What conversations look like
+structurally is a fixed, pre-collected batch of labeled episodes, exactly
 what `gated`/`expel` already consume. So this script segments each
 transcript into episodes (one per attempt, split on corrections so a
-mistake-then-fix becomes a real failure episode followed by a real success
-episode, not one episode that's vacuously "successful" because it ended
-well), holds some out, and points a generated `experiments/<name>/`
-at `environments/conversation_judge` for the held-out portion -- an
-`Environment` whose `step()` asks an LLM judge "does this new response,
-written under the candidate skill, avoid the mistake actually made last
-time (or still match what actually worked)?" instead of executing or
-matching anything. That's a judged proxy for re-running history, not a real
-re-run, but it's the closest honest substitute -- and because it's a normal
-`Environment` plugin, `gated`, `core.trainer.dev_eval`, and
-`evaluate_skill.py` all work against it completely unchanged.
+mistake-then-fix becomes a failure episode followed by a success episode,
+not one episode that's vacuously "successful" because it ended well),
+holds some out, and points a generated `experiments/<name>/` at
+`environments/conversation_judge` for the held-out portion -- an
+`Environment` whose `step()` asks an LLM judge whether a new response,
+written under the candidate skill, avoids the mistake made last time (or
+still matches what worked), instead of executing or matching anything.
+That's a judged proxy for re-running history, not a re-run, but the
+closest available substitute. Because it's a normal `Environment` plugin,
+`gated`, `core.trainer.dev_eval`, and `evaluate_skill.py` all work against
+it unchanged.
 
-To make this callable *from inside* a live conversation in any harness that
+To make this callable from inside a live conversation in any harness that
 reads the Agent Skills convention, see
 `.claude/skills/distill-conversation/SKILL.md` (also installed at
 `~/.claude/skills/distill-conversation/`) -- it tells an agent how to
@@ -352,7 +344,7 @@ experiments/<env>/        one environment's config + generated artifacts
 
 collect_trajectories.py, train_skill.py, evaluate_skill.py    entry points
 install_skill.py                                               drop a trained skill into any harness's skill dir
-distill_conversation.py, convert_conversation.py               build skills from real conversations instead
+distill_conversation.py, convert_conversation.py               build skills from conversations instead
 ```
 
 ## Adding a new environment
@@ -387,7 +379,7 @@ and import the module from `environments/__init__.py`. Then add
 
 `environments/hf_dataset/env.py` is a reference single-turn adapter for any
 Hugging Face dataset with a prompt column and a reference-answer column --
-point it at a dataset name + column names via config and it works with no
+point it at a dataset name and column names via config and it works with no
 new code (needs `pip install datasets`, kept optional since ALFWorld doesn't
 need it). A dataset needing custom grading or multi-turn interaction should
 still implement `Environment` directly, the way `environments/mbpp/env.py`
@@ -411,10 +403,11 @@ validate candidates against held-out tasks) `dev_tasks` and everything
 `core.trainer.dev_eval` needs to roll out fresh episodes. Reuse
 `core.skill`'s helpers (`parse_insights`/`render_insights`/`apply_delta`/...)
 if you want the same "preamble + flat insight list, edited via small
-structured deltas" representation the existing strategies use -- full-document
-rewrites were found to be fragile with cheap models (repetition collapse, or
-copying the prompt's own context back as if it were an edit); a bounded delta
-avoids that since merging happens in Python, not in the model.
+structured deltas" representation the existing strategies use --
+full-document rewrites were found fragile with cheap models (repetition
+collapse, or copying the prompt's own context back as if it were an edit);
+a bounded delta avoids that since merging happens in Python, not in the
+model.
 
 Register it (`core.trainer.register("yourname", run)`), import it from
 `trainers/__init__.py`, and it's immediately available via
@@ -425,35 +418,33 @@ Register it (`core.trainer.register("yourname", run)`), import it from
 `avo` tracks whether the population's best dev score has improved each
 generation. When it hasn't for `STAGNATION_PATIENCE` generations in a row,
 a separate supervisor LLM call (`trainers/prompts/avo_supervisor.md`) is
-made -- given every lineage's current insights and score, the shared
-knowledge base, and recent accept/reject history -- to diagnose *why* the
+made, given every lineage's current insights and score, the shared
+knowledge base, and recent accept/reject history, to diagnose why the
 population is stuck (converged lineages proposing redundant edits, the same
-kind of edit repeatedly rejected, edits too timid to escape a local optimum,
-...) and prescribe a directive for that generation's proposers, which
-replaces the normal bounded-edit instruction for every lineage until the
-population improves again. This is a real agentic call, not a fixed
-fallback string, so its intervention differs based on what's actually
-happening in the population; a fixed exploratory-edit instruction is used
-only if that call's response fails to parse.
+kind of edit repeatedly rejected, edits too timid to escape a local
+optimum, ...) and prescribe a directive for that generation's proposers,
+which replaces the normal bounded-edit instruction for every lineage until
+the population improves again. This is an agentic call, not a fixed
+fallback string, so its intervention differs based on what's happening in
+the population; a fixed exploratory-edit instruction is used only if that
+call's response fails to parse.
 
 ## reflact: a fuller port of Microsoft SkillOpt
 
 `reflact` (named after SkillOpt's own internal designation for its
-algorithm) replicates the real published method rather than a
-reinterpretation of it: on-policy rollout against the live "train" split
-every step (not a fixed pre-collected batch, unlike every other strategy
-here), one analyst call per minibatch of trajectories, hierarchical
-failure/success patch aggregation, a cosine-decaying edit budget (their
-published default), gate tracking against both a running "current" and a
-best-ever skill, and an epoch-boundary "slow update" mechanism with its own
-protected skill region. Hyperparameters default to SkillOpt's own published
-config (`batch_size=40`, `minibatch_size=merge_batch_size=8`,
-`edit_budget: 4 -> 2`), verified by running the actual upstream
-`microsoft/SkillOpt` repository against the same cheap model used
-throughout this README -- its gate rejected every step on SearchQA,
-identical in kind to what `reflact` does here, confirming the port
-faithfully reproduces the real algorithm's behavior rather than just its
-shape.
+algorithm) replicates the published method rather than a reinterpretation
+of it: on-policy rollout against the live "train" split every step (not a
+fixed pre-collected batch, unlike every other strategy here), one analyst
+call per minibatch of trajectories, hierarchical failure/success patch
+aggregation, a cosine-decaying edit budget (their published default), gate
+tracking against both a running "current" and a best-ever skill, and an
+epoch-boundary "slow update" mechanism with its own protected skill region.
+Hyperparameters default to SkillOpt's own published config (`batch_size=40`,
+`minibatch_size=merge_batch_size=8`, `edit_budget: 4 -> 2`), verified by
+running the upstream `microsoft/SkillOpt` repository against the same
+cheap model used throughout this README: its gate rejected every step on
+SearchQA, identical in kind to what `reflact` does here, confirming the
+port reproduces the algorithm's behavior and not just its shape.
 
 ## Parallelization
 
@@ -462,13 +453,13 @@ shape.
 concurrently, returning combined results in task order. This is
 process-based rather than thread-based on purpose: ALFWorld's PDDL backend
 (the `tatsu` grammar parser it uses to load and step through games) keeps
-shared, non-reentrant state and was found -- via an actual concurrency
-stress test, not a theoretical concern -- to corrupt and crash under
-multiple threads, even with just the game-loading step serialized behind a
-lock. Separate processes share no memory, so this doesn't apply to them. The
-LLM API call is still I/O-bound and the actual bottleneck, so this still
-gives real wall-clock speedup; each process's environment setup cost is paid
-concurrently across processes, not multiplied by the shard count.
+shared, non-reentrant state and was found, via a concurrency stress test,
+not a theoretical concern, to corrupt and crash under multiple threads,
+even with just the game-loading step serialized behind a lock. Separate
+processes share no memory, so this doesn't apply to them. The LLM API call
+is still I/O-bound and the actual bottleneck, so this still gives wall-clock
+speedup; each process's environment setup cost is paid concurrently across
+processes, not multiplied by the shard count.
 
 `evaluate_skill.py --condition <label> [--shard-index I --shard-count N]`
 exposes the same work as a single process/shard, for isolating a crash or
@@ -487,5 +478,5 @@ set of shard files into the combined report.
   for later inspection.
 - The environment's game-file ordering is sorted explicitly rather than
   relying on filesystem traversal order, which was found to differ across
-  concurrently-running processes -- this keeps every condition's task
+  concurrently-running processes; this keeps every condition's task
   sequence identical and reproducible regardless of run-to-run concurrency.
