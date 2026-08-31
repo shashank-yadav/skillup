@@ -1,13 +1,13 @@
 ---
-name: skill-rl
-description: Operate this repo (skill-rl) -- a framework for distilling agent trajectories into a portable SKILL.md and evaluating whether it measurably improves the same frozen model on unseen tasks. Use this skill when asked to train a skill for an environment, evaluate a trained skill, add a new environment or training algorithm to this repo, or install a trained skill into another harness (Claude Code, Codex, OpenCode, ...).
+name: skillup
+description: Operate this repo (SkillUp) -- a framework for distilling agent experience into a portable SKILL.md and evaluating whether it measurably improves the same frozen model on unseen tasks. Use this skill when asked to train a skill for an environment, evaluate a trained skill, add a new environment or training algorithm to this repo, or install a trained skill into another harness (Claude Code, Codex, OpenCode, ...).
 ---
 
-# skill-rl
+# SkillUp
 
 Trains and evaluates portable `SKILL.md` files -- no model weight updates.
 Environments and training algorithms are both pluggable; ALFWorld/SearchQA/
-LiveMathematicianBench and five strategies (naive/gated/expel/avo/reflact)
+LiveMathematicianBench/MBPP and five strategies (naive/gated/expel/avo/reflact)
 ship as references. See `README.md` for full depth; this skill is the fast
 path for common operations.
 
@@ -42,6 +42,25 @@ python evaluate_skill.py --env alfworld                     # -> experiments/alf
   sizes and the root `config.yaml` for model choice -- check those before
   assuming a knob doesn't exist.
 
+## Building a skill from a conversation instead of an environment
+
+No benchmark needed. For one conversation, extend or create a skill in place:
+
+```bash
+python distill_conversation.py --transcript conv.json --target ~/.claude/skills --name my-project
+```
+
+For a corpus of past conversations, with a real held-out validation gate:
+
+```bash
+python convert_conversation.py --transcripts conv1.json conv2.json ... --name my-project
+python train_skill.py --env my-project --strategy gated
+python evaluate_skill.py --env my-project
+```
+
+See `.claude/skills/distill-conversation/SKILL.md` for how to invoke the
+first one mid-conversation, in this repo or any other project.
+
 ## Installing a trained skill into another harness
 
 ```bash
@@ -59,7 +78,7 @@ install instead of a user-level one.
 Add `--harness cli` to `collect_trajectories.py` / `train_skill.py` /
 `evaluate_skill.py` to route every action-selection call through an
 external CLI tool (Claude Code, OpenCode, ...) instead of a direct API
-call, so the resulting skill reflects how that tool actually behaves. Needs
+call, so the resulting skill reflects how that tool behaves. Needs
 `harness.cli.command` set in `config.yaml` (a shell template with
 `{system_prompt}`/`{user_prompt}` placeholders) -- see `core/backend.py`
 and the "Training through your own harness" section of `README.md` for the

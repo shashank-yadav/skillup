@@ -8,7 +8,7 @@ description: Turn corrections and confirmed successes from THIS conversation int
 This conversation itself is training data. When the user corrected you, that
 correction implies a generalizable lesson; when something you did was
 approved or just worked, that's a pattern worth reinforcing. This skill
-turns that into an updated `SKILL.md` using skill-rl's
+turns that into an updated `SKILL.md` using SkillUp's
 `distill_conversation.py` -- the same structured add/remove insight-editing
 every trainer in that repo uses, just applied to a conversation transcript
 instead of RL episodes.
@@ -39,7 +39,7 @@ it mid-conversation, distill what's happened *so far*.
    `/tmp`). Plain text works too if JSON is inconvenient -- the script
    accepts either.
 
-2. **Run the distiller** (adjust the skill-rl path to wherever it's actually
+2. **Run the distiller** (adjust the path to wherever it's actually
    installed; `--target`/`--name` follow the same `<target>/<name>/SKILL.md`
    layout Claude Code, Codex, OpenCode, and `~/.agents/skills` all read):
 
@@ -66,7 +66,7 @@ it mid-conversation, distill what's happened *so far*.
 ## Why this representation
 
 Insights are added/removed as short, generalizable bullets -- not a full
-rewrite of the skill file. Full-document rewrites were found (in skill-rl's
+rewrite of the skill file. Full-document rewrites were found (in SkillUp's
 own experiments) to be fragile with cheap models; a bounded structured edit
 is more reliable and keeps a clean history of what was learned and why.
 Each proposed insight is checked against what's already there, so repeated

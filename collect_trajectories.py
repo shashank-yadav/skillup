@@ -10,7 +10,7 @@ harness's CLI (see core/backend.py and `harness.cli.command` in
 config.yaml) instead of a direct API call -- so the training trajectories
 this produces, and therefore the skill later distilled from them, come from
 whatever tool a person actually uses (Claude Code, OpenCode, ...), not just
-skill-rl's own loop.
+SkillUp's own loop.
 """
 
 import argparse

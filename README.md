@@ -1,19 +1,59 @@
-# skill-rl
+# SkillUp
 
-**A framework for turning an AI agent's experience, from a benchmark environment or from your own conversations, into a portable, reusable skill.**
+![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)
+![Agent Skills compatible](https://img.shields.io/badge/Agent%20Skills-compatible-brightgreen)
+![No weight updates](https://img.shields.io/badge/model%20weights-untouched-orange)
 
-Every new session with a coding agent starts from zero. It does not
-remember yesterday's correction, last week's working pattern, or the
-mistake it keeps making on your codebase. skill-rl turns that experience,
-from a training environment or from your own conversations, into a
-`SKILL.md`: a portable strategy document your agent loads on the next
-session so it improves at your workflow instead of resetting every time.
+**SkillUp teaches your AI agent a new skill every time you use it.**
+
+Every new session with an AI agent starts from zero. It does not remember
+yesterday's correction, last week's working pattern, or the mistake it
+keeps making on your task. SkillUp turns that experience, from a training
+environment or from your own conversations, into a `SKILL.md`: a portable
+strategy document your agent loads on the next session so it improves at
+your work instead of resetting every time. Coding is one use case among
+many; anything an agent does repeatedly (research, support, data work,
+whatever your harness handles) works the same way.
 
 **This is not a new agent, harness, or model.** It does not replace Claude
 Code, Codex, OpenCode, Cursor, or whatever you use now; it plugs into them.
 Skills produced here are plain `SKILL.md` files in the same Agent Skills
 convention those tools already read (`<skills-dir>/<name>/SKILL.md`).
 Installing one is a file copy, not an integration.
+
+## Use it through your AI agent
+
+The commands in this README are meant to be run by your agent, not typed by
+you. This repo ships two meta-skills so an agent that reads the Agent
+Skills convention already knows what to do: `skillup` (train and evaluate
+skills against an environment or dataset) and `distill-conversation`
+(build a skill from a conversation, callable mid-conversation). Make them
+visible to your harness once, then just ask.
+
+```bash
+# Claude Code, current project: nothing to do, already read from .claude/skills/
+# Claude Code, every project:
+cp -r .claude/skills/skillup ~/.claude/skills/skillup
+cp -r .claude/skills/distill-conversation ~/.claude/skills/distill-conversation
+
+# Codex
+cp -r .claude/skills/skillup ~/.codex/skills/skillup
+cp -r .claude/skills/distill-conversation ~/.codex/skills/distill-conversation
+
+# OpenCode, Cursor, or any harness reading the shared convention
+cp -r .claude/skills/skillup ~/.agents/skills/skillup
+cp -r .claude/skills/distill-conversation ~/.agents/skills/distill-conversation
+```
+
+Then tell it what you want, in plain language:
+
+- "Train a skill for MBPP and evaluate it."
+- "Distill a skill from this conversation and save it as backend-service."
+- "Add a new environment for `<your dataset>` and train `gated` on it."
+
+Your agent runs the underlying `python train_skill.py ...` calls itself;
+the rest of this README is what it's executing, in case you want to run a
+step by hand or understand what's happening.
 
 ## Two ways to build a skill
 
@@ -22,7 +62,7 @@ hope it fits. You generate your own from your own data, and validate it:
 measure whether it helps before you trust it, instead of taking a
 hand-authored file on faith.
 
-**Train against a dataset or environment.** Point skill-rl at a coding
+**Train against a dataset or environment.** Point SkillUp at a coding
 benchmark, a QA dataset, an interactive simulator, or any Hugging Face
 dataset. It runs a training loop: roll out episodes, distill what worked
 and what didn't into candidate skill edits, validate each candidate
@@ -61,10 +101,10 @@ without touching its weights:
 
 | Benchmark | Baseline (no skill) | Best result | Best strategy |
 |---|---|---|---|
-| ALFWorld (embodied household tasks) | 17.2% | **27.6%** (+10.4pp) | ExpeL-style |
-| SearchQA (trivia QA) | 50.0% | **74.0%** (+24.0pp) | single-shot rewrite |
-| MBPP (Python programming) | 39.0% | **51.0%** (+12.0pp) | SkillOpt-style |
-| LiveMathematicianBench (research-level math MCQ) | 29.0% | 31.0% (+2.0pp) | single-shot rewrite |
+| ALFWorld (embodied household tasks) | 17.2% | **27.6%** (+10.4pp) | `expel` |
+| SearchQA (trivia QA) | 50.0% | **74.0%** (+24.0pp) | `naive` |
+| MBPP (Python programming) | 39.0% | **51.0%** (+12.0pp) | `reflact` |
+| LiveMathematicianBench (research-level math MCQ) | 29.0% | 31.0% (+2.0pp) | `naive` |
 
 `reflact` is a faithful port of Microsoft's published SkillOpt method (see
 below). Their own reported numbers on the same benchmarks, at
@@ -76,77 +116,64 @@ verified implementation of that method, plus four other strategies, that
 you can point at your own environment, dataset, or conversations with a
 model you can afford to run.
 
-**No single training algorithm wins everywhere.** A single-shot rewrite
-beat every more sophisticated method on two of the four benchmarks. A
-validation-gated pipeline modeled on published research won a third. On
-the hardest benchmark (graduate-level math, where every question covers a
-different theorem), almost nothing helped: an informative negative result,
-not a bug. That is why the framework ships five interchangeable
-strategies: you can measure which one earns its complexity on your task in
-an afternoon, instead of guessing.
+**No single training algorithm wins everywhere.** `naive`, the simplest
+strategy here, beat every more sophisticated method on two of the four
+benchmarks. `reflact`, the fullest port of published research, won a
+third. On the hardest benchmark (graduate-level math, where every question
+covers a different theorem), almost nothing helped: an informative
+negative result, not a bug. That is why the framework ships five
+interchangeable strategies: you can measure which one earns its complexity
+on your task in an afternoon, instead of guessing.
 
-This repo ships its own meta-skill (`.claude/skills/skill-rl/SKILL.md`). An
+This repo ships its own meta-skill (`.claude/skills/skillup/SKILL.md`). An
 agent that reads the Agent Skills convention (Claude Code, Codex, ...)
 already knows the commands below.
 
-## Quick start: train against a benchmark or dataset (ALFWorld)
+## Quick start: train against a benchmark or dataset (MBPP)
 
-Requires Python 3.9-3.11 (ALFWorld's TextWorld dependency doesn't support
-newer Pythons).
-
-```bash
-python3.11 -m venv .venv
-source .venv/bin/activate
-pip install "setuptools<81" wheel   # alfworld's legacy build needs pkg_resources
-pip install alfworld pyyaml requests
-```
-
-> On Apple Silicon, plain `pip install alfworld` (no `[full]`/`[vis]` extras)
-> works natively. The `[full]` extra pulls in `visdom`, which fails to build
-> on modern setuptools, and isn't needed, since this only uses the text
-> environment.
-
-Download the ALFWorld game files (a few GB, cached under `~/.cache/alfworld`
-by default):
+MBPP (Python programming problems) needs nothing beyond an API key and the
+`datasets` library, so it's the fastest way to see the whole pipeline run:
 
 ```bash
-export ALFWORLD_DATA="$HOME/.cache/alfworld"
-alfworld-download
-```
-
-Set an OpenRouter API key (used for both the agent and the trainer):
-
-```bash
+python3.11 -m venv .venv && source .venv/bin/activate
+pip install datasets pyyaml requests
 export OPENROUTER_API_KEY=sk-or-...
 ```
 
-Model choice lives in [config.yaml](config.yaml); everything ALFWorld-specific
+Model choice lives in [config.yaml](config.yaml); everything MBPP-specific
 (task counts, split sizes, per-strategy knobs) lives in
-[experiments/alfworld/config.yaml](experiments/alfworld/config.yaml).
+[experiments/mbpp/config.yaml](experiments/mbpp/config.yaml). Every
+environment in `environments/` works the same way; swap `--env mbpp` for
+`--env searchqa`, `--env livemathbench`, or `--env alfworld` below once
+you're past the first run. ALFWorld (embodied, multi-turn household tasks)
+needs more setup than the others: Python 3.9-3.11 specifically and a
+one-time multi-gigabyte game-file download; see
+[experiments/alfworld/config.yaml](experiments/alfworld/config.yaml) if you
+want it.
 
 ## Usage
 
 ```bash
 # 1. Generate training trajectories by running the skill-less agent against
 #    the "train" split until the configured success/failure quotas fill.
-python collect_trajectories.py --env alfworld
+python collect_trajectories.py --env mbpp
 
 # 2. Distill those trajectories into an updated skill. --strategy all trains
 #    every registered strategy so they can be compared in one eval pass.
-python train_skill.py --env alfworld --strategy all
+python train_skill.py --env mbpp --strategy all
 
 # 3. Evaluate on held-out tasks, once without a skill and once per trained
 #    variant, using identical model/prompt/settings. Runs every condition
 #    across many concurrent processes automatically.
-python evaluate_skill.py --env alfworld
+python evaluate_skill.py --env mbpp
 
-# 4. Drop a trained skill into whatever coding-agent harness you already
-#    use -- see "Using a trained skill in your own harness" below.
-python install_skill.py --env alfworld --strategy naive --target ~/.claude/skills
+# 4. Drop a trained skill into whatever harness you already use -- see
+#    "Using a trained skill in your own harness" below.
+python install_skill.py --env mbpp --strategy naive --target ~/.claude/skills
 ```
 
 `evaluate_skill.py` prints a success-rate comparison table and writes, under
-`experiments/alfworld/`:
+`experiments/mbpp/`:
 
 - `data/evaluation/baseline_trajectories.jsonl` / `skill_trajectories_<strategy>.jsonl`
 - `results/summary.json` (per-task detail) and `results/summary.txt` (the printed table)
@@ -154,8 +181,8 @@ python install_skill.py --env alfworld --strategy naive --target ~/.claude/skill
 Run a single strategy or condition directly when iterating:
 
 ```bash
-python train_skill.py --env alfworld --strategy gated
-python evaluate_skill.py --env alfworld --condition gated
+python train_skill.py --env mbpp --strategy gated
+python evaluate_skill.py --env mbpp --condition gated
 ```
 
 ## Quick start: distill a skill from a conversation you already had
@@ -190,12 +217,13 @@ The framework itself is generic underneath this:
   grading) ship as reference implementations, but the agent loop and
   trainers never import anything environment-specific.
 - **Training algorithms** are pluggable (`trainers/`) -- five strategies ship
-  today: naive single-shot rewrite, a SkillOpt-style validation-gated editor,
-  an ExpeL-style incremental insight accumulator, an AVO-style population
-  search with crossover and a supervisor agent, and `reflact`, a fuller
-  port of Microsoft SkillOpt's training algorithm (on-policy rollout,
-  per-minibatch reflection, hierarchical aggregation, a cosine-scheduled edit
-  budget, and epoch-boundary slow-update) -- each independently swappable.
+  today: `naive` (single-shot rewrite), `gated` (SkillOpt-style
+  validation-gated editor), `expel` (ExpeL-style incremental insight
+  accumulator), `avo` (AVO-style population search with crossover and a
+  supervisor agent), and `reflact` (a fuller port of Microsoft SkillOpt's
+  own training algorithm: on-policy rollout, per-minibatch reflection,
+  hierarchical aggregation, a cosine-scheduled edit budget, and
+  epoch-boundary slow-update) -- each independently swappable.
 - **Experiments** live under `experiments/<env>/` -- config, generated
   skills, trajectory data, and results for one environment, kept together
   and gitignored where it's regenerable.
@@ -215,9 +243,9 @@ therefore the skill later distilled from them) come from how a tool you
 already use behaves, not from a raw completion:
 
 ```bash
-python collect_trajectories.py --env alfworld --harness cli
-python train_skill.py --env alfworld --strategy gated --harness cli   # affects gated/avo's dev-eval rollouts
-python evaluate_skill.py --env alfworld --harness cli
+python collect_trajectories.py --env mbpp --harness cli
+python train_skill.py --env mbpp --strategy gated --harness cli   # affects gated/avo's dev-eval rollouts
+python evaluate_skill.py --env mbpp --harness cli
 ```
 
 This needs `harness.cli.command` set in `config.yaml` -- a shell command
@@ -254,9 +282,9 @@ all already read, each as one `<skills-dir>/<name>/SKILL.md`. There's no
 conversion step:
 
 ```bash
-python install_skill.py --env alfworld --strategy naive --target ~/.claude/skills
-python install_skill.py --env alfworld --strategy gated --target ~/.codex/skills --name alfworld-gated
-python install_skill.py --env alfworld --strategy naive --target ./.claude/skills   # project-level
+python install_skill.py --env mbpp --strategy naive --target ~/.claude/skills
+python install_skill.py --env mbpp --strategy gated --target ~/.codex/skills --name mbpp-gated
+python install_skill.py --env mbpp --strategy naive --target ./.claude/skills   # project-level
 ```
 
 For a harness with no native skill-loading at all, the file still works --

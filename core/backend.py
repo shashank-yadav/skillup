@@ -4,7 +4,7 @@ an action -- swapping the backend lets rollout (and therefore training,
 since training trajectories come from rollout) run through a direct API
 call, or through an external harness someone already has installed (Claude
 Code, OpenCode, ...), so a skill can be learned from whatever tool a person
-actually uses day to day, not just skill-rl's own loop.
+actually uses day to day, not just SkillUp's own loop.
 """
 
 import shlex
