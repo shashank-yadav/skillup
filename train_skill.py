@@ -6,7 +6,7 @@ Usage:
 
 All strategies start from the same pristine skills/SKILL.initial.md, so their
 outputs are directly comparable. "naive" writes skills/SKILL.md (the
-PLAN.md-standard path); "gated", "expel", "avo", and "reflact" write sibling
+canonical path); "gated", "expel", "avo", and "reflact" write sibling
 SKILL.<strategy>.md files so multiple strategies can coexist and be compared
 by evaluate_skill.py in one run. "reflact" (a port of Microsoft SkillOpt's
 core algorithm) is not included in --strategy all -- it rolls out live

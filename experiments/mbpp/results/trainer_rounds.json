@@ -1,0 +1,679 @@
+{
+  "reflact": [
+    {
+      "step": 0,
+      "action": "baseline",
+      "rollout_hard": 0.43333333333333335,
+      "gate_score": 0.4344202898550725
+    },
+    {
+      "step": 1,
+      "action": "accept_new_best",
+      "rollout_hard": 0.575,
+      "edit_budget": 3,
+      "added": [
+        "Ensure the generated code is complete and syntactically correct, including all necessary control flow and logic to fully solve the problem, and that the function definition includes a return statement that produces the expected output for the given task.",
+        "Handle cases where the target pattern (e.g., parentheses) may not be present in the string.",
+        "The agent can translate natural language descriptions of programming tasks into functional Python code, effectively utilizing built-in Python functions, standard libraries, and methods for efficient and concise solutions. This includes implementing functions that process collections (lists, strings) by applying filtering, transformation, or aggregation based on specified conditions, performing string manipulation, and developing functions that involve mathematical operations on elements of a collection. The agent can handle various data types and structures, including strings, lists, and tuples, as input and output for its functions."
+      ],
+      "removed": [
+        "When processing a list of strings, iterate through each string to apply the transformation.",
+        "Ensure the function's return type matches the expected output format based on the tests."
+      ],
+      "candidate_hard": 0.4666666666666667,
+      "candidate_gate_score": 0.4672131147540984,
+      "current_score": 0.4672131147540984,
+      "best_score": 0.4672131147540984
+    },
+    {
+      "step": 2,
+      "action": "reject",
+      "rollout_hard": 0.65,
+      "edit_budget": 4,
+      "added": [
+        "The agent can implement specific algorithmic patterns, including mathematical sequence generation, string pattern matching using regular expressions, array manipulation (e.g., reversing subarrays, swapping elements), checking for subset relationships between collections, and accessing dictionary keys by index by converting them to a list.",
+        "The agent can implement functions that perform specific data transformations and calculations on collections, including string manipulation (e.g., counting characters, removing duplicates or spaces, filtering alphanumeric characters), list processing (e.g., converting elements to a single integer, summing powers of numbers, calculating perimeters, shifting elements, finding duplicates), and numerical operations (e.g., finding the maximum of numbers, conditional arithmetic, grouping or structuring data based on keys or conditions, sorting lists within dictionaries, determining relationships or boundaries between numerical ranges).",
+        "The agent can implement functions that check for sequential properties within a list of numbers, such as an increasing trend, by iterating through the list and comparing adjacent elements.",
+        "The agent can effectively use the `re` module for pattern matching and string manipulation tasks."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4166666666666667,
+      "candidate_gate_score": 0.41695238095238096,
+      "current_score": 0.4672131147540984,
+      "best_score": 0.4672131147540984
+    },
+    {
+      "step": 3,
+      "action": "accept_new_best",
+      "rollout_hard": 0.625,
+      "edit_budget": 2,
+      "added": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements.",
+        "The agent can translate natural language descriptions of programming tasks into functional Python code, effectively utilizing built-in Python functions, standard libraries (e.g., `collections`, `re`), and methods for efficient and concise solutions. This includes implementing functions that process collections (lists, strings, tuples) by applying filtering, transformation, or aggregation based on specified conditions, performing string manipulation, developing functions that involve mathematical operations on elements of a collection, performing type conversions between strings, lists, and tuples (including parsing string representations), extracting specific elements from sequences using positional indexing or slicing, applying logical conditions to collections (e.g., checking if all elements satisfy a predicate), leveraging specialized data structures (e.g., sets) and their properties for efficient problem-solving, performing element-wise comparisons or aggregations between corresponding elements of multiple sequences, implementing functions that sort collections based on custom criteria, and checking for the presence of elements within a collection or a specific range, handling various data types."
+      ],
+      "removed": [
+        "Ensure the generated code is complete and syntactically correct, including all necessary control flow and logic to fully solve the problem, and that the function definition includes a return statement that produces the expected output for the given task.",
+        "Handle cases where the target pattern (e.g., parentheses) may not be present in the string."
+      ],
+      "candidate_hard": 0.48333333333333334,
+      "candidate_gate_score": 0.4836559139784946,
+      "current_score": 0.4836559139784946,
+      "best_score": 0.4836559139784946
+    },
+    {
+      "step": 4,
+      "action": "reject",
+      "rollout_hard": 0.45,
+      "edit_budget": 4,
+      "added": [
+        "When dealing with collections that require hashing (e.g., for use as dictionary keys or in sets), the agent must ensure that the elements are converted to hashable types (e.g., converting lists to tuples).",
+        "The agent should carefully consider the order of operations and state updates when implementing algorithms involving sets or counters to ensure correct logic, especially when checking for relationships between elements (e.g., reverse pairs).",
+        "The agent can implement functions that iterate through a sequence and perform operations on adjacent elements, producing a new sequence of results."
+      ],
+      "removed": [],
+      "candidate_hard": 0.45,
+      "candidate_gate_score": 0.45062344139650873,
+      "current_score": 0.4836559139784946,
+      "best_score": 0.4836559139784946
+    },
+    {
+      "step": 5,
+      "action": "reject",
+      "rollout_hard": 0.475,
+      "edit_budget": 2,
+      "added": [
+        "The agent must generate syntactically complete and executable Python code, ensuring all functions, loops, and conditional statements are properly closed and include necessary return statements. The code should be logically sound, fully implement the required logic to pass given tests, and correctly apply algorithms and data structures, handling all specified edge cases and conditions.",
+        "The agent can translate natural language descriptions of programming tasks into functional Python code, effectively utilizing built-in Python functions, standard libraries (e.g., `collections`, `re`), and methods for efficient and concise solutions. This includes implementing functions that process collections (lists, strings, tuples) by applying filtering, transformation, or aggregation based on specified conditions, performing string manipulation, developing functions that involve mathematical operations on elements of a collection, performing type conversions between strings, lists, and tuples (including parsing string representations), extracting specific elements from sequences using positional indexing or slicing, applying logical conditions to collections (e.g., checking if all elements satisfy a predicate), leveraging specialized data structures (e.g., sets) and their properties for efficient problem-solving, performing element-wise comparisons or aggregations between corresponding elements of multiple sequences, implementing functions that sort collections based on custom criteria, checking for the presence of elements within a collection or a specific range, and utilizing regular expressions to define and search for specific patterns within strings. The agent can implement functions that iterate over sequences (strings, lists) and apply conditional logic based on element values, indices, or relationships between adjacent elements, and can perform data transformations on collections, such as converting string representations of tuples to actual tuples of integers, or counting occurrences of sub-elements within a list by converting them to hashable types. The agent can also implement functions that filter collections based on criteria related to element length or other properties, and reconstruct the collection from the filtered elements. All generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.45,
+      "candidate_gate_score": 0.45016339869281047,
+      "current_score": 0.4836559139784946,
+      "best_score": 0.4836559139784946
+    },
+    {
+      "step": 6,
+      "action": "accept_new_best",
+      "rollout_hard": 0.6,
+      "edit_budget": 4,
+      "added": [
+        "The agent can process nested data structures (e.g., lists of lists) by applying operations to inner elements based on positional indices or conditions, aggregating results as needed.",
+        "The agent can implement functions that process collections (lists, tuples, strings) by applying conditional logic to individual elements and generating new collections based on specified criteria or repetitions of elements."
+      ],
+      "removed": [
+        "The agent can translate natural language descriptions of programming tasks into functional Python code, effectively utilizing built-in Python functions, standard libraries, and methods for efficient and concise solutions. This includes implementing functions that process collections (lists, strings) by applying filtering, transformation, or aggregation based on specified conditions, performing string manipulation, and developing functions that involve mathematical operations on elements of a collection. The agent can handle various data types and structures, including strings, lists, and tuples, as input and output for its functions."
+      ],
+      "candidate_hard": 0.5,
+      "candidate_gate_score": 0.5003521126760564,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 7,
+      "action": "reject",
+      "rollout_hard": 0.55,
+      "edit_budget": 2,
+      "added": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, return statements, and the proper termination of loops, conditional statements, and arithmetic operations to fully address the task requirements.",
+        "The agent can implement standard algorithms and mathematical functions (e.g., sorting, LCM calculation, Fibonacci sequence generation) and perform direct mathematical calculations. It efficiently processes collections using functional programming constructs like lambda functions in conjunction with `map` and `filter` for concise element-wise operations, transformations, and conditional filtering. The agent also demonstrates proficiency in specific efficient list operations such as copying using slicing and iterating through collections to count and aggregate elements."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.48333333333333334,
+      "candidate_gate_score": 0.48360655737704916,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 8,
+      "action": "reject",
+      "rollout_hard": 0.45,
+      "edit_budget": 3,
+      "added": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements. This includes completing function definitions and all branches of conditional statements. The agent should verify that the implemented logic correctly addresses the problem statement and passes provided test cases, including double-checking mathematical formulas and algorithmic approaches.",
+        "The agent can implement functions that perform specific pattern matching or validation on input strings or numbers based on defined criteria.",
+        "The agent can implement functions that aggregate elements of a collection based on a specified operation (e.g., multiplication)."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4166666666666667,
+      "candidate_gate_score": 0.41718346253229976,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 9,
+      "action": "reject",
+      "rollout_hard": 0.525,
+      "edit_budget": 4,
+      "added": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow structures (loops, conditionals, function definitions), calculations, and return statements to fully address the task requirements. This includes ensuring all closing elements, brackets, and full definitions of functions and classes are present.",
+        "The agent can effectively utilize specialized Python libraries such as `collections` (e.g., `Counter`) and `heapq` for data analysis, frequency counting, and efficient merging of sorted sequences.",
+        "The agent can utilize regular expressions to parse and manipulate strings, including splitting strings based on defined patterns, reformatting dates, and converting between casing conventions (e.g., camel case to snake case).",
+        "The agent can implement functions that apply conditional logic to input values and return a specific result or None based on whether the condition is met."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4666666666666667,
+      "candidate_gate_score": 0.4670272435897436,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 10,
+      "action": "reject",
+      "rollout_hard": 0.5,
+      "edit_budget": 2,
+      "added": [
+        "Ensure that all control flow structures (if/else, loops) are fully implemented with complete logic for all branches and conditions.",
+        "The agent can implement functions that perform direct transformations or calculations on input data, often utilizing concise, single-line expressions or built-in Python functions to achieve the desired outcome."
+      ],
+      "removed": [],
+      "candidate_hard": 0.48333333333333334,
+      "candidate_gate_score": 0.4837824351297405,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 10,
+      "action": "slow_update",
+      "applied": true,
+      "reasoning": "The previous guidance was empty, as this is the first epoch. The longitudinal comparison shows a high rate of persistent failures (11/20 tasks), indicating a significant need for improvement. There were no regressions, which is positive. The single improvement was for a simple summation task. The persistent failures are concentrated on tasks requiring more complex logic, such as bit manipulation, number conversions (Roman numerals), dynamic programming (tiling, segment counting, triangle path sum), string manipulation (camel to snake), and mathematical functions. Many of these failures stem from incomplete code generation, particularly in loops, conditional statements, and initialization of data structures. The agent often stops mid-implementation. The 'Insights' section in the current skill is a good start, but it's too descriptive and doesn't provide actionable instructions. The agent needs to be explicitly told to complete its code and handle edge cases, especially for mathematical and algorithmic problems.",
+      "slow_update_content": "When generating code for mathematical or algorithmic problems, always ensure the function body is complete, including all necessary control flow (loops, conditionals), calculations, and return statements. Pay close attention to base cases and edge conditions, especially for recursive or dynamic programming solutions. For number conversion tasks (e.g., Roman numerals), ensure all mapping values and conversion logic are fully implemented. For string manipulation tasks, verify that all characters and transformations are handled correctly, especially for edge cases like empty strings or strings with mixed casing. When implementing algorithms involving collections or sequences, ensure all elements are processed and aggregated as required by the problem statement."
+    },
+    {
+      "step": 11,
+      "action": "reject",
+      "rollout_hard": 0.45,
+      "edit_budget": 2,
+      "added": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements. Verify that function signatures and return types match task requirements and test cases, especially when specific data structures or output formats are involved.",
+        "The agent can implement functions that perform specific sequence manipulations, such as reordering elements or extracting sub-sequences, based on positional logic; iterate through sequences (strings, lists) to count occurrences of specific elements or patterns; perform operations on ranges or intervals, including slicing and determining the union or intersection of ranges; identify duplicate elements within a collection; and group data from a sequence of key-value pairs into a dictionary where values associated with the same key are collected into a list."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4666666666666667,
+      "candidate_gate_score": 0.46714859437751005,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 12,
+      "action": "reject",
+      "rollout_hard": 0.625,
+      "edit_budget": 4,
+      "added": [
+        "The agent can implement custom sorting logic for collections, including sorting based on multiple criteria (compound keys) by providing a tuple of values to the sorting function's key argument.",
+        "The agent can iterate over multiple sequences (lists, tuples) in parallel using `zip` and perform element-wise operations or aggregations.",
+        "The agent can leverage lambda functions with higher-order functions like `filter` and `map` to perform concise data transformations and filtering on collections."
+      ],
+      "removed": [],
+      "candidate_hard": 0.45,
+      "candidate_gate_score": 0.45028011204481794,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 13,
+      "action": "reject",
+      "rollout_hard": 0.575,
+      "edit_budget": 3,
+      "added": [
+        "The agent can correctly implement mathematical formulas and handle specific edge cases or input constraints as defined by provided test cases, even if these constraints deviate from standard mathematical interpretations.",
+        "The agent can leverage specialized Python modules like `re` for regular expression operations and `bisect` for efficient operations on sorted sequences.",
+        "The agent can perform element-wise operations on collections (lists, tuples) using functional programming constructs like `map` with `lambda` functions, or list comprehensions, to achieve concise and efficient code."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4666666666666667,
+      "candidate_gate_score": 0.46694139194139195,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 14,
+      "action": "reject",
+      "rollout_hard": 0.275,
+      "edit_budget": 2,
+      "added": [
+        "The agent can parse string representations of data structures (e.g., tuples) and convert them into their corresponding Python data types, including performing necessary type conversions on elements."
+      ],
+      "removed": [],
+      "candidate_hard": 0.48333333333333334,
+      "candidate_gate_score": 0.48365384615384616,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 15,
+      "action": "reject",
+      "rollout_hard": 0.725,
+      "edit_budget": 3,
+      "added": [
+        "The agent can implement functions that perform bitwise operations, such as bit rotation.",
+        "The agent can aggregate data from dictionaries, specifically by summing the values of the dictionary.",
+        "The agent can perform specific data structure transformations, such as creating new tuples by combining existing lists and strings, or removing nested structures from tuples."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4166666666666667,
+      "candidate_gate_score": 0.4169634025717112,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 16,
+      "action": "reject",
+      "rollout_hard": 0.425,
+      "edit_budget": 2,
+      "added": [
+        "The agent can implement functions that directly translate mathematical formulas or algorithms into code, utilizing basic arithmetic operations and standard mathematical concepts, and perform specific mathematical calculations based on provided parameters."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4666666666666667,
+      "candidate_gate_score": 0.466984126984127,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 17,
+      "action": "reject",
+      "rollout_hard": 0.5,
+      "edit_budget": 0,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.4666666666666667,
+      "candidate_gate_score": 0.467018779342723,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 18,
+      "action": "reject",
+      "rollout_hard": 0.425,
+      "edit_budget": 3,
+      "added": [
+        "The agent should implement robust error handling and consider edge cases, such as empty inputs, invalid data types, or boundary conditions, to ensure the generated code is resilient and correct.",
+        "The agent should correctly utilize methods of standard library data structures, such as `collections.Counter.most_common()` instead of `Counter.most`.",
+        "The agent should ensure that data manipulation for reordering or indexing is performed efficiently and correctly, avoiding redundant operations or incorrect lookups."
+      ],
+      "removed": [],
+      "candidate_hard": 0.43333333333333335,
+      "candidate_gate_score": 0.4338935574229692,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 19,
+      "action": "reject",
+      "rollout_hard": 0.39285714285714285,
+      "edit_budget": 3,
+      "added": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow structures (e.g., if statements, loops) with appropriate conditions and bodies, calculations, and return statements to fully address the task requirements and pass all provided tests.",
+        "The agent can utilize regular expressions to perform complex string splitting based on patterns.",
+        "The agent can implement functions that calculate aggregate statistics (like average) on collections."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.4666666666666667,
+      "candidate_gate_score": 0.4669724770642202,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 20,
+      "action": "reject",
+      "rollout_hard": 0.5,
+      "edit_budget": 1,
+      "added": [
+        "The agent can perform string manipulation tasks, including simple character replacements and more complex substitutions using regular expressions to modify string content based on specified patterns or conditions."
+      ],
+      "removed": [],
+      "candidate_hard": 0.48333333333333334,
+      "candidate_gate_score": 0.48365384615384616,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 20,
+      "action": "slow_update",
+      "applied": true,
+      "reasoning": "The previous guidance focused on ensuring completeness of function bodies, paying attention to base cases and edge conditions, and verifying correct implementation for number conversion and string manipulation. This guidance appears to have been partially effective, as 8 out of 20 tasks remained stable successes. However, there was one regression and a significant number of persistent failures (11 out of 20). The regression occurred in a task involving calculating the sum of divisors for an abundant number, where the previous successful implementation was truncated in the current epoch. This suggests a potential issue with code completion or a misunderstanding of when to stop generating code. The persistent failures highlight several areas where the agent consistently struggles:\n\n1.  **Incomplete function bodies:** Tasks like `get_First_Set_Bit_Pos`, `int_to_roman`, `get_noOfways`, `roman_to_int`, `discriminant_value`, `camel_to_snake`, `check`, `floor_Max`, `join_tuples`, `maximum_segments`, and `min_sum_path` all show incomplete function definitions or logic. This is a recurring problem despite the previous guidance.\n2.  **Algorithmic correctness:** For tasks like `get_First_Set_Bit_Pos`, `roman_to_int`, `discriminant_value`, and `maximum_segments`, the core logic seems to be missing or incorrect, leading to persistent failures.\n3.  **Handling specific data types/structures:** The `join_tuples` task suggests an issue with processing and aggregating data from a list of tuples.\n\nGiven these observations, the new guidance needs to prioritize preventing regressions by ensuring full code generation, and then address the persistent failures by emphasizing the need for complete and correct algorithmic implementation, especially for tasks involving bit manipulation, number conversions, mathematical functions, and data structure manipulation. The previous guidance's focus on completeness was good but not sufficient; it needs to be more explicit about *completing* the code and ensuring the *logic* is sound.\n\nSpecifically:\n\n*   **Prevent regressions:** The `is_abundant` regression indicates that the agent might be stopping prematurely. The guidance should explicitly state to always complete the function body and return statement.\n*   **Address persistent failures:** For bit manipulation (`get_First_Set_Bit_Pos`), number conversions (`int_to_roman`, `roman_to_int`), mathematical calculations (`discriminant_value`, `floor_Max`), string manipulation (`camel_to_snake`), set operations (`check`), dynamic programming/recursion (`get_noOfways`, `maximum_segments`, `min_sum_path`), and data structure manipulation (`join_tuples`), the agent needs to ensure the entire logic is present and correct.\n*   **Reinforce successful patterns:** The stable successes indicate the agent is capable of many tasks, so the new guidance should build upon these strengths by ensuring that the previously successful patterns are maintained while addressing the identified weaknesses.",
+      "slow_update_content": "When generating code, always ensure the function body is complete, including all necessary control flow (loops, conditionals), calculations, and return statements. Do not truncate code generation prematurely. For tasks involving bit manipulation, ensure the logic for bitwise operations and position tracking is fully implemented. For number conversion tasks (e.g., Roman numerals to integers, integers to Roman numerals), verify that all mapping values and conversion logic are fully implemented and cover all necessary cases. For mathematical and algorithmic problems, pay close attention to base cases, edge conditions, and the complete implementation of the algorithm. For string manipulation, ensure all characters and transformations are handled correctly, especially for edge cases. When processing collections or data structures, ensure all elements are processed and aggregated as required, and that the logic for joining or transforming data is complete. For dynamic programming or recursive problems, ensure the base cases and recursive steps are fully defined and implemented."
+    },
+    {
+      "step": 21,
+      "action": "reject",
+      "rollout_hard": 0.525,
+      "edit_budget": 2,
+      "added": [
+        "The agent may fail to complete the code generation for a function, leaving the implementation incomplete after the function definition and docstring."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4166666666666667,
+      "candidate_gate_score": 0.4169934640522876,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 22,
+      "action": "reject",
+      "rollout_hard": 0.6,
+      "edit_budget": 1,
+      "added": [
+        "The agent should be aware that mutable data structures like lists are not hashable and cannot be directly added to sets; conversion to immutable types (like tuples) is necessary when using sets for deduplication of list elements."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4166666666666667,
+      "candidate_gate_score": 0.4169781931464175,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 23,
+      "action": "reject",
+      "rollout_hard": 0.35,
+      "edit_budget": 3,
+      "added": [
+        "Ensure that all generated code, including loops, conditional statements, and function bodies, is syntactically complete and logically sound, covering all necessary control flow, branches, and conditions to fully address the task requirements and lead to fully executable and correct solutions.",
+        "The agent can implement functions that correctly compute the symmetric difference between two collections, including elements present in either collection but not in both.",
+        "The agent can perform complex string manipulation and pattern matching using regular expressions, including tasks such as validating formats (e.g., decimal), extracting patterns, and transforming strings based on defined rules (e.g., using `re.match`, `re.search`, `re.sub` with lookaheads)."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.4166666666666667,
+      "candidate_gate_score": 0.41694139194139196,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 24,
+      "action": "reject",
+      "rollout_hard": 0.55,
+      "edit_budget": 3,
+      "added": [
+        "Ensure that all generated code includes necessary control flow, calculations, return statements, and is syntactically complete and properly closed to fully address the task requirements, resulting in a complete and executable function.",
+        "When processing sequences and encountering conditions that require updating a running total or maximum, ensure that the update logic is explicitly included in all relevant branches (e.g., `else` blocks) and that running totals are reset appropriately when the condition changes.",
+        "When iterating through counts and generating repeated elements, ensure that the logic correctly handles zero or negative counts by not adding any elements for that iteration, and that the correct elements are mapped to their corresponding counts."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.48333333333333334,
+      "candidate_gate_score": 0.4838768115942029,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 25,
+      "action": "reject",
+      "rollout_hard": 0.4,
+      "edit_budget": 3,
+      "added": [
+        "The agent can implement functions that directly translate mathematical formulas for geometric shapes and numerical calculations into code.",
+        "The agent can extract specific numeric data from strings using regular expressions."
+      ],
+      "removed": [],
+      "candidate_hard": 0.5,
+      "candidate_gate_score": 0.5003184713375797,
+      "current_score": 0.5003521126760564,
+      "best_score": 0.5003521126760564
+    },
+    {
+      "step": 26,
+      "action": "accept_new_best",
+      "rollout_hard": 0.6,
+      "edit_budget": 1,
+      "added": [],
+      "removed": [],
+      "candidate_hard": 0.5333333333333333,
+      "candidate_gate_score": 0.5336854460093897,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 27,
+      "action": "reject",
+      "rollout_hard": 0.475,
+      "edit_budget": 2,
+      "added": [
+        "The agent must generate complete and executable code blocks, including all necessary logic, control flow, and return statements, to fully address the task requirements. The agent should be able to implement algorithms and data structures correctly, handling edge cases and ensuring the logic produces the expected output.",
+        "The agent can leverage specialized data structures (e.g., dictionaries) for efficient data manipulation, such as removing duplicates while preserving order."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.43333333333333335,
+      "candidate_gate_score": 0.433640081799591,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 28,
+      "action": "reject",
+      "rollout_hard": 0.425,
+      "edit_budget": 2,
+      "added": [
+        "The agent can implement custom sorting logic for collections based on derived properties of their elements."
+      ],
+      "removed": [],
+      "candidate_hard": 0.43333333333333335,
+      "candidate_gate_score": 0.4336666666666667,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 29,
+      "action": "reject",
+      "rollout_hard": 0.5,
+      "edit_budget": 2,
+      "added": [
+        "The agent should generate complete and executable code, ensuring all functions have proper definitions, logic, and return statements to fully address the task requirements.",
+        "The agent can implement string manipulation functions, including rotation, by leveraging string slicing and concatenation."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.43333333333333335,
+      "candidate_gate_score": 0.4335016835016835,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 30,
+      "action": "reject",
+      "rollout_hard": 0.55,
+      "edit_budget": 2,
+      "added": [
+        "The agent must correctly handle data structure transformations, including nested lists and tuples, ensuring operations are applied to the appropriate levels and elements.",
+        "The agent needs to implement robust comparison logic for collections, considering whether order matters and handling potential data type differences or complexities."
+      ],
+      "removed": [],
+      "candidate_hard": 0.45,
+      "candidate_gate_score": 0.45045592705167176,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 30,
+      "action": "slow_update",
+      "applied": true,
+      "reasoning": "The previous guidance was largely ineffective, as evidenced by the high number of persistent failures (12 out of 20 tasks) and no improvements or regressions. The guidance focused on general code completion and handling specific problem types (bit manipulation, number conversion, etc.), but it failed to address the root causes of the persistent failures. Many of these failures involve incomplete implementations of algorithms or data structures, particularly in dynamic programming, mathematical functions, and string manipulation. For example, tasks like `is_abundant`, `get_First_Set_Bit_Pos`, `int_to_roman`, `roman_to_int`, `get_noOfways`, `discriminant_value`, `camel_to_snake`, `check`, `floor_Max`, `join_tuples`, `maximum_segments`, and `min_sum_path` all show incomplete or incorrect logic. The guidance needs to be more specific about ensuring the *completeness* and *correctness* of the algorithms, especially for edge cases and the full implementation of recursive/iterative steps. The new guidance will focus on ensuring full implementation of algorithms, correct handling of edge cases, and proper use of data structures for specific problem types that have shown persistent failures.",
+      "slow_update_content": "When generating code, always ensure the function body is complete, including all necessary control flow (loops, conditionals), calculations, and return statements. Do not truncate code generation prematurely.\n\nFor tasks involving number theory (e.g., abundant numbers), ensure the logic for calculating sums of divisors and comparisons is fully implemented.\n\nFor bit manipulation tasks, ensure the logic for bitwise operations and position tracking is fully implemented and handles edge cases like zero.\n\nFor number conversion tasks (e.g., Roman numerals to integers, integers to Roman numerals), verify that all mapping values and conversion logic are fully implemented and cover all necessary cases, including subtractive notation for Roman numerals.\n\nFor mathematical and algorithmic problems (e.g., tiling, discriminant, periodic functions, segment maximization, triangle path sum), pay close attention to base cases, edge conditions, and the complete implementation of the algorithm, including dynamic programming states or recursive steps.\n\nFor string manipulation tasks (e.g., camel case to snake case, vowel checking), ensure all characters and transformations are handled correctly, especially for edge cases and case insensitivity where required.\n\nWhen processing collections or data structures (e.g., joining tuples), ensure all elements are processed and aggregated as required, and that the logic for joining or transforming data is complete and correctly handles the structure of the input.\n\nFor dynamic programming or recursive problems, ensure the base cases and recursive steps are fully defined and implemented, and that the state transitions are correct."
+    },
+    {
+      "step": 31,
+      "action": "reject",
+      "rollout_hard": 0.575,
+      "edit_budget": 2,
+      "added": [
+        "The agent can leverage lambda functions for concise expression of simple operations on collection elements, particularly for filtering and aggregation tasks.",
+        "The agent can implement recursive functions to solve problems that have a naturally recursive structure."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4166666666666667,
+      "candidate_gate_score": 0.4169791666666667,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 32,
+      "action": "reject",
+      "rollout_hard": 0.45,
+      "edit_budget": 2,
+      "added": [
+        "The agent can perform element-wise operations between corresponding elements of multiple sequences, producing a new sequence of results, often by using `map` with `lambda` functions.",
+        "The agent can utilize regular expressions to define and search for specific patterns within strings, including quantifiers like 'zero or one', and for string manipulation tasks such as extracting specific patterns or removing unwanted characters."
+      ],
+      "removed": [
+        "Ensure that all generated code blocks are syntactically complete, including all necessary closing parentheses, brackets, quotes, and indentation levels to form valid Python statements and expressions."
+      ],
+      "candidate_hard": 0.45,
+      "candidate_gate_score": 0.4502898550724638,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 33,
+      "action": "reject",
+      "rollout_hard": 0.375,
+      "edit_budget": 2,
+      "added": [
+        "The agent can implement algorithms that leverage specific data structures like heaps (e.g., `heapq` in Python) to efficiently solve problems such as finding the n smallest or largest elements in a collection, or for priority queue implementations.",
+        "The agent can correctly handle data structure conversions, such as converting mutable types (e.g., lists) to immutable types (e.g., tuples) when they are used as keys in dictionaries or elements in sets."
+      ],
+      "removed": [],
+      "candidate_hard": 0.45,
+      "candidate_gate_score": 0.4502808988764045,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 34,
+      "action": "reject",
+      "rollout_hard": 0.55,
+      "edit_budget": 2,
+      "added": [
+        "The agent can implement functions that perform element-wise comparisons or conditional checks between corresponding elements of multiple sequences (e.g., lists, tuples).",
+        "The agent can implement functions that perform mathematical operations on numerical inputs, including arithmetic calculations and rounding, potentially utilizing standard libraries like `math`."
+      ],
+      "removed": [],
+      "candidate_hard": 0.48333333333333334,
+      "candidate_gate_score": 0.48363636363636364,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 35,
+      "action": "reject",
+      "rollout_hard": 0.55,
+      "edit_budget": 2,
+      "added": [
+        "The agent must generate complete and functional code that fully addresses the task requirements, including all necessary logic, calculations, control flow, and return statements, ensuring syntactic completeness and proper termination of statements and code blocks. The agent must correctly interpret and implement the core logic of the problem, rather than providing partial solutions or misinterpreting the objective. When a task requires modifying a value to meet a condition (e.g., making a sum even), the agent should implement the logic to perform that modification, not just check the current state.",
+        "The agent can utilize `collections.Counter` to efficiently determine the frequency of elements within a collection."
+      ],
+      "removed": [],
+      "candidate_hard": 0.48333333333333334,
+      "candidate_gate_score": 0.48384615384615387,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 36,
+      "action": "reject",
+      "rollout_hard": 0.4,
+      "edit_budget": 2,
+      "added": [
+        "The agent should ensure that all generated code is complete, executable, and logically sound, including all necessary functions, classes, method definitions, control flow, calculations, and return statements to fully address the task requirements and satisfy provided test cases. The agent should also consider edge cases and constraints mentioned or implied by the task description and test cases to ensure the robustness of the generated code.",
+        "The agent can perform element-wise operations on sub-elements within nested list structures, such as reversing individual lists or extracting specific elements from them."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.48333333333333334,
+      "candidate_gate_score": 0.48376436781609194,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 37,
+      "action": "reject",
+      "rollout_hard": 0.45,
+      "edit_budget": 2,
+      "added": [
+        "The agent can implement functions that leverage built-in data structure conversions (e.g., list to set, tuple to set) to achieve specific data transformations.",
+        "The agent can implement functions that iterate through collections and apply conditional logic to individual elements, potentially breaking the iteration early based on a condition or element properties."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.45,
+      "candidate_gate_score": 0.45016077170418006,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 38,
+      "action": "reject",
+      "rollout_hard": 0.4375,
+      "edit_budget": 2,
+      "added": [
+        "The agent can leverage built-in Python functions (e.g., `sum`, `len`, `min`) and basic arithmetic/logical operators to perform calculations and checks efficiently.",
+        "The agent can perform string manipulation tasks such as slicing and concatenation to achieve transformations like rotation."
+      ],
+      "removed": [
+        "The agent must generate complete and executable code, including all necessary logic, calculations, and return statements, to fully address the task requirements."
+      ],
+      "candidate_hard": 0.5,
+      "candidate_gate_score": 0.5003076923076923,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 39,
+      "action": "reject",
+      "rollout_hard": 0.5,
+      "edit_budget": 2,
+      "added": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements. This includes correctly implementing algorithms for list manipulation (sorting, filtering, rearranging), accurately translating mathematical requirements into code with correct formulas and accumulation, and completing the implementation of functions rather than generating partial code.",
+        "The agent can perform advanced string manipulation tasks, including removing specific substrings based on delimiters or patterns, performing pattern matching using regular expressions, simple replacements, conditional filtering of strings based on character properties (e.g., case), and complex substitutions using regular expressions to achieve specific text transformations."
+      ],
+      "removed": [
+        "Ensure that all generated code is syntactically complete and logically sound, including all necessary control flow, calculations, and return statements to fully address the task requirements."
+      ],
+      "candidate_hard": 0.43333333333333335,
+      "candidate_gate_score": 0.4336080586080586,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 40,
+      "action": "reject",
+      "rollout_hard": 0.675,
+      "edit_budget": 2,
+      "added": [
+        "The agent should be able to implement algorithms that require multiple steps or complex logic, ensuring all intermediate calculations and conditions are correctly handled to reach a final, correct result.",
+        "The agent should be able to generate complete and correct regular expressions for pattern matching tasks, ensuring all parts of the pattern are defined and the expression is syntactically valid."
+      ],
+      "removed": [],
+      "candidate_hard": 0.4666666666666667,
+      "candidate_gate_score": 0.46695736434108526,
+      "current_score": 0.5336854460093897,
+      "best_score": 0.5336854460093897
+    },
+    {
+      "step": 40,
+      "action": "slow_update",
+      "applied": true,
+      "reasoning": "The previous guidance was largely ineffective, as evidenced by the high number of persistent failures (12 out of 20 tasks) and no improvements. The guidance was too general and didn't address the specific issues leading to incomplete or incorrect code generation. For instance, tasks related to number theory, bit manipulation, Roman numeral conversion, and dynamic programming all remained persistent failures, despite the previous guidance mentioning them. The agent consistently truncated code or failed to implement the core logic correctly. The current comparison shows no regressions, which is positive, but the lack of improvement on the majority of tasks indicates a need for more specific and actionable instructions. The previous guidance's focus on 'ensuring logic is fully implemented' was not sufficient. The new guidance needs to be more direct about *how* to ensure completeness and correctness, especially for the categories that consistently failed.",
+      "slow_update_content": "When generating code, always ensure the function body is complete, including all necessary control flow (loops, conditionals), calculations, and return statements. Do not truncate code generation prematurely.\n\nFor tasks involving number theory (e.g., abundant numbers), ensure the complete logic for calculating sums of divisors and performing comparisons is implemented. This includes iterating through all potential divisors and correctly summing them.\n\nFor bit manipulation tasks, ensure the logic for bitwise operations and position tracking is fully implemented and correctly handles edge cases like zero. Specifically, for finding the position of the rightmost set bit, ensure the loop terminates correctly and the position is accurately calculated.\n\nFor number conversion tasks (e.g., Roman numerals to integers, integers to Roman numerals), verify that all mapping values and conversion logic are fully implemented and cover all necessary cases, including subtractive notation for Roman numerals. Ensure the entire mapping and conversion process is present.\n\nFor mathematical and algorithmic problems (e.g., tiling, discriminant, periodic functions, segment maximization, triangle path sum), pay close attention to base cases, edge conditions, and the complete implementation of the algorithm. For dynamic programming problems, ensure all states are correctly initialized and transitions are fully defined. For recursive problems, ensure base cases and recursive steps are complete.\n\nFor string manipulation tasks (e.g., camel case to snake case, vowel checking), ensure all characters and transformations are handled correctly, especially for edge cases and case insensitivity where required. For camel to snake case, ensure the logic correctly identifies uppercase letters and inserts underscores. For vowel checking, ensure all vowels are accounted for and the final check is comprehensive.\n\nWhen processing collections or data structures (e.g., joining tuples), ensure all elements are processed and aggregated as required, and that the logic for joining or transforming data is complete and correctly handles the structure of the input. For joining tuples with similar initial elements, ensure the aggregation logic correctly groups subsequent elements and the final output format matches the examples.\n\nFor tasks requiring dynamic programming or recursion, ensure that base cases are explicitly handled and that the recursive steps or iterative updates are fully defined and correctly implemented. This includes ensuring that all necessary subproblems are solved and their results are correctly combined."
+    },
+    {
+      "step": 40,
+      "action": "final_reconcile",
+      "chose": "best_only",
+      "best_only_score": 0.5336854460093897,
+      "combined_score": 0.40128593040847205
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+# MBPP (Mostly Basic Python Problems) -- a lightweight programming benchmark.
+# Real train/validation/test splits ship with the dataset already, so no
+# split-carving is needed (unlike SearchQA/LiveMathematicianBench).
+environment: mbpp
+
+mbpp:
+  dataset_name: "google-research-datasets/mbpp"
+  split_map: {train: "train", valid_seen: "validation", valid_unseen: "test"}
+
+experiment:
+  seed: 42
+  max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap
+  num_train_success: 30
+  num_train_fail: 30
+  max_train_episodes: 300
+  num_eval_tasks: 100
+  num_dev_tasks: 60
+  avo_dev_tasks_per_candidate: 40
+  trainer_rounds: 3
+  reflact:
+    # Real train split is 374 rows -- the equivalent of SkillOpt's train_size=0
+    # ("derive from dataset") for this environment; batch_size=40 (their real
+    # default) -> steps_per_epoch=10, num_epochs=4 (their default) -> 40 steps,
+    # same scale as our SearchQA run.
+    reflact_train_size: 374
+
+paths:
+  training_trajectories: "data/training/trajectories.jsonl"
+  eval_baseline_trajectories: "data/evaluation/baseline_trajectories.jsonl"
+  eval_skill_trajectories: "data/evaluation/skill_trajectories.jsonl"
+  skill_dir: "skills"
+  skill_file: "skills/SKILL.md"
+  initial_skill_file: "skills/SKILL.initial.md"
+  trainer_rounds_log: "results/trainer_rounds.json"
+  results_summary: "results/summary.json"
+  results_table: "results/summary.txt"
