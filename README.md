@@ -163,6 +163,17 @@ against 23 held-out conversations never used for training:
 | `gated` | 39.1% | +8.7pp |
 | `expel` | 39.1% | +8.7pp |
 | `naive` | 47.8% | +17.4pp |
+| `reflact` | not applicable | -- |
+
+`reflact` isn't in the table because it structurally can't run here, not
+because it was skipped: it rolls out fresh episodes against the live
+**train** split every step, and a past conversation isn't re-runnable --
+there's no "train" split for it to sample from, only the held-out
+`valid_seen`/`valid_unseen` splits `convert_conversation.py` builds. That's
+also why `reflact` is absent from `## Two ways to build a skill` and
+`convert_conversation.py`'s own docstring: it's reserved for the
+benchmark-training path, where a live environment exists to roll out
+against, not conversation distillation.
 
 Read `naive`'s number with more caution than the others. It roughly
 tripled average response length (811 vs. 258 tokens) with a long, generic
