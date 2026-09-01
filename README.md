@@ -5,21 +5,20 @@
 ![No weight updates](https://img.shields.io/badge/model%20weights-untouched-orange)
 ![MIT license](https://img.shields.io/badge/license-MIT-lightgrey)
 
-**SkillUp gives your AI agent dynamic skills that evolve with every use.**
+**A framework for training and managing skills for AI agents.**
 
-Every new AI-agent session starts from zero: it doesn't remember
-yesterday's correction, last week's working pattern, or the mistake it
-keeps making on your task. SkillUp turns that experience, from a training
-environment or your own conversations, into a `SKILL.md`: a portable
-strategy document your agent loads next time instead of resetting every
-session. Coding is one use case among many; anything an agent does
-repeatedly (research, support, data work) works the same way.
+Point SkillUp at an existing dataset, environment, or your own past
+conversations, and it trains a `SKILL.md` -- a portable strategy document
+your agent loads next session -- and validates that it helps before
+keeping it. Once trained, skills are managed like anything else you
+maintain: versioned, diffed, rolled back, merged, and installed into
+whatever harness you already use.
 
-**This is not a new agent, harness, or model.** It doesn't replace Claude
-Code, Codex, OpenCode, Cursor, or whatever you already use -- it plugs into
+**Not a new agent, harness, or model.** It doesn't replace Claude Code,
+Codex, OpenCode, Cursor, or whatever you already use -- it plugs into
 them. Skills produced here are plain `SKILL.md` files in the same Agent
-Skills convention those tools already read (`<skills-dir>/<name>/SKILL.md`).
-Installing one is a file copy, not an integration.
+Skills convention those tools already read
+(`<skills-dir>/<name>/SKILL.md`). Installing one is a file copy.
 
 On a small, cheap model (`google/gemini-2.5-flash-lite`, not a frontier
 one), a skill trained here took MBPP from 39% to 51% and SearchQA from 50%
@@ -32,11 +31,9 @@ numbers below in [Does it work?](#does-it-work).
 
 - [Install](#install)
 - [Use it](#use-it)
-- [Two ways to build a skill](#two-ways-to-build-a-skill)
+- [Train a skill](#train-a-skill)
 - [Does it work?](#does-it-work)
-- [Quick start: MBPP](#quick-start-mbpp)
-- [Quick start: a conversation you already had](#quick-start-a-conversation-you-already-had)
-- [Managing skills: history, diff, rollback, merge](#managing-skills-history-diff-rollback-merge)
+- [Manage a skill](#manage-a-skill)
 - [Project structure](#project-structure)
 - [Adding a new environment](#adding-a-new-environment)
 - [Adding a new training algorithm](#adding-a-new-training-algorithm)
@@ -61,8 +58,8 @@ is why the prompt tells your agent to ask. Safe to rerun.
 
 Two meta-skills ship with this repo, so an agent that reads the Agent
 Skills convention already knows what to do once installed: `skillup`
-(train and evaluate skills) and `distill-conversation` (build a skill from
-a conversation, callable mid-session). Ask in plain language:
+(train, evaluate, and manage skills) and `distill-conversation` (build a
+skill from a conversation, callable mid-session). Ask in plain language:
 
 - "Train a skill for MBPP and evaluate it."
 - "Distill a skill from this conversation and save it as my-project."
@@ -71,27 +68,119 @@ a conversation, callable mid-session). Ask in plain language:
 Everything below is what your agent runs on your behalf -- useful if you
 want to run a step by hand or understand what's happening.
 
-## Two ways to build a skill
+## Train a skill
 
-**Train against a dataset or environment.** Point SkillUp at a coding
-benchmark, a QA dataset, an interactive simulator, or any Hugging Face
-dataset. It rolls out episodes, distills what worked and didn't into
-candidate skill edits, and validates each candidate against held-out tasks
-before keeping it. Five training algorithms ship out of the box, from a
-single-shot distillation to a full port of Microsoft's published SkillOpt
-method -- measure which one earns its keep before committing to it.
+Training always follows the same loop, whatever the source: roll out
+episodes under the current skill, distill what worked and didn't into a
+candidate edit, validate the candidate against held-out tasks, keep it
+only if it scores better. Five training algorithms ship out of the box,
+from a single-shot distillation to a full port of Microsoft's published
+SkillOpt method -- measure which one earns its keep before committing to
+it. The only thing that changes is where the episodes come from.
 
-**Distill from a conversation.** No formal dataset needed: point
-`distill_conversation.py` at a transcript of a session where you corrected
-your agent a few times, and it extracts the generalizable lessons into a
-skill. Callable mid-conversation ("remember this") through its own skill.
-For a corpus of past conversations, `convert_conversation.py` builds a
-held-out split and runs the same validation-gated trainer the results
-below use.
+### From a dataset or environment
 
-Both paths produce the same thing: a markdown file that makes the same,
-frozen model measurably better. No fine-tuning, no weight updates, nothing
-to deploy but a text file.
+Point SkillUp at a coding benchmark, a QA dataset, an interactive
+simulator, or any Hugging Face dataset. MBPP needs only an API key and the
+core dependencies `./install.sh` already installed, so it's the fastest
+way to see the whole pipeline run:
+
+```bash
+python collect_trajectories.py --env mbpp        # roll out the skill-less agent until quotas fill
+python train_skill.py --env mbpp --strategy all  # distill a skill per strategy, one comparison pass
+python evaluate_skill.py --env mbpp               # baseline + every trained variant, in parallel
+python install_skill.py --env mbpp --strategy naive --target ~/.claude/skills
+```
+
+`evaluate_skill.py` writes `results/summary.json` (per-task detail) and
+`results/summary.txt` (the printed table) under `experiments/mbpp/`. Model
+choice lives in [config.yaml](config.yaml); everything MBPP-specific in
+[experiments/mbpp/config.yaml](experiments/mbpp/config.yaml). Swap
+`--env mbpp` for `--env searchqa`, `--env livemathbench`, or `--env
+alfworld` (heavier setup -- Python 3.9-3.11 and a multi-gigabyte download,
+see [experiments/alfworld/config.yaml](experiments/alfworld/config.yaml)).
+Iterate on a single strategy or condition directly:
+
+```bash
+python train_skill.py --env mbpp --strategy gated
+python evaluate_skill.py --env mbpp --condition gated
+```
+
+### From your own conversations
+
+No formal dataset needed: point `distill_conversation.py` at a transcript
+of a session where you corrected your agent a few times, and it extracts
+the generalizable lessons into a skill.
+
+```bash
+python distill_conversation.py --transcript conv.json --target ~/.claude/skills --name my-project
+```
+
+A transcript is a JSON list of `{"role", "content"}` turns (or plain text)
+-- not tied to one harness's log format. This is a single LLM call: find
+corrections and confirmed successes, propose a bounded add/remove insight
+edit, apply it directly -- no validation gate, matching `expel`'s
+ungated-accumulation design. It extends `~/.claude/skills/my-project/SKILL.md`
+if it exists, or creates it. Callable mid-conversation ("remember this")
+through its own skill, `.claude/skills/distill-conversation/SKILL.md`
+(also installed at `~/.claude/skills/distill-conversation/`).
+
+For a corpus of past conversations, validated the same way training
+against a benchmark is:
+
+```bash
+python convert_conversation.py --transcripts conv1.json conv2.json ... --name my-project
+python train_skill.py --env my-project --strategy gated
+python evaluate_skill.py --env my-project
+```
+
+`reflact` doesn't apply here (see [Does it work?](#does-it-work));
+`gated`/`expel`/`avo` do, since they only need a fixed, pre-collected
+batch of episodes plus a held-out split -- exactly what a conversation
+corpus already is. `convert_conversation.py` segments each transcript into
+episodes (split on corrections, so a mistake-then-fix becomes a failure
+episode followed by a success episode, never one vacuously "successful"
+episode because it ended well), holds some out, and points a generated
+`experiments/<name>/` at `environments/conversation_judge` for the
+held-out portion: an `Environment` whose `step()` asks an LLM judge
+whether a new response, written under the candidate skill, avoids the
+mistake made last time (or still matches what worked) -- a judged proxy
+for re-running history, since a past conversation can't be re-run.
+Because it's a normal `Environment` plugin, `gated`, `core.trainer.
+dev_eval`, and `evaluate_skill.py` all work against it unchanged.
+
+### Through your own harness, not just the API
+
+By default, every action-selection call goes straight to the model API
+(`core/backend.py`'s `ApiBackend`). Pass `--harness cli` to route it
+through an external harness's CLI instead, so trajectories, and the skill
+distilled from them, reflect how that tool behaves:
+
+```bash
+python collect_trajectories.py --env mbpp --harness cli
+python train_skill.py --env mbpp --strategy gated --harness cli
+python evaluate_skill.py --env mbpp --harness cli
+```
+
+Needs `harness.cli.command` set in `config.yaml` -- a shell template with
+`{system_prompt}`/`{user_prompt}` placeholders, not hardcoded to one
+product. Verified end to end for Claude Code:
+
+```yaml
+harness:
+  cli:
+    command: >-
+      claude -p {user_prompt} --system-prompt {system_prompt}
+      --tools "" --no-session-persistence --output-format text
+    timeout_s: 120
+```
+
+`--tools ""` and `--no-session-persistence` make Claude Code behave like a
+plain chat completion -- one clean action back per call, no tool-use
+noise, no leftover session state. The same pattern (print-and-exit, a
+forced system prompt, tools disabled) should carry over to any similar
+CLI harness. Expect roughly 5-10x the latency of a direct API call, and no
+usage/token accounting for most external CLIs.
 
 ## Does it work?
 
@@ -149,94 +238,26 @@ average response length (811 vs. 258 tokens) with a long, generic
 best-practices document rather than lessons traceable to specific
 corrections -- plausibly winning partly by being more thorough, not by
 having learned something specific, the same full-document-rewrite tendency
-noted elsewhere in this README. `gated` and `expel`'s smaller gains came
-from single, targeted insights instead (`gated`'s: "when asked to provide
-specific numerical data, prioritize verifiable sources," traceable to a
-real disagreement in the source conversations about Wikipedia's
-reliability). `avo`'s population search reached 0.85 on its own 20-task
-dev pool during training but didn't transfer to the held-out set at all --
-overfitting the small dev pool made easy to reach, caught exactly because
-a held-out check existed. At n=23, one flipped task is 4.3 percentage
-points, so treat this as directional, not precise -- but directional is
-what the question needed: yes, distilling from real conversations
-measurably changes held-out performance.
+noted under [Adding a new training algorithm](#adding-a-new-training-algorithm).
+`gated` and `expel`'s smaller gains came from single, targeted insights
+instead (`gated`'s: "when asked to provide specific numerical data,
+prioritize verifiable sources," traceable to a real disagreement in the
+source conversations about Wikipedia's reliability). `avo`'s population
+search reached 0.85 on its own 20-task dev pool during training but
+didn't transfer to the held-out set at all -- overfitting the small dev
+pool made easy to reach, caught exactly because a held-out check existed.
+At n=23, one flipped task is 4.3 percentage points, so treat this as
+directional, not precise -- but directional is what the question needed:
+yes, distilling from real conversations measurably changes held-out
+performance.
 
-## Quick start: MBPP
+## Manage a skill
 
-MBPP (Python programming problems) needs only an API key and the core
-dependencies `./install.sh` already installed, so it's the fastest way to
-see the whole pipeline run:
+Training isn't the end of a skill's life. Once one exists, it needs to
+reach the harness you use, and stay reviewable and reversible as
+it keeps changing.
 
-```bash
-python collect_trajectories.py --env mbpp     # roll out the skill-less agent until quotas fill
-python train_skill.py --env mbpp --strategy all   # distill a skill per strategy, one comparison pass
-python evaluate_skill.py --env mbpp            # baseline + every trained variant, in parallel
-python install_skill.py --env mbpp --strategy naive --target ~/.claude/skills
-```
-
-`evaluate_skill.py` writes `results/summary.json` (per-task detail) and
-`results/summary.txt` (the printed table) under `experiments/mbpp/`. Model
-choice lives in [config.yaml](config.yaml); everything MBPP-specific in
-[experiments/mbpp/config.yaml](experiments/mbpp/config.yaml). Swap
-`--env mbpp` for `--env searchqa`, `--env livemathbench`, or `--env
-alfworld` (heavier setup -- Python 3.9-3.11 and a multi-gigabyte download,
-see [experiments/alfworld/config.yaml](experiments/alfworld/config.yaml)).
-
-Iterate on a single strategy or condition directly:
-
-```bash
-python train_skill.py --env mbpp --strategy gated
-python evaluate_skill.py --env mbpp --condition gated
-```
-
-## Quick start: a conversation you already had
-
-```bash
-python distill_conversation.py --transcript conv.json --target ~/.claude/skills --name my-project
-```
-
-A transcript is a JSON list of `{"role", "content"}` turns (or plain text)
--- not tied to one harness's log format. This extends
-`~/.claude/skills/my-project/SKILL.md` if it exists, or creates it, picked
-up by any Agent-Skills-aware harness next session. For many past
-conversations and a real validation gate instead of one unchecked pass,
-see [Distilling a skill from a conversation](#distilling-a-skill-from-a-conversation-not-a-benchmark)
-below.
-
-## Training through your own harness instead of the API
-
-By default, every action-selection call goes straight to the model API
-(`core/backend.py`'s `ApiBackend`). Pass `--harness cli` to route it
-through an external harness's CLI instead, so trajectories, and the skill
-distilled from them, reflect how that tool behaves:
-
-```bash
-python collect_trajectories.py --env mbpp --harness cli
-python train_skill.py --env mbpp --strategy gated --harness cli
-python evaluate_skill.py --env mbpp --harness cli
-```
-
-Needs `harness.cli.command` set in `config.yaml` -- a shell template with
-`{system_prompt}`/`{user_prompt}` placeholders, not hardcoded to one
-product. Verified end to end for Claude Code:
-
-```yaml
-harness:
-  cli:
-    command: >-
-      claude -p {user_prompt} --system-prompt {system_prompt}
-      --tools "" --no-session-persistence --output-format text
-    timeout_s: 120
-```
-
-`--tools ""` and `--no-session-persistence` make Claude Code behave like a
-plain chat completion -- one clean action back per call, no tool-use noise,
-no leftover session state. The same pattern (print-and-exit, a forced
-system prompt, tools disabled) should carry over to any similar CLI
-harness. Expect roughly 5-10x the latency of a direct API call, and no
-usage/token accounting for most external CLIs.
-
-## Using a trained skill in your own harness
+### Install into your harness
 
 Every skill this framework produces is a plain `SKILL.md`: frontmatter
 plus a markdown body, the same shape Claude Code, Codex, OpenCode, and the
@@ -252,7 +273,7 @@ For a harness with no native skill-loading at all, the file still works --
 paste its body into a system prompt, the way
 `core.agent.build_system_prompt` does internally.
 
-## Managing skills: history, diff, rollback, merge
+### Version, diff, rollback, merge
 
 `install_skill.py` and `distill_conversation.py` both write through
 `core/skill_store.py`, which versions every change to a deployed skill
@@ -276,47 +297,6 @@ source skill's directory in place unless you pass `--delete-src`. None of
 this decides *which* installed skill a harness loads for a given
 conversation -- that's the harness's own job, matching each skill's
 `description` frontmatter against what you're doing.
-
-## Distilling a skill from a conversation, not a benchmark
-
-```bash
-# One conversation, right now: extend/create a skill in place.
-python distill_conversation.py --transcript conv.json --target ~/.claude/skills --name my-project
-
-# A corpus of conversations: train/dev split + gated.py's validation gate.
-python convert_conversation.py --transcripts conv1.json conv2.json ... --name my-project
-python train_skill.py --env my-project --strategy gated
-python evaluate_skill.py --env my-project
-```
-
-`distill_conversation.py` is a single LLM call per conversation: find
-corrections and confirmed successes, propose a bounded add/remove insight
-edit, apply it directly -- no validation gate, matching `expel`'s
-ungated-accumulation design. Suited to "learn from this conversation,
-right now."
-
-`convert_conversation.py` is for when there are enough past conversations
-to warrant validation. `reflact` doesn't apply here (see
-[Does it work?](#does-it-work)); `gated`/`expel`/`avo` do, since they only
-need a fixed, pre-collected batch of episodes plus a held-out split --
-exactly what a conversation corpus already is. This script segments each
-transcript into episodes (split on corrections, so a mistake-then-fix
-becomes a failure episode followed by a success episode, never one
-vacuously "successful" episode because it ended well), holds some out, and
-points a generated `experiments/<name>/` at `environments/conversation_judge`
-for the held-out portion: an `Environment` whose `step()` asks an LLM judge
-whether a new response, written under the candidate skill, avoids the
-mistake made last time (or still matches what worked), instead of
-executing or matching anything -- a judged proxy for re-running history,
-not a real re-run, but the closest available substitute. Because it's a
-normal `Environment` plugin, `gated`, `core.trainer.dev_eval`, and
-`evaluate_skill.py` all work against it unchanged.
-
-Callable mid-conversation in any harness that reads the Agent Skills
-convention through `.claude/skills/distill-conversation/SKILL.md` (also
-installed at `~/.claude/skills/distill-conversation/`) -- it tells an
-agent how to export the relevant excerpt and invoke
-`distill_conversation.py` mid-conversation, not just after the fact.
 
 ## Project structure
 
