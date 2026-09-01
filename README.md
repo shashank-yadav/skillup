@@ -33,6 +33,7 @@ numbers below in [Does it work?](#does-it-work).
 - [Use it](#use-it)
 - [Train a skill](#train-a-skill)
 - [Does it work?](#does-it-work)
+- [Use existing skills](#use-existing-skills)
 - [Manage a skill](#manage-a-skill)
 - [Project structure](#project-structure)
 - [Adding a new environment](#adding-a-new-environment)
@@ -251,6 +252,65 @@ directional, not precise -- but directional is what the question needed:
 yes, distilling from real conversations measurably changes held-out
 performance.
 
+**Three more domains were added to test how far this generalizes, and
+the honest result is: not much moved.** `bigcodebench` (harder, more
+realistic Python problems), `sql` (text-to-SQL, graded by real query
+execution against an in-memory SQLite database, not string matching),
+and `writing` (quality across genres, judged against expert-annotated
+reference pairs) were trained and evaluated the same way, same cheap
+model:
+
+| Environment | Baseline | Best result | Best strategy |
+|---|---|---|---|
+| BigCodeBench (harder Python programming) | 1.0% | 1.0% | none -- see below |
+| SQL (text-to-SQL) | 35.0% | 35.0% | none |
+| Writing (quality across genres) | 1.0% | 4.0% (+3.0pp) | `naive` |
+
+BigCodeBench and Writing hit the same wall: `google/gemini-2.5-flash-lite`
+solves so few of these tasks unaided (1% baseline on both) that there's
+barely a "what worked" example for any trainer to learn from, and at that
+rate, 0 vs. 1 success out of 100 isn't statistically distinguishable from
+noise. These aren't "skills failed" results -- they're "this benchmark
+needs a stronger model before there's a measurable signal to learn from
+at all" results, which is exactly what adding more models later (see
+[Use existing skills](#use-existing-skills)) is for. SQL is a cleaner
+negative: baseline 35%, every skill landed within 1pp of it, and the
+trained insights themselves are sound (`gated` learned "use BETWEEN for
+date ranges," `expel` learned "join tables on their foreign keys") --
+they're just not addressing whatever's causing the model's failures
+here. Part of that ceiling is the dataset itself: roughly 7% of
+its gold queries have real data-quality issues, the known cost of a
+synthetic set traded for being fully self-contained (see
+`environments/sql/env.py`).
+
+## Use existing skills
+
+Every skill trained here, including every number above, is published
+under `skills/<env>/<model-slug>/` alongside the results that validated
+it -- not just the code that produced it. Point your agent at one
+directly instead of training your own:
+
+```bash
+cp skills/mbpp/google_gemini-2.5-flash-lite/SKILL.reflact.md ~/.claude/skills/mbpp/SKILL.md
+```
+
+`skills/<env>/<model-slug>/summary.txt` has the exact numbers that skill
+was validated against, so you're not taking it on faith -- when a skill
+didn't beat baseline (BigCodeBench and SQL above), that's visible right
+in its own directory, not hidden.
+
+The model shows up in the path on purpose: a skill trained by one model
+doesn't necessarily transfer to another. Everything published so far
+comes from one small, cheap model (`google/gemini-2.5-flash-lite`); more
+models will be added later, landing alongside it, not replacing it.
+`publish_skills.py --env <name>` is the command that writes this
+directory -- run once after `evaluate_skill.py`, so nothing gets
+published without real numbers behind it first.
+
+Currently published, all under `google_gemini-2.5-flash-lite`:
+`alfworld`, `searchqa`, `mbpp`, `livemathbench`, `bigcodebench`, `sql`,
+`writing`.
+
 ## Manage a skill
 
 Training isn't the end of a skill's life. Once one exists, it needs to
@@ -314,6 +374,9 @@ core/                    environment-agnostic framework
 environments/            one subpackage per environment; each self-registers
   alfworld/env.py           ALFWorld plugin (wraps its TextWorld backend)
   mbpp/env.py               MBPP plugin (subprocess-sandboxed code-execution grading)
+  bigcodebench/env.py       harder Python problems, same grading shape as mbpp
+  sql/env.py                text-to-SQL, graded by real SQLite execution
+  writing/env.py            writing quality, LLM-judge graded against chosen/rejected pairs
   conversation_judge/env.py LLM-as-judge plugin for convert_conversation.py's held-out episodes
 
 trainers/                one module per training algorithm; each self-registers
@@ -326,11 +389,17 @@ experiments/<env>/       one environment's config + generated artifacts
   data/                     generated trajectories (gitignored -- regenerable)
   results/                  summary.json / summary.txt from evaluate_skill.py
 
+skills/<env>/<model>/    published, curated skills + the results that validated them
+                          (see Use existing skills above) -- distinct from the
+                          experiments/ copies above, which are scratch working state
+
 collect_trajectories.py, train_skill.py, evaluate_skill.py    entry points
 install_skill.py                                               drop a trained skill into any harness's skill dir
+publish_skills.py                                               copy a trained skill + its results into skills/<env>/<model>/
 distill_conversation.py, convert_conversation.py               build skills from conversations instead
 skill_manager.py                                               list/show/log/diff/rollback/merge deployed skills
-install.sh, requirements.txt, requirements-alfworld.txt        one-shot setup (see Install above)
+install.sh, requirements.txt, requirements-alfworld.txt,
+  requirements-bigcodebench.txt                                 one-shot setup (see Install above)
 ```
 
 ## Adding a new environment

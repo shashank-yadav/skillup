@@ -1,0 +1,264 @@
+{
+  "naive": [
+    {
+      "round": 1,
+      "accepted": true,
+      "skill": "---\nname: writing\ndescription: Strategies for producing high-quality writing across genres (letters, reviews, tutorials, ad copy, essays, and more).\n---\n\n# Writing\n\nRespond to the writing prompt directly with the piece itself -- no preamble, no meta-commentary about what you're about to write, no markdown headers unless the prompt specifically calls for structured formatting.\n\nWhen crafting a narrative, focus on establishing the scene and introducing key elements early. For stories, begin by setting the mood and introducing characters or the central conflict. For outlines or structured pieces, start with a clear title and logline or introductory statement.\n\nIncorporate specific details and sensory language as requested by the prompt to create a vivid and immersive experience for the reader. This includes using descriptive adjectives, adverbs, and figurative language.\n\nEnsure that the output directly addresses all aspects of the prompt, including specific requirements for tone, style, and content. If the prompt requests specific phrases or elements, integrate them naturally into the narrative.\n\nFor argumentative or expository essays, clearly state the thesis or main argument early on and then systematically develop supporting points with evidence and logical reasoning.\n\nWhen creating outlines or synopses, provide a clear structure, often starting with a title and logline, followed by a breakdown of key parts or plot points.\n\nFor tasks involving role-playing, maintain the specified persona throughout the response, reflecting their voice, mannerisms, and perspective.\n\nIf a task involves a specific format (e.g., a report, a letter, an essay), adhere to that format. For example, a letter should begin with a salutation and end with a closing.\n\nWhen a task requires a specific emotional tone (e.g., heartfelt, melancholic, suspenseful), ensure the language, imagery, and narrative choices consistently reflect that tone."
+    }
+  ],
+  "gated": [
+    {
+      "round": 0,
+      "action": "baseline",
+      "dev_success_rate": 0.0,
+      "accepted": true
+    },
+    {
+      "round": 1,
+      "dev_success_rate": 0.016666666666666666,
+      "accepted": true,
+      "added": [
+        "When generating creative text, focus on establishing a strong narrative voice and tone that aligns with the prompt's requirements. This includes using specific vocabulary, sentence structures, and emotional registers to create the desired atmosphere and characterization."
+      ],
+      "removed": []
+    },
+    {
+      "round": 2,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [
+        "When generating creative text, adopt a persona that is distinct from the user's prompt and the expected output, and then translate the prompt's requirements into that persona's context."
+      ],
+      "removed": []
+    },
+    {
+      "round": 3,
+      "dev_success_rate": 0.03333333333333333,
+      "accepted": true,
+      "added": [
+        "When generating creative text, ensure the output adheres to the specified format and structure, even when adopting a particular voice or style."
+      ],
+      "removed": []
+    }
+  ],
+  "expel": [
+    {
+      "round": 1,
+      "accepted": true,
+      "added": [
+        "When generating creative text, focus on sensory details to evoke atmosphere and emotion.",
+        "When writing a report or formal communication, adopt a professional and objective tone, using relevant jargon where appropriate."
+      ],
+      "removed": []
+    },
+    {
+      "round": 2,
+      "accepted": true,
+      "added": [
+        "When writing a report, clearly delineate sections with headings and use a formal structure (e.g., To, From, Subject, Date).",
+        "When describing emotional states, use sensory details and metaphors to convey the internal experience."
+      ],
+      "removed": [
+        "When generating creative text, focus on sensory details to evoke atmosphere and emotion."
+      ]
+    },
+    {
+      "round": 3,
+      "accepted": true,
+      "added": [
+        "When writing a report, use a formal structure including To, From, Subject, and Date fields."
+      ],
+      "removed": []
+    }
+  ],
+  "avo": [
+    {
+      "generation": 0,
+      "lineage": 1,
+      "dev_success_rate": 0.0,
+      "added": [
+        "When generating creative text, incorporate specific sensory details (scent, light, texture) to enhance atmosphere and emotional resonance.",
+        "When writing a story, establish a clear theme and ensure the narrative elements (plot, characters, setting) consistently support it."
+      ],
+      "removed": [
+        "The aroma of burnt popcorn hung heavy in the air, a fitting metaphor for the evening.",
+        "The weight of the armor was a familiar, comforting pressure."
+      ]
+    },
+    {
+      "generation": 0,
+      "lineage": 2,
+      "dev_success_rate": 0.0,
+      "added": [
+        "When generating a story, establish the core conflict and character motivations early in the narrative.",
+        "When writing a story, use sensory details to immerse the reader in the setting and emotional atmosphere."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 0,
+      "lineage": 3,
+      "dev_success_rate": 0.0,
+      "added": [
+        "When generating creative text, explicitly state the desired tone and style (e.g., poetic, melancholic, formal, persuasive) to guide the output.",
+        "When creating a narrative, ensure the initial action directly addresses the core task or premise, avoiding tangential descriptions."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 1,
+      "lineage": 1,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [
+        "When describing a setting, use specific sensory details (sight, sound, smell, touch, taste) to create a vivid and immersive atmosphere.",
+        "When portraying internal conflict, focus on the character's thoughts, feelings, and physical reactions to illustrate their struggle."
+      ],
+      "removed": [
+        "When generating creative text, incorporate specific sensory details (scent, light, texture) to enhance atmosphere and emotional resonance."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 2,
+      "dev_success_rate": 0.025,
+      "accepted": true,
+      "added": [
+        "When writing dialogue, ensure it reflects the character's background and emotional state.",
+        "When describing actions, focus on the physical movements and their immediate consequences."
+      ],
+      "removed": [
+        "When generating a story, establish the core conflict and character motivations early in the narrative.",
+        "When writing a story, use sensory details to immerse the reader in the setting and emotional atmosphere."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 3,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [
+        "When writing dialogue, ensure it reflects the character's background and emotional state.",
+        "When describing actions, focus on the physical movements and their immediate consequences."
+      ],
+      "removed": [
+        "When generating creative text, explicitly state the desired tone and style (e.g., poetic, melancholic, formal, persuasive) to guide the output.",
+        "When creating a narrative, ensure the initial action directly addresses the core task or premise, avoiding tangential descriptions."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": "crossover",
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "parents": [
+        2,
+        1
+      ],
+      "replaced": 3
+    },
+    {
+      "generation": 2,
+      "lineage": 1,
+      "dev_success_rate": 0.025,
+      "accepted": true,
+      "added": [
+        "When writing dialogue, ensure it reflects the character's background and emotional state.",
+        "When describing actions, focus on the physical movements and their immediate consequences."
+      ],
+      "removed": [
+        "When generating creative text, incorporate specific sensory details (scent, light, texture) to enhance atmosphere and emotional resonance."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 2,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [
+        "When describing a character's internal state, use metaphors and similes to convey complex emotions.",
+        "When depicting a setting, establish the mood and atmosphere through descriptive language that appeals to multiple senses."
+      ],
+      "removed": [
+        "When writing dialogue, ensure it reflects the character's background and emotional state.",
+        "When describing actions, focus on the physical movements and their immediate consequences."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 3,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": "crossover",
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "parents": [
+        1,
+        2
+      ],
+      "replaced": 3
+    },
+    {
+      "generation": 3,
+      "lineage": 1,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [],
+      "removed": [
+        "When writing dialogue, ensure it reflects the character's background and emotional state."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": 2,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [
+        "When describing a character's internal state, use metaphors and similes to convey complex emotions.",
+        "When depicting a setting, establish the mood and atmosphere through descriptive language that appeals to multiple senses."
+      ],
+      "removed": [
+        "When writing dialogue, ensure it reflects the character's background and emotional state.",
+        "When describing actions, focus on the physical movements and their immediate consequences."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": 3,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [
+        "When a task involves role-playing a specific persona, maintain that persona's voice and vocabulary consistently throughout the output.",
+        "When generating creative text, adhere to the specified tone and style (e.g., poetic, melancholic, formal, persuasive) to guide the output."
+      ],
+      "removed": [
+        "When generating creative text, explicitly state the desired tone and style (e.g., poetic, melancholic, formal, persuasive) to guide the output."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": "crossover",
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "parents": [
+        1,
+        2
+      ],
+      "replaced": 3
+    }
+  ]
+}

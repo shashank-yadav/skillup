@@ -12,6 +12,9 @@ try:
     from environments import hf_dataset  # noqa: F401
     from environments import livemathbench  # noqa: F401
     from environments import mbpp  # noqa: F401
+    from environments import bigcodebench  # noqa: F401
+    from environments import sql  # noqa: F401
+    from environments import writing  # noqa: F401
 except ImportError:
     # Optional: needs `pip install datasets`. Not required for ALFWorld or
     # any other environment that doesn't use these plugins.

@@ -1,0 +1,36 @@
+# Text-to-SQL, via gretelai/synthetic_text_to_sql -- self-contained
+# (CREATE TABLE + INSERT bundled per row), graded by real SQL execution
+# against a fresh in-memory SQLite database, not string matching. See
+# environments/sql/env.py for why this dataset instead of Spider/BIRD.
+environment: sql
+
+sql:
+  dataset_name: "gretelai/synthetic_text_to_sql"
+  split_map:
+    train: {hf_split: "train", offset: 0, count: 600}       # 100k rows available
+    valid_seen: {hf_split: "test", offset: 0, count: 150}   # 5851 rows available
+    valid_unseen: {hf_split: "test", offset: 150}            # count omitted -> rest of the split
+
+experiment:
+  seed: 42
+  max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap
+  num_train_success: 30
+  num_train_fail: 30
+  max_train_episodes: 300
+  num_eval_tasks: 100
+  num_dev_tasks: 60
+  avo_dev_tasks_per_candidate: 40
+  trainer_rounds: 3
+  reflact:
+    reflact_train_size: 600
+
+paths:
+  training_trajectories: "data/training/trajectories.jsonl"
+  eval_baseline_trajectories: "data/evaluation/baseline_trajectories.jsonl"
+  eval_skill_trajectories: "data/evaluation/skill_trajectories.jsonl"
+  skill_dir: "skills"
+  skill_file: "skills/SKILL.md"
+  initial_skill_file: "skills/SKILL.initial.md"
+  trainer_rounds_log: "results/trainer_rounds.json"
+  results_summary: "results/summary.json"
+  results_table: "results/summary.txt"

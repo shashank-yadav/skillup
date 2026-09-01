@@ -5,9 +5,12 @@
 # this by asking your agent" section for the exact prompt.
 #
 # Usage:
-#   ./install.sh                 core deps only (fine for MBPP/SearchQA/
-#                                 LiveMathematicianBench/conversation distillation)
-#   ./install.sh --with-alfworld also installs ALFWorld's extra dependencies
+#   ./install.sh                       core deps only (fine for MBPP/SearchQA/
+#                                       LiveMathematicianBench/SQL/Writing/
+#                                       conversation distillation)
+#   ./install.sh --with-alfworld       also installs ALFWorld's extra dependencies
+#   ./install.sh --with-bigcodebench   also installs BigCodeBench's extra dependencies
+#   ./install.sh --with-alfworld --with-bigcodebench   both
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
@@ -34,10 +37,18 @@ echo "Installing core dependencies..."
 pip install -q --upgrade pip
 pip install -q -r requirements.txt
 
-if [ "${1:-}" = "--with-alfworld" ]; then
-    echo "Installing ALFWorld dependencies..."
-    pip install -q -r requirements-alfworld.txt
-fi
+for arg in "$@"; do
+    case "$arg" in
+        --with-alfworld)
+            echo "Installing ALFWorld dependencies..."
+            pip install -q -r requirements-alfworld.txt
+            ;;
+        --with-bigcodebench)
+            echo "Installing BigCodeBench dependencies..."
+            pip install -q -r requirements-bigcodebench.txt
+            ;;
+    esac
+done
 
 echo ""
 echo "Installing meta-skills into every agent harness found on this machine..."

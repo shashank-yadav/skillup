@@ -1,0 +1,20 @@
+# Optional. Only needed for --env bigcodebench -- its tasks call real
+# third-party libraries as part of what's being tested, unlike MBPP's
+# stdlib-only problems. Covers the libraries referenced by the large
+# majority of BigCodeBench's 1140 tasks; a long tail of rarer ones
+# (django, flask, rsa, cryptography, psutil, ...) is left uninstalled --
+# those few tasks will fail regardless of skill quality, the same kind of
+# environment-drift noise other environments here have (see README).
+pandas
+numpy
+matplotlib
+scikit-learn
+scipy
+seaborn
+requests
+nltk
+pytz
+beautifulsoup4
+python-dateutil
+opencv-python
+statsmodels

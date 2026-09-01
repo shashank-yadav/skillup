@@ -1,0 +1,37 @@
+# BigCodeBench -- harder, more realistic Python programming problems than
+# MBPP (diverse function calls, complex instructions, unittest-based
+# grading). Single physical split ("v0.1.4", 1140 rows) carved into three
+# logical splits, same idea as livemathbench's split_ranges.
+environment: bigcodebench
+
+bigcodebench:
+  dataset_name: "bigcode/bigcodebench"
+  hf_split: "v0.1.4"
+  split_ranges:
+    train: {offset: 0, count: 600}
+    valid_seen: {offset: 600, count: 150}
+    valid_unseen: {offset: 750}   # count omitted -> rest of the split (390 rows)
+
+experiment:
+  seed: 42
+  max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap
+  num_train_success: 30
+  num_train_fail: 30
+  max_train_episodes: 300
+  num_eval_tasks: 100
+  num_dev_tasks: 60
+  avo_dev_tasks_per_candidate: 40
+  trainer_rounds: 3
+  reflact:
+    reflact_train_size: 600
+
+paths:
+  training_trajectories: "data/training/trajectories.jsonl"
+  eval_baseline_trajectories: "data/evaluation/baseline_trajectories.jsonl"
+  eval_skill_trajectories: "data/evaluation/skill_trajectories.jsonl"
+  skill_dir: "skills"
+  skill_file: "skills/SKILL.md"
+  initial_skill_file: "skills/SKILL.initial.md"
+  trainer_rounds_log: "results/trainer_rounds.json"
+  results_summary: "results/summary.json"
+  results_table: "results/summary.txt"

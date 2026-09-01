@@ -1,0 +1,237 @@
+{
+  "naive": [
+    {
+      "round": 1,
+      "accepted": true,
+      "skill": "---\nname: sql\ndescription: Strategies for writing correct SQL queries against a given schema.\n---\n\n# SQL\n\nWrite a single SQLite query that answers the question against the given\nschema. Respond with only the query -- no explanation, no markdown code\nfences, no semicolon-separated multiple statements.\n\n## Strategies\n\n- **Identify the core question:** Determine what information needs to be retrieved or aggregated.\n- **Map question to tables and columns:** Identify the relevant tables and columns that contain the necessary data.\n- **Use `SELECT` for desired columns:** Specify the columns to be returned.\n- **Use `FROM` to specify the table(s):** Indicate the table(s) to query from.\n- **Use `WHERE` for filtering:** Apply conditions to filter rows based on specific criteria.\n- **Use `JOIN` for combining tables:** When data is spread across multiple tables, use appropriate `JOIN` clauses (e.g., `INNER JOIN`, `LEFT JOIN`) based on the relationship between tables.\n- **Use `GROUP BY` for aggregation:** When aggregating data (e.g., `SUM`, `AVG`, `COUNT`, `MAX`, `MIN`), group the results by relevant columns.\n- **Use aggregate functions:** Employ functions like `SUM`, `AVG`, `COUNT`, `MAX`, `MIN` to perform calculations on groups of rows.\n- **Use `ORDER BY` for sorting:** Sort the results in ascending (`ASC`) or descending (`DESC`) order.\n- **Use `LIMIT` to restrict results:** If only a specific number of rows are needed, use `LIMIT`.\n- **Use `LIKE` for pattern matching:** Employ `LIKE` with wildcards (`%`, `_`) for flexible string comparisons.\n- **Use `IN` for multiple values:** Use `IN` to specify a list of possible values for a condition.\n- **Use `BETWEEN` for ranges:** Use `BETWEEN` for conditions that fall within a specified range.\n- **Use `STRFTIME` for date/time formatting:** Extract parts of dates (e.g., year, month, week) for filtering or grouping.\n- **Use `CAST` for type conversion:** Convert data types when necessary for calculations (e.g., `CAST(SUM(column) AS REAL)` for accurate division).\n- **Handle string literals correctly:** Enclose string literals in single quotes (`'`).\n- **Handle boolean values:** Use `TRUE` or `FALSE` for boolean comparisons.\n- **Use aliases for clarity:** Use table aliases (e.g., `T1`, `T2`) and column aliases (e.g., `AS total_value`) to make queries more readable, especially with joins.\n- **Subqueries for complex conditions:** Use subqueries when a condition depends on the result of another query.\n- **Be precise with conditions:** Ensure all conditions in the `WHERE` clause accurately reflect the task requirements.\n- **Check for missing table/column names:** Ensure all referenced tables and columns exist in the schema.\n- **Ensure correct syntax for date functions:** Verify the correct format for date functions like `STRFTIME`.\n- **Avoid trailing commas or semicolons:** The output should be a single, valid SQL query without extra punctuation."
+    }
+  ],
+  "gated": [
+    {
+      "round": 0,
+      "action": "baseline",
+      "dev_success_rate": 0.35,
+      "accepted": true
+    },
+    {
+      "round": 1,
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "added": [
+        "When filtering by date, use the appropriate date functions for the specific SQL dialect."
+      ],
+      "removed": []
+    },
+    {
+      "round": 2,
+      "dev_success_rate": 0.36666666666666664,
+      "accepted": true,
+      "added": [
+        "When filtering by a range of dates, use the BETWEEN operator."
+      ],
+      "removed": []
+    },
+    {
+      "round": 3,
+      "dev_success_rate": 0.36666666666666664,
+      "accepted": false,
+      "added": [],
+      "removed": []
+    }
+  ],
+  "expel": [
+    {
+      "round": 1,
+      "accepted": true,
+      "added": [
+        "When a query involves multiple tables, join them using appropriate foreign keys.",
+        "When filtering by date, use date functions to extract the relevant parts of the date (e.g., year, month)."
+      ],
+      "removed": []
+    },
+    {
+      "round": 2,
+      "accepted": true,
+      "added": [
+        "When filtering by a range of dates, use the BETWEEN operator.",
+        "When filtering by multiple values in a single column, use the IN operator."
+      ],
+      "removed": []
+    },
+    {
+      "round": 3,
+      "accepted": true,
+      "added": [],
+      "removed": []
+    }
+  ],
+  "avo": [
+    {
+      "generation": 0,
+      "lineage": 1,
+      "dev_success_rate": 0.35,
+      "added": [
+        "When filtering by date, use the appropriate date functions for the specific SQL dialect.",
+        "When aggregating data, ensure that all non-aggregated columns in the SELECT statement are included in the GROUP BY clause."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 0,
+      "lineage": 2,
+      "dev_success_rate": 0.35,
+      "added": [
+        "When filtering by date, use date range functions or specific date comparisons.",
+        "When aggregating data, ensure all non-aggregated columns in the SELECT statement are included in the GROUP BY clause."
+      ],
+      "removed": [
+        "When filtering by date, use date range functions or specific date comparisons.",
+        "When aggregating data, ensure all non-aggregated columns in the SELECT statement are included in the GROUP BY clause."
+      ]
+    },
+    {
+      "generation": 0,
+      "lineage": 3,
+      "dev_success_rate": 0.35,
+      "added": [
+        "When filtering by date ranges, use BETWEEN for inclusive ranges.",
+        "When a query requires aggregation and filtering on a specific value, use a WHERE clause before the GROUP BY clause."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 1,
+      "lineage": 1,
+      "dev_success_rate": 0.325,
+      "accepted": false,
+      "added": [
+        "When filtering by date ranges, use the BETWEEN operator for inclusive ranges."
+      ],
+      "removed": [
+        "When filtering by date, use the appropriate date functions for the specific SQL dialect."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 2,
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "added": [],
+      "removed": [
+        "When filtering by date ranges, use the BETWEEN operator for inclusive ranges."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 3,
+      "dev_success_rate": 0.375,
+      "accepted": true,
+      "added": [],
+      "removed": [
+        "When a query requires aggregation and filtering on a specific value, use a WHERE clause before the GROUP BY clause."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": "crossover",
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "parents": [
+        3,
+        1
+      ],
+      "replaced": 2
+    },
+    {
+      "generation": 2,
+      "lineage": 1,
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 2,
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "added": [
+        "When filtering by a range of values, use the BETWEEN operator."
+      ],
+      "removed": [
+        "When filtering by date, use date range functions or specific date comparisons."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 3,
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": "crossover",
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "parents": [
+        3,
+        1
+      ],
+      "replaced": 2
+    },
+    {
+      "generation": 3,
+      "lineage": 1,
+      "dev_success_rate": 0.325,
+      "accepted": false,
+      "added": [
+        "When filtering by a range of values, use the BETWEEN operator."
+      ],
+      "removed": [
+        "When filtering by date, use the appropriate date functions for the specific SQL dialect."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": 2,
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": 3,
+      "dev_success_rate": 0.375,
+      "accepted": false,
+      "added": [
+        "When filtering by a range of values, use the BETWEEN operator."
+      ],
+      "removed": [
+        "When filtering by date ranges, use BETWEEN for inclusive ranges."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": "crossover",
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "parents": [
+        3,
+        1
+      ],
+      "replaced": 2
+    }
+  ]
+}

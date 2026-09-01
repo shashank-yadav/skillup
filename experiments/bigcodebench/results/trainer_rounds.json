@@ -1,0 +1,264 @@
+{
+  "naive": [
+    {
+      "round": 1,
+      "accepted": true,
+      "skill": "---\nname: alfworld\ndescription: Strategies for interacting with ALFWorld.\n---\n\n# ALFWorld\n\n## General Strategies\n\n- **Understand the Goal:** Before taking any action, ensure you understand the objective of the current task. This includes what needs to be achieved, any constraints, and the desired output format.\n- **Break Down Complex Tasks:** If a task is complex, break it down into smaller, manageable sub-tasks. Address each sub-task sequentially.\n- **Use Available Tools and Libraries:** Leverage Python's standard library and any provided external libraries (e.g., `os`, `re`, `json`, `csv`, `collections`, `itertools`, `random`, `statistics`, `numpy`, `pandas`, `seaborn`, `psutil`, `subprocess`, `ftplib`, `shutil`, `zipfile`, `base64`, `hashlib`, `cryptography`, `sklearn`).\n- **Handle Errors and Edge Cases:** Anticipate potential errors (e.g., `FileNotFoundError`, `ValueError`, `RuntimeError`, `statistics.StatisticsError`) and implement appropriate error handling mechanisms (e.g., `try-except` blocks, input validation). Consider edge cases like empty inputs, invalid data formats, or missing files.\n- **Follow Output Specifications:** Adhere strictly to the specified output format, including data types, structure, and any required naming conventions.\n- **Write Self-Contained Code:** Ensure that the code provided is self-contained, including all necessary imports. Avoid external dependencies that are not explicitly allowed or provided.\n- **Iterative Refinement:** If an initial approach fails, analyze the failure and refine the strategy. This might involve trying a different library function, adjusting the logic, or adding more robust error handling.\n\n## Specific Strategies\n\n### File and Directory Operations\n\n- **Listing and Filtering Files:** Use `os.listdir`, `glob.glob`, or `os.scandir` to get lists of files in a directory. Filter these lists based on patterns (e.g., file extensions, regex) as needed.\n- **Reading and Writing Files:** Use standard file I/O operations (`open()`, `read()`, `write()`) for text files. For CSV files, use the `csv` module. For JSON files, use the `json` module.\n- **Archiving and Compression:** Utilize `shutil.make_archive` for creating archives (e.g., zip, tar.gz). For individual file compression, `zipfile` can be used.\n- **Executing Shell Commands:** Use the `subprocess` module (e.g., `subprocess.run`, `subprocess.call`, `subprocess.Popen`) to execute external commands. Be mindful of security implications and error handling for subprocesses.\n- **Directory Manipulation:** Use `os.makedirs` to create directories, `os.path.exists` to check for existence, and `os.remove` or `shutil.rmtree` for deletion.\n\n### Data Manipulation and Analysis\n\n- **Working with Collections:** Leverage `collections.Counter` for frequency counting, `collections.defaultdict` for easier dictionary manipulation, and `itertools` for efficient iteration.\n- **Mathematical Operations:** For numerical computations, especially with arrays, `numpy` is highly recommended. For statistical calculations like mean, median, and mode, use the `statistics` module or `numpy`.\n- **Data Transformation:** Use `pandas` for data manipulation, especially with tabular data (DataFrames). Libraries like `sklearn.preprocessing.StandardScaler` can be used for data standardization.\n- **String Processing:** Use regular expressions (`re` module) for pattern matching and validation.\n- **Randomness:** Use the `random` module for generating random numbers, choices, and shuffling.\n\n### Networking and Communication\n\n- **HTTP Requests:** Use the `requests` library for making HTTP requests (e.g., POST, GET).\n- **FTP Operations:** Use `ftplib` for interacting with FTP servers.\n\n### Security and Encoding\n\n- **Hashing:** Use `hashlib` for cryptographic hashing algorithms (e.g., SHA-256).\n- **Encoding/Decoding:** Use `base64` for encoding and decoding data.\n- **Encryption:** Use libraries like `cryptography.fernet` for symmetric encryption.\n\n### System Information\n\n- **Process Management:** Use `psutil` to get information about running processes and `subprocess` to start or stop them.\n- **System Details:** Use `platform` and `psutil` to gather OS, architecture, and memory usage information.\n\n### Error Handling and Exception Management\n\n- **Specific Exceptions:** Be prepared to catch and handle specific exceptions mentioned in task descriptions (e.g., `FileNotFoundError`, `ValueError`, `RuntimeError`, `statistics.StatisticsError`).\n- **General Exceptions:** Use broad `Exception` catches when specific exceptions are not known or when dealing with external library calls that might raise unexpected errors.\n- **Raising Exceptions:** Raise appropriate exceptions when input validation fails or when an unrecoverable error occurs.\n\n---"
+    }
+  ],
+  "gated": [
+    {
+      "round": 0,
+      "action": "baseline",
+      "dev_success_rate": 0.016666666666666666,
+      "accepted": true
+    },
+    {
+      "round": 1,
+      "dev_success_rate": 0.016666666666666666,
+      "accepted": false,
+      "added": [
+        "When processing text, clean it by removing non-alphanumeric characters (except spaces), converting to lowercase, and removing punctuation and stopwords."
+      ],
+      "removed": []
+    },
+    {
+      "round": 2,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [
+        "When processing text, clean it by removing non-alphanumeric characters (except spaces), converting to lowercase, and removing punctuation."
+      ],
+      "removed": []
+    },
+    {
+      "round": 3,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [
+        "When processing text, clean it by removing non-alphanumeric characters (except spaces), converting to lowercase, and removing punctuation and stopwords."
+      ],
+      "removed": []
+    }
+  ],
+  "expel": [
+    {
+      "round": 1,
+      "accepted": true,
+      "added": [
+        "When processing lists, consider using `itertools.chain.from_iterable` to flatten nested lists for easier processing.",
+        "When dealing with collections of items and their frequencies, `collections.Counter` is an efficient tool.",
+        "For tasks involving permutations or combinations of data, `itertools` provides useful functions."
+      ],
+      "removed": []
+    },
+    {
+      "round": 2,
+      "accepted": true,
+      "added": [
+        "When dealing with lists of numbers, using numpy for numerical operations like calculating means, medians, and percentiles can be efficient."
+      ],
+      "removed": []
+    },
+    {
+      "round": 3,
+      "accepted": true,
+      "added": [
+        "When processing data that involves multiple lists or iterables, consider using `itertools.chain.from_iterable` to efficiently flatten them into a single iterable."
+      ],
+      "removed": [
+        "When processing lists, consider using `itertools.chain.from_iterable` to flatten nested lists for easier processing."
+      ]
+    }
+  ],
+  "avo": [
+    {
+      "generation": 0,
+      "lineage": 1,
+      "dev_success_rate": 0.0,
+      "added": [
+        "Iterate through a dictionary's values and flatten them into a single list.",
+        "Count the occurrences of items in a list using a Counter object."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 0,
+      "lineage": 2,
+      "dev_success_rate": 0.025,
+      "added": [
+        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing.",
+        "When dealing with file system operations, always check for the existence of directories and files before attempting to operate on them to prevent `FileNotFoundError`."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 0,
+      "lineage": 3,
+      "dev_success_rate": 0.025,
+      "added": [
+        "Iterate over a dictionary's values and flatten them into a single list.",
+        "Count the occurrences of items in a list using a Counter object."
+      ],
+      "removed": []
+    },
+    {
+      "generation": 1,
+      "lineage": 1,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 2,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [
+        "When dealing with file paths, ensure that the directory exists before attempting to create files or subdirectories within it."
+      ],
+      "removed": [
+        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 3,
+      "dev_success_rate": 0.025,
+      "accepted": false,
+      "added": [
+        "Iterate over a dictionary's items to access both keys and values."
+      ],
+      "removed": [
+        "Count the occurrences of items in a list using a Counter object."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": "crossover",
+      "dev_success_rate": 0.025,
+      "accepted": true,
+      "parents": [
+        2,
+        3
+      ],
+      "replaced": 1
+    },
+    {
+      "generation": 2,
+      "lineage": 1,
+      "dev_success_rate": 0.025,
+      "accepted": false,
+      "added": [
+        "When processing nested data structures, consider using recursion to traverse and manipulate them."
+      ],
+      "removed": [
+        "Iterate over a dictionary's values and flatten them into a single list."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 2,
+      "dev_success_rate": 0.0,
+      "accepted": false,
+      "added": [],
+      "removed": [
+        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 3,
+      "dev_success_rate": 0.025,
+      "accepted": false,
+      "added": [
+        "When iterating over a dictionary's values, consider using itertools.chain.from_iterable to flatten nested iterables."
+      ],
+      "removed": [
+        "Count the occurrences of items in a list using a Counter object."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": "crossover",
+      "dev_success_rate": 0.025,
+      "accepted": false,
+      "parents": [
+        1,
+        2
+      ],
+      "replaced": 3
+    },
+    {
+      "generation": 3,
+      "lineage": "supervisor",
+      "diagnosis": "The lineages appear to be stuck in a loop of proposing very similar, incremental changes that are not leading to significant score improvements, and some promising avenues have been rejected.",
+      "directive": "The population's progress has stalled, with the best score remaining at 0.03 for two generations. This suggests that the current incremental refinement strategy is not effective. Therefore, for this generation, each lineage should be instructed to take a more substantial and exploratory step. This could involve adding a significantly larger number of new insights, or conversely, removing a long-held insight to force a re-evaluation of the agent's strategy and encourage exploration of fundamentally different approaches. Avoid proposing minor variations on existing insights or re-submitting insights that have been previously rejected."
+    },
+    {
+      "generation": 3,
+      "lineage": 1,
+      "dev_success_rate": 0.025,
+      "accepted": false,
+      "added": [
+        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing.",
+        "When dealing with file system operations, always check for the existence of directories and files before attempting to operate on them to prevent `FileNotFoundError`.",
+        "Iterate over a dictionary's values and flatten them into a single list.",
+        "Count the occurrences of items in a list using a Counter object.",
+        "When processing nested data structures, consider using recursion to traverse and manipulate them.",
+        "When dealing with file paths, ensure that the directory exists before attempting to create files or subdirectories within it."
+      ],
+      "removed": [
+        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing.",
+        "When dealing with file system operations, always check for the existence of directories and files before attempting to operate on them to prevent `FileNotFoundError`.",
+        "Iterate over a dictionary's values and flatten them into a single list.",
+        "Count the occurrences of items in a list using a Counter object."
+      ],
+      "stagnation_intervention": true
+    },
+    {
+      "generation": 3,
+      "lineage": 2,
+      "dev_success_rate": 0.025,
+      "accepted": false,
+      "added": [
+        "When generating random data, ensure that the range of generated values is appropriate for the task and consider using a fixed seed for reproducibility."
+      ],
+      "removed": [
+        "When dealing with file system operations, always check for the existence of directories and files before attempting to operate on them to prevent `FileNotFoundError`."
+      ],
+      "stagnation_intervention": true
+    },
+    {
+      "generation": 3,
+      "lineage": 3,
+      "dev_success_rate": 0.025,
+      "accepted": false,
+      "added": [
+        "When processing nested dictionaries, use recursion to traverse and extract values."
+      ],
+      "removed": [
+        "Count the occurrences of items in a list using a Counter object."
+      ],
+      "stagnation_intervention": true
+    },
+    {
+      "generation": 3,
+      "lineage": "crossover",
+      "dev_success_rate": 0.025,
+      "accepted": false,
+      "parents": [
+        1,
+        2
+      ],
+      "replaced": 3
+    }
+  ]
+}
