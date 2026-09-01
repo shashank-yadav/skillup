@@ -11,4 +11,5 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- When filtering by date ranges, use BETWEEN for inclusive ranges.
+- When filtering by date, use the appropriate date functions for the specific SQL dialect.
+- When filtering by date ranges, use the appropriate date functions for the specific SQL dialect and ensure the range is inclusive or exclusive as required.

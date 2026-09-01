@@ -9,28 +9,245 @@ Write a single SQLite query that answers the question against the given
 schema. Respond with only the query -- no explanation, no markdown code
 fences, no semicolon-separated multiple statements.
 
-## Strategies
+## General Strategies
 
-- **Identify the core question:** Determine what information needs to be retrieved or aggregated.
-- **Map question to tables and columns:** Identify the relevant tables and columns that contain the necessary data.
-- **Use `SELECT` for desired columns:** Specify the columns to be returned.
-- **Use `FROM` to specify the table(s):** Indicate the table(s) to query from.
-- **Use `WHERE` for filtering:** Apply conditions to filter rows based on specific criteria.
-- **Use `JOIN` for combining tables:** When data is spread across multiple tables, use appropriate `JOIN` clauses (e.g., `INNER JOIN`, `LEFT JOIN`) based on the relationship between tables.
-- **Use `GROUP BY` for aggregation:** When aggregating data (e.g., `SUM`, `AVG`, `COUNT`, `MAX`, `MIN`), group the results by relevant columns.
-- **Use aggregate functions:** Employ functions like `SUM`, `AVG`, `COUNT`, `MAX`, `MIN` to perform calculations on groups of rows.
-- **Use `ORDER BY` for sorting:** Sort the results in ascending (`ASC`) or descending (`DESC`) order.
-- **Use `LIMIT` to restrict results:** If only a specific number of rows are needed, use `LIMIT`.
-- **Use `LIKE` for pattern matching:** Employ `LIKE` with wildcards (`%`, `_`) for flexible string comparisons.
-- **Use `IN` for multiple values:** Use `IN` to specify a list of possible values for a condition.
-- **Use `BETWEEN` for ranges:** Use `BETWEEN` for conditions that fall within a specified range.
-- **Use `STRFTIME` for date/time formatting:** Extract parts of dates (e.g., year, month, week) for filtering or grouping.
-- **Use `CAST` for type conversion:** Convert data types when necessary for calculations (e.g., `CAST(SUM(column) AS REAL)` for accurate division).
-- **Handle string literals correctly:** Enclose string literals in single quotes (`'`).
-- **Handle boolean values:** Use `TRUE` or `FALSE` for boolean comparisons.
-- **Use aliases for clarity:** Use table aliases (e.g., `T1`, `T2`) and column aliases (e.g., `AS total_value`) to make queries more readable, especially with joins.
-- **Subqueries for complex conditions:** Use subqueries when a condition depends on the result of another query.
-- **Be precise with conditions:** Ensure all conditions in the `WHERE` clause accurately reflect the task requirements.
-- **Check for missing table/column names:** Ensure all referenced tables and columns exist in the schema.
-- **Ensure correct syntax for date functions:** Verify the correct format for date functions like `STRFTIME`.
-- **Avoid trailing commas or semicolons:** The output should be a single, valid SQL query without extra punctuation.
+- **Identify the core question:** Understand what information is being requested.
+- **Scan the schema:** Identify relevant tables and columns.
+- **Select appropriate columns:** Use `SELECT` to specify the desired output.
+- **Filter data:** Use `WHERE` clauses for specific conditions.
+- **Aggregate data:** Use functions like `SUM`, `AVG`, `COUNT`, `MAX`, `MIN` for calculations.
+- **Group results:** Use `GROUP BY` when aggregating data across categories.
+- **Join tables:** Use `JOIN` clauses to combine data from multiple tables based on common keys.
+- **Order results:** Use `ORDER BY` to sort the output.
+- **Limit results:** Use `LIMIT` to restrict the number of rows returned.
+- **Handle date/time:** Use `STRFTIME` or other date functions for date-based filtering and grouping.
+- **Use aliases:** Use `AS` to provide meaningful names for calculated columns or tables.
+- **Be precise with string matching:** Use `=` for exact matches and `LIKE` for pattern matching.
+- **Ensure correct syntax:** Pay attention to quotes, commas, and keywords.
+- **Handle boolean values:** Use `TRUE`/`FALSE` or `1`/`0` as appropriate for boolean comparisons.
+- **Use subqueries when necessary:** For complex conditions or calculations that depend on intermediate results.
+- **Consider data types:** Use `CAST` for type conversions when needed.
+- **When filtering by date ranges, ensure the correct format and comparison operators are used.**
+- **When filtering by multiple values, use `IN` or `OR` appropriately.**
+- **When comparing strings, ensure case sensitivity is handled if necessary (though SQLite is generally case-insensitive for string comparisons unless specific collations are used).**
+- **When a task involves counting distinct items, use `COUNT(DISTINCT column_name)`.**
+- **When a task requires finding the maximum or minimum value within a group, use `MAX()` or `MIN()` in conjunction with `GROUP BY`.**
+- **When a task asks for a specific number of top or bottom results, use `ORDER BY` with `DESC` or `ASC` and `LIMIT`.**
+- **When a task requires combining data from multiple tables, carefully choose the appropriate `JOIN` type (e.g., `INNER JOIN`, `LEFT JOIN`) based on the relationship between the tables and the desired outcome.**
+- **When a task requires filtering based on a condition that depends on the count of distinct values in another column, use `HAVING COUNT(DISTINCT column_name)`.**
+- **When a task requires calculating a percentage, use `CAST` to ensure floating-point division.**
+- **When a task involves filtering by a date range, ensure the `BETWEEN` operator or equivalent date comparisons are used correctly.**
+- **When a task requires selecting specific columns from joined tables, use table aliases to disambiguate column names.**
+- **When a task requires filtering by multiple conditions, use `AND` to combine them.**
+- **When a task requires selecting all columns from a table, use `SELECT *`.**
+- **When a task requires selecting specific columns from a table, list them explicitly in the `SELECT` clause.**
+- **When a task requires filtering by a specific value in a column, use the `=` operator.**
+- **When a task requires filtering by a range of values, use the `BETWEEN` operator or comparison operators (`>`, `<`, `>=`, `<=`).**
+- **When a task requires grouping by multiple columns, list them in the `GROUP BY` clause.**
+- **When a task requires ordering by multiple columns, list them in the `ORDER BY` clause.**
+- **When a task requires selecting distinct values, use the `DISTINCT` keyword.**
+- **When a task requires calculating the average of a column, use the `AVG()` function.**
+- **When a task requires calculating the sum of a column, use the `SUM()` function.**
+- **When a task requires counting the number of rows, use the `COUNT(*)` function.**
+- **When a task requires finding the maximum value in a column, use the `MAX()` function.**
+- **When a task requires finding the minimum value in a column, use the `MIN()` function.**
+- **When a task requires filtering by a list of values, use the `IN` operator.**
+- **When a task requires filtering by a pattern, use the `LIKE` operator with wildcards (`%` for any sequence of characters, `_` for any single character).**
+- **When a task requires combining results from multiple `SELECT` statements, use `UNION ALL` to include all rows or `UNION` to include only distinct rows.**
+- **When a task requires referencing a subquery, ensure it is properly enclosed in parentheses.**
+- **When a task requires filtering by a date, use appropriate date functions to extract the year, month, or day.**
+- **When a task requires filtering by a specific year, use the `=` operator with the year value.**
+- **When a task requires filtering by a specific month, use `STRFTIME('%m', date_column) = 'MM'`.**
+- **When a task requires filtering by a specific day of the week, use `STRFTIME('%w', date_column)` (where 0 is Sunday).**
+- **When a task requires filtering by a specific time of day, use `STRFTIME('%H:%M:%S', date_column)`.**
+- **When a task requires filtering by a specific quarter, use `STRFTIME('%Y-%q', date_column)`.**
+- **When a task requires filtering by a specific week of the year, use `STRFTIME('%Y-%W', date_column)`.**
+- **When a task requires filtering by a specific fiscal year, ensure the fiscal year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial quarter, ensure the financial quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial year, ensure the financial year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial period, ensure the financial period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
+- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
+-

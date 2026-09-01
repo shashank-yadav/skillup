@@ -3,42 +3,42 @@
     {
       "round": 1,
       "accepted": true,
-      "skill": "---\nname: alfworld\ndescription: Strategies for interacting with ALFWorld.\n---\n\n# ALFWorld\n\n## General Strategies\n\n- **Understand the Goal:** Before taking any action, ensure you understand the objective of the current task. This includes what needs to be achieved, any constraints, and the desired output format.\n- **Break Down Complex Tasks:** If a task is complex, break it down into smaller, manageable sub-tasks. Address each sub-task sequentially.\n- **Use Available Tools and Libraries:** Leverage Python's standard library and any provided external libraries (e.g., `os`, `re`, `json`, `csv`, `collections`, `itertools`, `random`, `statistics`, `numpy`, `pandas`, `seaborn`, `psutil`, `subprocess`, `ftplib`, `shutil`, `zipfile`, `base64`, `hashlib`, `cryptography`, `sklearn`).\n- **Handle Errors and Edge Cases:** Anticipate potential errors (e.g., `FileNotFoundError`, `ValueError`, `RuntimeError`, `statistics.StatisticsError`) and implement appropriate error handling mechanisms (e.g., `try-except` blocks, input validation). Consider edge cases like empty inputs, invalid data formats, or missing files.\n- **Follow Output Specifications:** Adhere strictly to the specified output format, including data types, structure, and any required naming conventions.\n- **Write Self-Contained Code:** Ensure that the code provided is self-contained, including all necessary imports. Avoid external dependencies that are not explicitly allowed or provided.\n- **Iterative Refinement:** If an initial approach fails, analyze the failure and refine the strategy. This might involve trying a different library function, adjusting the logic, or adding more robust error handling.\n\n## Specific Strategies\n\n### File and Directory Operations\n\n- **Listing and Filtering Files:** Use `os.listdir`, `glob.glob`, or `os.scandir` to get lists of files in a directory. Filter these lists based on patterns (e.g., file extensions, regex) as needed.\n- **Reading and Writing Files:** Use standard file I/O operations (`open()`, `read()`, `write()`) for text files. For CSV files, use the `csv` module. For JSON files, use the `json` module.\n- **Archiving and Compression:** Utilize `shutil.make_archive` for creating archives (e.g., zip, tar.gz). For individual file compression, `zipfile` can be used.\n- **Executing Shell Commands:** Use the `subprocess` module (e.g., `subprocess.run`, `subprocess.call`, `subprocess.Popen`) to execute external commands. Be mindful of security implications and error handling for subprocesses.\n- **Directory Manipulation:** Use `os.makedirs` to create directories, `os.path.exists` to check for existence, and `os.remove` or `shutil.rmtree` for deletion.\n\n### Data Manipulation and Analysis\n\n- **Working with Collections:** Leverage `collections.Counter` for frequency counting, `collections.defaultdict` for easier dictionary manipulation, and `itertools` for efficient iteration.\n- **Mathematical Operations:** For numerical computations, especially with arrays, `numpy` is highly recommended. For statistical calculations like mean, median, and mode, use the `statistics` module or `numpy`.\n- **Data Transformation:** Use `pandas` for data manipulation, especially with tabular data (DataFrames). Libraries like `sklearn.preprocessing.StandardScaler` can be used for data standardization.\n- **String Processing:** Use regular expressions (`re` module) for pattern matching and validation.\n- **Randomness:** Use the `random` module for generating random numbers, choices, and shuffling.\n\n### Networking and Communication\n\n- **HTTP Requests:** Use the `requests` library for making HTTP requests (e.g., POST, GET).\n- **FTP Operations:** Use `ftplib` for interacting with FTP servers.\n\n### Security and Encoding\n\n- **Hashing:** Use `hashlib` for cryptographic hashing algorithms (e.g., SHA-256).\n- **Encoding/Decoding:** Use `base64` for encoding and decoding data.\n- **Encryption:** Use libraries like `cryptography.fernet` for symmetric encryption.\n\n### System Information\n\n- **Process Management:** Use `psutil` to get information about running processes and `subprocess` to start or stop them.\n- **System Details:** Use `platform` and `psutil` to gather OS, architecture, and memory usage information.\n\n### Error Handling and Exception Management\n\n- **Specific Exceptions:** Be prepared to catch and handle specific exceptions mentioned in task descriptions (e.g., `FileNotFoundError`, `ValueError`, `RuntimeError`, `statistics.StatisticsError`).\n- **General Exceptions:** Use broad `Exception` catches when specific exceptions are not known or when dealing with external library calls that might raise unexpected errors.\n- **Raising Exceptions:** Raise appropriate exceptions when input validation fails or when an unrecoverable error occurs.\n\n---"
+      "skill": "---\nname: bigcodebench\ndescription: Strategies for solving BigCodeBench Python programming problems.\n---\n\n# BigCodeBench\n\nWrite a Python function that satisfies the given instructions and passes\nits hidden unit tests. Respond with only the function definition(s)\nneeded -- no explanation, no example usage, no markdown code fences, no\ntest code of your own.\n\n## General Strategies\n\n### Input Validation and Error Handling\n- **Check for invalid inputs**: Before performing operations, validate that inputs are of the expected type and format. Handle edge cases such as empty lists, zero values, or invalid file paths.\n- **Raise specific exceptions**: When errors occur due to invalid inputs or unexpected conditions, raise appropriate exceptions (e.g., `ValueError`, `FileNotFoundError`, `statistics.StatisticsError`) with informative messages.\n- **Handle subprocess errors**: When using `subprocess`, use `check=True` or explicitly check the return code and capture `stderr` to handle command execution failures gracefully.\n\n### Data Manipulation and Transformation\n- **Use appropriate libraries**: Leverage libraries like `pandas`, `numpy`, `collections`, `itertools`, `random`, `statistics`, `scipy`, and `sklearn` for efficient data manipulation, statistical calculations, and machine learning tasks.\n- **Handle missing values**: Before performing calculations or visualizations, address missing values (NaNs) by imputing them (e.g., with the column's mean) or by dropping rows/columns as appropriate for the task.\n- **Type conversion**: Ensure data types are correct before performing operations. For example, convert string representations of numbers or dictionaries to their actual types using `int()`, `float()`, `ast.literal_eval()`, or `json.loads()`.\n- **Data normalization and scaling**: Use `StandardScaler` or `MinMaxScaler` from `sklearn.preprocessing` when data requires normalization or scaling for certain algorithms or visualizations.\n\n### File Operations\n- **Check file/directory existence**: Before reading from or writing to files/directories, verify their existence using `os.path.exists()`. Create directories if they don't exist using `os.makedirs()`.\n- **Safe file handling**: Use `with open(...)` for file operations to ensure files are properly closed, even if errors occur.\n- **Archiving and compression**: Utilize libraries like `zipfile` and `shutil` for creating archives and `tarfile` or `subprocess` with `tar` for creating compressed archives.\n\n### Visualization\n- **Clear plot labeling**: Ensure all plots have descriptive titles, x-axis labels, and y-axis labels.\n- **Appropriate plot types**: Choose visualization types (e.g., bar plot, histogram, heatmap, scatter plot, line plot, box plot, KDE plot) that best represent the data and the task's requirements.\n- **Handle empty data for plotting**: If a plot cannot be generated due to empty or insufficient data, return `None` or an appropriate indicator as specified by the task.\n- **Figure and Axes management**: When creating plots, manage `Figure` and `Axes` objects correctly, especially when returning them or saving plots to files.\n\n### Algorithmic Strategies\n- **Iterate and aggregate**: For tasks involving processing collections of items (lists, dictionaries, files), iterate through them and aggregate results using appropriate methods (e.g., `sum()`, `mean()`, `Counter()`, `reduce()`).\n- **Conditional logic**: Implement conditional logic (`if/else`) to handle different scenarios, such as varying input lengths, specific data patterns, or error conditions.\n- **Regular expressions**: Use `re` for pattern matching and text manipulation, especially when dealing with strings, file names, or specific text formats.\n\n### Code Structure and Readability\n- **Import necessary modules**: Ensure all required modules are imported at the beginning of the function.\n- **Use meaningful variable names**: Choose descriptive names for variables to improve code clarity.\n- **Add comments**: Include comments to explain complex logic or non-obvious steps.\n- **Follow function signature**: Adhere to the provided function signature, including default arguments and type hints.\n- **Return expected types**: Ensure the function returns values of the types specified in the task description.\n\n---"
     }
   ],
   "gated": [
     {
       "round": 0,
       "action": "baseline",
-      "dev_success_rate": 0.016666666666666666,
+      "dev_success_rate": 0.31666666666666665,
       "accepted": true
     },
     {
       "round": 1,
-      "dev_success_rate": 0.016666666666666666,
-      "accepted": false,
+      "dev_success_rate": 0.36666666666666664,
+      "accepted": true,
       "added": [
-        "When processing text, clean it by removing non-alphanumeric characters (except spaces), converting to lowercase, and removing punctuation and stopwords."
+        "When generating random data, ensure the generated values fall within the specified range."
       ],
       "removed": []
     },
     {
       "round": 2,
-      "dev_success_rate": 0.0,
-      "accepted": false,
-      "added": [
-        "When processing text, clean it by removing non-alphanumeric characters (except spaces), converting to lowercase, and removing punctuation."
-      ],
+      "dev_success_rate": 0.4166666666666667,
+      "accepted": true,
+      "added": [],
       "removed": []
     },
     {
       "round": 3,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.36666666666666664,
       "accepted": false,
       "added": [
-        "When processing text, clean it by removing non-alphanumeric characters (except spaces), converting to lowercase, and removing punctuation and stopwords."
+        "When performing statistical calculations on data, handle potential errors such as division by zero or undefined statistics (e.g., mode of an empty list) gracefully."
       ],
-      "removed": []
+      "removed": [
+        "When generating random data, ensure the generated values fall within the specified range."
+      ]
     }
   ],
   "expel": [
@@ -46,9 +46,9 @@
       "round": 1,
       "accepted": true,
       "added": [
-        "When processing lists, consider using `itertools.chain.from_iterable` to flatten nested lists for easier processing.",
-        "When dealing with collections of items and their frequencies, `collections.Counter` is an efficient tool.",
-        "For tasks involving permutations or combinations of data, `itertools` provides useful functions."
+        "Handle missing values by imputation with the column mean before performing calculations or transformations.",
+        "When processing data from files, ensure robust error handling for file I/O operations and data parsing.",
+        "When performing statistical calculations on lists or arrays, consider edge cases such as empty inputs and handle them appropriately to avoid errors."
       ],
       "removed": []
     },
@@ -56,209 +56,204 @@
       "round": 2,
       "accepted": true,
       "added": [
-        "When dealing with lists of numbers, using numpy for numerical operations like calculating means, medians, and percentiles can be efficient."
+        "When performing calculations on lists or arrays, handle potential division by zero errors by checking for zero denominators before performing division."
       ],
-      "removed": []
+      "removed": [
+        "Handle missing values by imputation with the column mean before performing calculations or transformations."
+      ]
     },
     {
       "round": 3,
       "accepted": true,
-      "added": [
-        "When processing data that involves multiple lists or iterables, consider using `itertools.chain.from_iterable` to efficiently flatten them into a single iterable."
-      ],
-      "removed": [
-        "When processing lists, consider using `itertools.chain.from_iterable` to flatten nested lists for easier processing."
-      ]
+      "added": [],
+      "removed": []
     }
   ],
   "avo": [
     {
       "generation": 0,
       "lineage": 1,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.3,
       "added": [
-        "Iterate through a dictionary's values and flatten them into a single list.",
-        "Count the occurrences of items in a list using a Counter object."
+        "Handle potential errors during file operations by using try-except blocks.",
+        "When processing data from files, ensure that the file path is validated before attempting to open or read it."
       ],
       "removed": []
     },
     {
       "generation": 0,
       "lineage": 2,
-      "dev_success_rate": 0.025,
+      "dev_success_rate": 0.35,
       "added": [
-        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing.",
-        "When dealing with file system operations, always check for the existence of directories and files before attempting to operate on them to prevent `FileNotFoundError`."
+        "When processing data, handle potential errors gracefully by using try-except blocks to catch exceptions and provide informative error messages or default behaviors.",
+        "When performing file operations, ensure that directories exist before attempting to create or write files within them, and create them if they do not."
       ],
-      "removed": []
+      "removed": [
+        "If a list of items is empty, raise a ValueError with a specific message.",
+        "If a file path does not exist, raise a FileNotFoundError."
+      ]
     },
     {
       "generation": 0,
       "lineage": 3,
-      "dev_success_rate": 0.025,
+      "dev_success_rate": 0.4,
       "added": [
-        "Iterate over a dictionary's values and flatten them into a single list.",
-        "Count the occurrences of items in a list using a Counter object."
+        "When processing text, normalize to lowercase and remove punctuation before counting word frequencies.",
+        "When creating a document-term matrix, ensure that empty sentences are ignored."
       ],
       "removed": []
     },
     {
       "generation": 1,
       "lineage": 1,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.4,
+      "accepted": true,
+      "added": [],
+      "removed": [
+        "Handle potential errors during file operations by using try-except blocks."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 2,
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "added": [
+        "When generating random data, ensure that the size of the generated data is determined by the sum of relevant input values.",
+        "When processing data that involves numerical operations, handle potential edge cases such as empty lists or non-unique modes to prevent errors."
+      ],
+      "removed": [
+        "When processing data, handle potential errors gracefully by using try-except blocks to catch exceptions and provide informative error messages or default behaviors.",
+        "When performing file operations, ensure that directories exist before attempting to create or write files within them, and create them if they do not."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 3,
+      "dev_success_rate": 0.375,
+      "accepted": false,
+      "added": [
+        "When processing text, convert to lowercase and remove punctuation before tokenizing words.",
+        "When creating a document-term matrix, ensure that empty documents or sentences are handled appropriately, e.g., by ignoring them."
+      ],
+      "removed": [
+        "When processing text, normalize to lowercase and remove punctuation before counting word frequencies.",
+        "When creating a document-term matrix, ensure that empty sentences are ignored."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": "crossover",
+      "dev_success_rate": 0.35,
+      "accepted": false,
+      "parents": [
+        1,
+        3
+      ],
+      "replaced": 2
+    },
+    {
+      "generation": 2,
+      "lineage": 1,
+      "dev_success_rate": 0.4,
+      "accepted": false,
+      "added": [
+        "When performing file operations, ensure that the target directory exists before attempting to create or write files into it."
+      ],
+      "removed": [
+        "When processing data from files, ensure that the file path is validated before attempting to open or read it."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 2,
+      "dev_success_rate": 0.375,
+      "accepted": true,
+      "added": [
+        "When performing operations on data that may contain missing values, impute these missing values using the mean of the respective column before proceeding with further analysis or transformations.",
+        "When creating visualizations of data distributions, ensure that appropriate binning is used for histograms and that plots are clearly labeled with titles and axis labels."
+      ],
+      "removed": [
+        "When processing data, handle potential errors gracefully by using try-except blocks to catch exceptions and provide informative error messages or default behaviors.",
+        "When performing file operations, ensure that directories exist before attempting to create or write files within them, and create them if they do not."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
+      "lineage": 3,
+      "dev_success_rate": 0.4,
       "accepted": false,
       "added": [],
       "removed": [],
       "stagnation_intervention": false
     },
     {
-      "generation": 1,
-      "lineage": 2,
-      "dev_success_rate": 0.0,
-      "accepted": false,
-      "added": [
-        "When dealing with file paths, ensure that the directory exists before attempting to create files or subdirectories within it."
-      ],
-      "removed": [
-        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing."
-      ],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 1,
-      "lineage": 3,
-      "dev_success_rate": 0.025,
-      "accepted": false,
-      "added": [
-        "Iterate over a dictionary's items to access both keys and values."
-      ],
-      "removed": [
-        "Count the occurrences of items in a list using a Counter object."
-      ],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 1,
-      "lineage": "crossover",
-      "dev_success_rate": 0.025,
-      "accepted": true,
-      "parents": [
-        2,
-        3
-      ],
-      "replaced": 1
-    },
-    {
-      "generation": 2,
-      "lineage": 1,
-      "dev_success_rate": 0.025,
-      "accepted": false,
-      "added": [
-        "When processing nested data structures, consider using recursion to traverse and manipulate them."
-      ],
-      "removed": [
-        "Iterate over a dictionary's values and flatten them into a single list."
-      ],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 2,
-      "lineage": 2,
-      "dev_success_rate": 0.0,
-      "accepted": false,
-      "added": [],
-      "removed": [
-        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing."
-      ],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 2,
-      "lineage": 3,
-      "dev_success_rate": 0.025,
-      "accepted": false,
-      "added": [
-        "When iterating over a dictionary's values, consider using itertools.chain.from_iterable to flatten nested iterables."
-      ],
-      "removed": [
-        "Count the occurrences of items in a list using a Counter object."
-      ],
-      "stagnation_intervention": false
-    },
-    {
       "generation": 2,
       "lineage": "crossover",
-      "dev_success_rate": 0.025,
+      "dev_success_rate": 0.375,
       "accepted": false,
       "parents": [
         1,
-        2
+        3
       ],
-      "replaced": 3
+      "replaced": 2
     },
     {
       "generation": 3,
       "lineage": "supervisor",
-      "diagnosis": "The lineages appear to be stuck in a loop of proposing very similar, incremental changes that are not leading to significant score improvements, and some promising avenues have been rejected.",
-      "directive": "The population's progress has stalled, with the best score remaining at 0.03 for two generations. This suggests that the current incremental refinement strategy is not effective. Therefore, for this generation, each lineage should be instructed to take a more substantial and exploratory step. This could involve adding a significantly larger number of new insights, or conversely, removing a long-held insight to force a re-evaluation of the agent's strategy and encourage exploration of fundamentally different approaches. Avoid proposing minor variations on existing insights or re-submitting insights that have been previously rejected."
+      "diagnosis": "The lineages appear to be stuck in local optima, proposing only minor, incremental improvements that are not significantly boosting the overall score.",
+      "directive": "This generation, I want each lineage to explore a more significant departure from their current successful strategies. Instead of small refinements, I want them to consider making a substantial addition to their insight list, or conversely, removing a long-held insight that has been part of their successful strategy for several generations. The goal is to force a re-evaluation of their approach and potentially discover a new, more impactful direction."
     },
     {
       "generation": 3,
       "lineage": 1,
-      "dev_success_rate": 0.025,
+      "dev_success_rate": 0.325,
       "accepted": false,
       "added": [
-        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing.",
-        "When dealing with file system operations, always check for the existence of directories and files before attempting to operate on them to prevent `FileNotFoundError`.",
-        "Iterate over a dictionary's values and flatten them into a single list.",
-        "Count the occurrences of items in a list using a Counter object.",
-        "When processing nested data structures, consider using recursion to traverse and manipulate them.",
-        "When dealing with file paths, ensure that the directory exists before attempting to create files or subdirectories within it."
+        "When performing file operations, ensure that the target directory exists before attempting to create or write files into it."
       ],
-      "removed": [
-        "When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing.",
-        "When dealing with file system operations, always check for the existence of directories and files before attempting to operate on them to prevent `FileNotFoundError`.",
-        "Iterate over a dictionary's values and flatten them into a single list.",
-        "Count the occurrences of items in a list using a Counter object."
-      ],
+      "removed": [],
       "stagnation_intervention": true
     },
     {
       "generation": 3,
       "lineage": 2,
-      "dev_success_rate": 0.025,
+      "dev_success_rate": 0.375,
       "accepted": false,
-      "added": [
-        "When generating random data, ensure that the range of generated values is appropriate for the task and consider using a fixed seed for reproducibility."
-      ],
+      "added": [],
       "removed": [
-        "When dealing with file system operations, always check for the existence of directories and files before attempting to operate on them to prevent `FileNotFoundError`."
+        "When creating visualizations of data distributions, ensure that appropriate binning is used for histograms and that plots are clearly labeled with titles and axis labels."
       ],
       "stagnation_intervention": true
     },
     {
       "generation": 3,
       "lineage": 3,
-      "dev_success_rate": 0.025,
+      "dev_success_rate": 0.4,
       "accepted": false,
       "added": [
-        "When processing nested dictionaries, use recursion to traverse and extract values."
+        "When processing text data, normalize to lowercase and remove punctuation before tokenizing words to ensure consistent word matching."
       ],
       "removed": [
-        "Count the occurrences of items in a list using a Counter object."
+        "When processing text, normalize to lowercase and remove punctuation before counting word frequencies."
       ],
       "stagnation_intervention": true
     },
     {
       "generation": 3,
       "lineage": "crossover",
-      "dev_success_rate": 0.025,
+      "dev_success_rate": 0.375,
       "accepted": false,
       "parents": [
         1,
-        2
+        3
       ],
-      "replaced": 3
+      "replaced": 2
     }
   ]
 }

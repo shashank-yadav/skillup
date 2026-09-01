@@ -12,6 +12,11 @@ bigcodebench:
     valid_seen: {offset: 600, count: 150}
     valid_unseen: {offset: 750}   # count omitted -> rest of the split (390 rows)
 
+model:
+  # Root config.yaml's default (64) silently truncates code mid-function --
+  # canonical solutions run up to ~480 tokens. See mbpp/config.yaml for why.
+  agent_max_tokens: 1024
+
 experiment:
   seed: 42
   max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap

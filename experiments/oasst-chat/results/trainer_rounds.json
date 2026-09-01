@@ -3,40 +3,36 @@
     {
       "round": 1,
       "accepted": true,
-      "skill": "---\nname: oasst-chat\ndescription: Lessons learned from past conversations, so the same mistakes aren't repeated.\n---\n\n# oasst-chat\n\n## General Strategies\n\n- **Provide clear and structured answers:** Use headings, bullet points, and numbered lists to organize information.\n- **Handle ambiguity:** If a request is unclear, ask clarifying questions or provide multiple interpretations.\n- **Be cautious with factual claims:** If unsure about a fact, state that or provide a range of possibilities. Avoid making definitive statements on complex or controversial topics without qualification.\n- **Adhere to constraints:** Pay close attention to negative constraints (e.g., \"do not use Wikipedia\") and positive constraints (e.g., \"use markdown\").\n- **Explain code:** When providing code, explain its functionality, purpose, and any important components.\n- **Acknowledge limitations:** If unable to perform a task (e.g., control physical devices, access real-time internet data), clearly state the limitation.\n- **Offer further assistance:** Conclude responses by offering to elaborate or answer follow-up questions.\n- **Maintain a helpful and polite tone:** Even when correcting misunderstandings or stating limitations.\n- **Prioritize safety and ethical considerations:** Avoid providing harmful or unethical advice.\n- **Adapt to user feedback:** Incorporate user suggestions for improving response format and detail.\n\n## Specific Strategies\n\n- **For coding tasks:**\n    - When asked to implement a function, provide the code and explain its logic.\n    - If asked to convert code between languages, provide the equivalent code and explain any significant differences in syntax or paradigms.\n    - When asked to debug or explain code, break down the logic step-by-step.\n    - If asked to provide unit tests, ensure they cover various scenarios, including edge cases.\n- **For information retrieval:**\n    - When asked for specific data (e.g., number of Pok\u00e9mon), cite reliable sources and be prepared to use alternatives if requested.\n    - When asked to compare entities (e.g., companies, technologies), structure the comparison clearly, highlighting pros and cons.\n- **For creative writing tasks:**\n    - Understand the desired tone and style.\n    - If asked to rewrite content, focus on the specified improvements.\n- **For problem-solving tasks:**\n    - Break down complex problems into smaller, manageable steps.\n    - Explain the reasoning behind the solution.\n- **For technical explanations:**\n    - Define technical terms clearly.\n    - Use analogies or simpler language when appropriate.\n    - Provide context and background information."
+      "skill": "---\nname: oasst-chat\ndescription: Lessons learned from past conversations, so the same mistakes aren't repeated.\n---\n\n# oasst-chat\n\n## General Strategies\n\n- **Provide clear and structured answers:** Use headings, bullet points, and numbered lists to organize information.\n- **Handle ambiguity and follow-up questions:** If a user's request is unclear, ask clarifying questions. If the user asks for more detail or a different perspective, provide it.\n- **Acknowledge limitations:** If you cannot fulfill a request (e.g., access real-time data, control physical devices), state it clearly and politely.\n- **Offer concrete examples:** When explaining concepts, provide specific examples to illustrate the points.\n- **Adapt to user preferences:** If a user provides feedback on response style or length, adjust accordingly.\n- **Prioritize accuracy and reliability:** When asked for factual information, use reliable sources and avoid making definitive statements on subjective matters without qualification.\n- **Be cautious with sensitive topics:** When discussing complex or sensitive subjects, acknowledge the nuances and avoid definitive pronouncements.\n- **Maintain a helpful and polite tone:** Even when unable to fulfill a request, maintain a positive and helpful demeanor.\n- **Break down complex tasks:** For multi-step processes or complex information, present it in a step-by-step manner.\n- **Explain code and technical concepts clearly:** When providing code or technical explanations, break down the components and their functions.\n- **Handle factual inaccuracies gracefully:** If a user points out an error, acknowledge it and provide a corrected response.\n- **Avoid making assumptions:** If information is missing, ask for clarification rather than assuming.\n- **Be mindful of context:** Understand the user's intent and tailor the response accordingly.\n- **Offer to provide more information:** After answering a question, ask if the user would like further details or has additional questions.\n- **When asked to adopt a persona or style, do so consistently.**\n- **When asked to provide code, ensure it is functional and well-commented where appropriate.**\n- **When asked to compare options, present a balanced view of pros and cons.**"
     }
   ],
   "gated": [
     {
       "round": 0,
       "action": "baseline",
-      "dev_success_rate": 0.6,
+      "dev_success_rate": 0.8,
       "accepted": true
     },
     {
       "round": 1,
-      "dev_success_rate": 0.55,
-      "accepted": false,
+      "dev_success_rate": 0.9,
+      "accepted": true,
       "added": [
-        "When asked to provide information, prioritize sources other than Wikipedia if explicitly requested."
+        "When asked to provide information from a specific source, cite that source directly if possible, or explain why it cannot be provided."
       ],
       "removed": []
     },
     {
       "round": 2,
-      "dev_success_rate": 0.65,
-      "accepted": true,
-      "added": [
-        "When asked to provide specific numerical data, prioritize verifiable sources and state them if possible."
-      ],
-      "removed": [
-        "When asked to provide information, prioritize sources other than Wikipedia if explicitly requested."
-      ]
+      "dev_success_rate": 0.9,
+      "accepted": false,
+      "added": [],
+      "removed": []
     },
     {
       "round": 3,
-      "dev_success_rate": 0.7,
-      "accepted": true,
+      "dev_success_rate": 0.9,
+      "accepted": false,
       "added": [],
       "removed": []
     }
@@ -46,179 +42,182 @@
       "round": 1,
       "accepted": true,
       "added": [
-        "When faced with a complex problem, break it down into smaller, manageable steps to ensure thoroughness and accuracy."
+        "When faced with a task that requires generating content, consider the target audience and tailor the tone and style accordingly.",
+        "When providing instructions or explanations, break down complex information into smaller, manageable steps.",
+        "When asked to provide a list or examples, ensure the items are distinct and cover a range of possibilities."
       ],
       "removed": []
     },
     {
       "round": 2,
       "accepted": true,
-      "added": [],
-      "removed": []
+      "added": [
+        "When providing instructions, ensure they are actionable and include specific steps or parameters where applicable."
+      ],
+      "removed": [
+        "When providing instructions or explanations, break down complex information into smaller, manageable steps."
+      ]
     },
     {
       "round": 3,
       "accepted": true,
-      "added": [],
-      "removed": []
+      "added": [
+        "When generating instructions, consider the user's current knowledge and experience level."
+      ],
+      "removed": [
+        "When providing instructions, ensure they are actionable and include specific steps or parameters where applicable."
+      ]
     }
   ],
   "avo": [
     {
       "generation": 0,
       "lineage": 1,
-      "dev_success_rate": 0.7,
+      "dev_success_rate": 0.5,
       "added": [
-        "When a task requires generating structured output (like code or lists), ensure the output adheres to the requested format and includes all necessary components."
+        "When asked to perform a task that requires external tools or real-time information (e.g., web searches, controlling devices), state the inability to do so and offer to explain how the user could perform the task themselves."
       ],
       "removed": []
     },
     {
       "generation": 0,
       "lineage": 2,
-      "dev_success_rate": 0.35,
+      "dev_success_rate": 0.95,
       "added": [
-        "When asked to provide a list or set of items, present them in a structured format such as a bulleted or numbered list."
+        "When asked to provide code, ensure it is runnable and includes necessary imports and boilerplate.",
+        "When asked to explain a process, break it down into logical, numbered steps."
       ],
       "removed": [
-        "When asked to provide a list or set of items, present them in a structured format such as a bulleted or numbered list."
+        "When asked to provide code, ensure it is runnable and includes necessary imports and boilerplate."
       ]
     },
     {
       "generation": 0,
       "lineage": 3,
-      "dev_success_rate": 0.45,
+      "dev_success_rate": 0.95,
       "added": [
-        "When asked to provide specific examples, ensure the examples are concrete and directly illustrate the concept being explained.",
-        "When asked to explain a process, break it down into clear, numbered steps."
+        "When asked to provide instructions or explanations, break down complex topics into smaller, manageable steps.",
+        "When asked to provide code, ensure it is well-commented and includes explanations of its functionality."
       ],
       "removed": []
     },
     {
       "generation": 1,
       "lineage": 1,
-      "dev_success_rate": 0.7,
-      "accepted": false,
-      "added": [],
-      "removed": [],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 1,
-      "lineage": 2,
-      "dev_success_rate": 0.5,
-      "accepted": true,
-      "added": [
-        "When providing instructions or steps, use a numbered list for clarity and sequential order."
-      ],
-      "removed": [],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 1,
-      "lineage": 3,
-      "dev_success_rate": 0.6,
-      "accepted": true,
-      "added": [],
-      "removed": [],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 1,
-      "lineage": "crossover",
-      "dev_success_rate": 0.45,
-      "accepted": false,
-      "parents": [
-        1,
-        3
-      ],
-      "replaced": 2
-    },
-    {
-      "generation": 2,
-      "lineage": 1,
-      "dev_success_rate": 0.5,
-      "accepted": false,
-      "added": [
-        "When generating code, provide clear explanations of the code's functionality and purpose."
-      ],
-      "removed": [
-        "When a task requires generating structured output (like code or lists), ensure the output adheres to the requested format and includes all necessary components."
-      ],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 2,
-      "lineage": 2,
-      "dev_success_rate": 0.55,
-      "accepted": true,
-      "added": [],
-      "removed": [],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 2,
-      "lineage": 3,
       "dev_success_rate": 0.65,
       "accepted": true,
-      "added": [],
-      "removed": [
-        "When asked to explain a process, break it down into clear, numbered steps."
+      "added": [
+        "When a user provides feedback on response length, acknowledge it and commit to adhering to the specified constraints in future responses."
       ],
+      "removed": [],
       "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 2,
+      "dev_success_rate": 1.0,
+      "accepted": true,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": 3,
+      "dev_success_rate": 1.0,
+      "accepted": true,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 1,
+      "lineage": "crossover",
+      "dev_success_rate": 0.95,
+      "accepted": true,
+      "parents": [
+        2,
+        3
+      ],
+      "replaced": 1
     },
     {
       "generation": 2,
-      "lineage": "crossover",
-      "dev_success_rate": 0.85,
-      "accepted": true,
-      "parents": [
-        1,
-        3
-      ],
-      "replaced": 2
-    },
-    {
-      "generation": 3,
       "lineage": 1,
-      "dev_success_rate": 0.8,
-      "accepted": true,
-      "added": [],
-      "removed": [
-        "When generating code, provide clear explanations of the code's functionality and purpose."
-      ],
-      "stagnation_intervention": false
-    },
-    {
-      "generation": 3,
-      "lineage": 2,
-      "dev_success_rate": 0.6,
+      "dev_success_rate": 0.9,
       "accepted": false,
       "added": [],
       "removed": [],
       "stagnation_intervention": false
     },
     {
-      "generation": 3,
-      "lineage": 3,
-      "dev_success_rate": 0.6,
+      "generation": 2,
+      "lineage": 2,
+      "dev_success_rate": 1.0,
       "accepted": false,
-      "added": [
-        "When asked to provide examples, ensure they are concrete and directly illustrate the concept being explained."
-      ],
-      "removed": [
-        "When asked to provide specific examples, ensure the examples are concrete and directly illustrate the concept being explained."
-      ],
+      "added": [],
+      "removed": [],
       "stagnation_intervention": false
     },
     {
-      "generation": 3,
+      "generation": 2,
+      "lineage": 3,
+      "dev_success_rate": 0.95,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 2,
       "lineage": "crossover",
-      "dev_success_rate": 0.55,
+      "dev_success_rate": 0.9,
       "accepted": false,
       "parents": [
         2,
-        1
+        3
+      ],
+      "replaced": 1
+    },
+    {
+      "generation": 3,
+      "lineage": 1,
+      "dev_success_rate": 1.0,
+      "accepted": true,
+      "added": [
+        "When asked to provide instructions or explanations, break down complex topics into smaller, manageable steps."
+      ],
+      "removed": [
+        "When asked to provide instructions or explanations, break down complex topics into smaller, manageable steps."
+      ],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": 2,
+      "dev_success_rate": 0.95,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": 3,
+      "dev_success_rate": 0.9,
+      "accepted": false,
+      "added": [],
+      "removed": [],
+      "stagnation_intervention": false
+    },
+    {
+      "generation": 3,
+      "lineage": "crossover",
+      "dev_success_rate": 1.0,
+      "accepted": false,
+      "parents": [
+        1,
+        2
       ],
       "replaced": 3
     }

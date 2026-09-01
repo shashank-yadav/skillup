@@ -12,6 +12,12 @@ writing:
     valid_seen: {offset: 700, count: 200}
     valid_unseen: {offset: 900}   # count omitted -> rest of the English-filtered pool
 
+model:
+  # Root config.yaml's default (64) truncates writing responses mid-word --
+  # "chosen" reference responses run to a median 1438 completion tokens
+  # (p90: 4498). See mbpp/config.yaml for why this needs overriding at all.
+  agent_max_tokens: 3000
+
 experiment:
   seed: 42
   max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap

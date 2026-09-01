@@ -12,6 +12,5 @@ formatting.
 
 ## Insights
 
-- When writing a story, establish a clear theme and ensure the narrative elements (plot, characters, setting) consistently support it.
-- When writing dialogue, ensure it reflects the character's background and emotional state.
-- When describing actions, focus on the physical movements and their immediate consequences.
+- When generating a story, focus on establishing a clear protagonist, setting, and conflict early on to guide the narrative.
+- When a task involves creative generation, break down the prompt into constituent parts and ensure each part is addressed in the output.

@@ -12,7 +12,6 @@ test code of your own.
 
 ## Insights
 
-- When dealing with collections of items and their frequencies, `collections.Counter` is an efficient tool.
-- For tasks involving permutations or combinations of data, `itertools` provides useful functions.
-- When dealing with lists of numbers, using numpy for numerical operations like calculating means, medians, and percentiles can be efficient.
-- When processing data that involves multiple lists or iterables, consider using `itertools.chain.from_iterable` to efficiently flatten them into a single iterable.
+- When processing data from files, ensure robust error handling for file I/O operations and data parsing.
+- When performing statistical calculations on lists or arrays, consider edge cases such as empty inputs and handle them appropriately to avoid errors.
+- When performing calculations on lists or arrays, handle potential division by zero errors by checking for zero denominators before performing division.

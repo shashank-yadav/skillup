@@ -21,8 +21,9 @@ Skills convention those tools already read
 (`<skills-dir>/<name>/SKILL.md`). Installing one is a file copy.
 
 On a small, cheap model (`google/gemini-2.5-flash-lite`, not a frontier
-one), a skill trained here took MBPP from 39% to 51% and SearchQA from 50%
-to 74%, measured on held-out tasks never seen during training. Full
+one), a skill trained here took SearchQA from 50% to 74% and ALFWorld
+from 17.2% to 27.6%, measured on held-out tasks never seen during
+training. Full
 numbers below in [Does it work?](#does-it-work).
 
 ---
@@ -188,13 +189,21 @@ usage/token accounting for most external CLIs.
 Yes, on 3 of 4 benchmarks, measured on held-out data never seen during
 training, every condition run under identical model, prompt, and step
 settings so skill text is the only variable. Every number below is from a
-small, cheap model (`google/gemini-2.5-flash-lite`), not a frontier one:
+small, cheap model (`google/gemini-2.5-flash-lite`), not a frontier one.
+
+(A silent bug affected earlier versions of every number below except
+ALFWorld/SearchQA/LiveMathematicianBench: `agent_max_tokens` defaulted to
+64 everywhere, sized for those three benchmarks' short discrete answers,
+and was truncating code and writing responses mid-output for MBPP,
+BigCodeBench, SQL, Writing, and the conversation-distillation path --
+inflating some results and flattening others. Fixed with per-environment
+token budgets; every number below is a clean re-run.)
 
 | Benchmark | Baseline | Best result | Best strategy |
 |---|---|---|---|
 | ALFWorld (embodied household tasks) | 17.2% | **27.6%** (+10.4pp) | `expel` |
 | SearchQA (trivia QA) | 50.0% | **74.0%** (+24.0pp) | `naive` |
-| MBPP (Python programming) | 39.0% | **51.0%** (+12.0pp) | `reflact` |
+| MBPP (Python programming) | 81.0% | 83.0% (+2.0pp) | `avo`/`reflact` (tied) |
 | LiveMathematicianBench (research-level math MCQ) | 29.0% | 31.0% (+2.0pp) | `naive` |
 
 `reflact` is a faithful port of Microsoft's published SkillOpt method (see
@@ -206,12 +215,12 @@ on GPT-5.5. This repo verifies that method, plus four other strategies,
 against a model you can afford to run at volume.
 
 **No single strategy wins everywhere.** `naive`, the simplest strategy
-here, beat every more sophisticated method on two of four benchmarks;
-`reflact`, the fullest port of published research, won a third. On the
-hardest benchmark (graduate-level math, a different theorem every
-question) almost nothing helped -- an informative negative result, not a
-bug. That's why five interchangeable strategies ship: measure which one
-earns its complexity on your task instead of guessing.
+here, beat every more sophisticated method on two of four benchmarks
+(SearchQA, LiveMathematicianBench); on MBPP, `avo` and `reflact` tied for
+best. On the hardest benchmark (graduate-level math, a different theorem
+every question) almost nothing helped -- an informative negative result,
+not a bug. That's why five interchangeable strategies ship: measure which
+one earns its complexity on your task instead of guessing.
 
 **The conversation path was checked the same way, not just asserted.** Run
 end to end against 120 real conversations from the public
@@ -222,11 +231,11 @@ training:
 
 | Strategy | Held-out success | vs. baseline |
 |---|---|---|
-| Baseline (no skill) | 30.4% | -- |
-| `avo` | 30.4% | +0.0pp |
-| `gated` | 39.1% | +8.7pp |
-| `expel` | 39.1% | +8.7pp |
-| `naive` | 47.8% | +17.4pp |
+| Baseline (no skill) | 82.6% | -- |
+| `avo` | 87.0% | +4.3pp |
+| `gated` | 87.0% | +4.3pp |
+| `expel` | 82.6% | +0.0pp |
+| `naive` | 82.6% | +0.0pp |
 | `reflact` | not applicable | -- |
 
 `reflact` structurally can't run here: it rolls out fresh episodes against
@@ -234,54 +243,43 @@ a live **train** split every step, and a past conversation isn't
 re-runnable -- there's only the held-out `valid_seen`/`valid_unseen` splits
 `convert_conversation.py` builds.
 
-Read `naive`'s number with more caution than the rest. It roughly tripled
-average response length (811 vs. 258 tokens) with a long, generic
-best-practices document rather than lessons traceable to specific
-corrections -- plausibly winning partly by being more thorough, not by
-having learned something specific, the same full-document-rewrite tendency
-noted under [Adding a new training algorithm](#adding-a-new-training-algorithm).
-`gated` and `expel`'s smaller gains came from single, targeted insights
-instead (`gated`'s: "when asked to provide specific numerical data,
-prioritize verifiable sources," traceable to a real disagreement in the
-source conversations about Wikipedia's reliability). `avo`'s population
-search reached 0.85 on its own 20-task dev pool during training but
-didn't transfer to the held-out set at all -- overfitting the small dev
-pool made easy to reach, caught exactly because a held-out check existed.
-At n=23, one flipped task is 4.3 percentage points, so treat this as
-directional, not precise -- but directional is what the question needed:
-yes, distilling from real conversations measurably changes held-out
-performance.
+`avo` and `gated` -- the two strategies that validate every candidate
+against a held-out gate before keeping it -- are the top performers here;
+`naive` and `expel`'s ungated edits landed exactly on baseline. `avo`'s
+insights are concrete and traceable (generated code should include its
+imports and be runnable, explanations should be broken into numbered
+steps); `gated`'s is a single targeted rule (cite a source directly when
+asked for one). At n=23, one flipped task is 4.3 percentage points, so
+treat this as directional, not a precise measurement -- but directional
+is what the question needed: yes, distilling from real conversations
+measurably changes held-out performance.
 
-**Three more domains were added to test how far this generalizes, and
-the honest result is: not much moved.** `bigcodebench` (harder, more
-realistic Python problems), `sql` (text-to-SQL, graded by real query
-execution against an in-memory SQLite database, not string matching),
-and `writing` (quality across genres, judged against expert-annotated
-reference pairs) were trained and evaluated the same way, same cheap
-model:
+**Three more domains were added to test how far this generalizes:**
+`bigcodebench` (harder, more realistic Python problems), `sql`
+(text-to-SQL, graded by real query execution against an in-memory SQLite
+database, not string matching), and `writing` (quality across genres,
+judged against expert-annotated reference pairs), trained and evaluated
+the same way, same cheap model:
 
 | Environment | Baseline | Best result | Best strategy |
 |---|---|---|---|
-| BigCodeBench (harder Python programming) | 1.0% | 1.0% | none -- see below |
-| SQL (text-to-SQL) | 35.0% | 35.0% | none |
-| Writing (quality across genres) | 1.0% | 4.0% (+3.0pp) | `naive` |
+| BigCodeBench (harder Python programming) | 28.0% | **34.0%** (+6.0pp) | `avo`/`expel` (tied) |
+| SQL (text-to-SQL) | 37.0% | **40.0%** (+3.0pp) | `expel` |
+| Writing (quality across genres) | 41.0% | 42.0% (+1.0pp) | `gated` |
 
-BigCodeBench and Writing hit the same wall: `google/gemini-2.5-flash-lite`
-solves so few of these tasks unaided (1% baseline on both) that there's
-barely a "what worked" example for any trainer to learn from, and at that
-rate, 0 vs. 1 success out of 100 isn't statistically distinguishable from
-noise. These aren't "skills failed" results -- they're "this benchmark
-needs a stronger model before there's a measurable signal to learn from
-at all" results, which is exactly what adding more models later (see
-[Use existing skills](#use-existing-skills)) is for. SQL is a cleaner
-negative: baseline 35%, every skill landed within 1pp of it, and the
-trained insights themselves are sound (`gated` learned "use BETWEEN for
-date ranges," `expel` learned "join tables on their foreign keys") --
-they're just not addressing whatever's causing the model's failures
-here. Part of that ceiling is the dataset itself: roughly 7% of
-its gold queries have real data-quality issues, the known cost of a
-synthetic set traded for being fully self-contained (see
-`environments/sql/env.py`).
+BigCodeBench shows the clearest gain of the three, with sound, specific
+insights behind it: validate a file path before opening it, check for
+empty inputs and zero denominators before dividing. SQL and Writing moved
+less. `expel`'s SQL insights are reasonable (join tables on their foreign
+keys, use BETWEEN for date ranges) but only edge out baseline by 3pp;
+part of that ceiling is the dataset itself, since roughly 7% of its gold
+queries have real data-quality issues, the known cost of a synthetic set
+traded for being fully self-contained (see `environments/sql/env.py`).
+Writing barely moved at all, and the "winning" insight isn't about
+writing at all -- a tell that +1pp here is noise, not signal, not a real
+effect to trust. Generic writing advice doesn't reliably beat a capable
+baseline once that baseline can finish its response; that's a believable
+result, not a bug.
 
 ## Use existing skills
 

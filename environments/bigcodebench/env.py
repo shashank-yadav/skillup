@@ -77,18 +77,22 @@ class BigCodeBenchEnvironment:
         program = "\n".join([code, row["test"], "unittest.main()"])
 
         won = False
+        # BigCodeBench tasks legitimately create files/directories as part of
+        # what they test (zip archives, log directories, ...) -- run in a
+        # throwaway cwd so that lands in a temp dir, not this repo's working
+        # directory (confirmed: earlier runs left test_case_*/, *.zip, *.tar
+        # fixtures sitting in the repo root before this fix).
         try:
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
-                f.write(program)
-                tmp_path = f.name
-            result = subprocess.run(
-                [sys.executable, tmp_path], capture_output=True, text=True, timeout=_EXEC_TIMEOUT_S,
-            )
-            won = result.returncode == 0
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                tmp_path = Path(tmp_dir) / "candidate.py"
+                tmp_path.write_text(program)
+                result = subprocess.run(
+                    [sys.executable, str(tmp_path)], capture_output=True, text=True,
+                    timeout=_EXEC_TIMEOUT_S, cwd=tmp_dir,
+                )
+                won = result.returncode == 0
         except subprocess.TimeoutExpired:
             won = False
-        finally:
-            Path(tmp_path).unlink(missing_ok=True)
 
         info = {"admissible_commands": [], "won": won, "task_id": row["id"], "task": ""}
         return "", True, info  # single-turn: always done after one step

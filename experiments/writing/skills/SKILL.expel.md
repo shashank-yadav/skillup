@@ -12,7 +12,6 @@ formatting.
 
 ## Insights
 
-- When writing a report or formal communication, adopt a professional and objective tone, using relevant jargon where appropriate.
-- When writing a report, clearly delineate sections with headings and use a formal structure (e.g., To, From, Subject, Date).
-- When describing emotional states, use sensory details and metaphors to convey the internal experience.
-- When writing a report, use a formal structure including To, From, Subject, and Date fields.
+- Recognize that the agent's primary goal is to extract general strategies, not task-specific details.
+- Prioritize concrete, procedural insights over vague advice.
+- Avoid mentioning specific objects, locations, or tasks from the trajectories.

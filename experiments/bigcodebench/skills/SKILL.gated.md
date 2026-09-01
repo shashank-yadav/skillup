@@ -12,4 +12,4 @@ test code of your own.
 
 ## Insights
 
-(none yet)
+- When generating random data, ensure the generated values fall within the specified range.

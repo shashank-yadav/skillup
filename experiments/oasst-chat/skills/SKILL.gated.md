@@ -7,4 +7,4 @@ description: Lessons learned from past conversations, so the same mistakes aren'
 
 ## Insights
 
-- When asked to provide specific numerical data, prioritize verifiable sources and state them if possible.
+- When asked to provide information from a specific source, cite that source directly if possible, or explain why it cannot be provided.

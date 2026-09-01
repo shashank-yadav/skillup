@@ -3,42 +3,48 @@
     {
       "round": 1,
       "accepted": true,
-      "skill": "---\nname: writing\ndescription: Strategies for producing high-quality writing across genres (letters, reviews, tutorials, ad copy, essays, and more).\n---\n\n# Writing\n\nRespond to the writing prompt directly with the piece itself -- no preamble, no meta-commentary about what you're about to write, no markdown headers unless the prompt specifically calls for structured formatting.\n\nWhen crafting a narrative, focus on establishing the scene and introducing key elements early. For stories, begin by setting the mood and introducing characters or the central conflict. For outlines or structured pieces, start with a clear title and logline or introductory statement.\n\nIncorporate specific details and sensory language as requested by the prompt to create a vivid and immersive experience for the reader. This includes using descriptive adjectives, adverbs, and figurative language.\n\nEnsure that the output directly addresses all aspects of the prompt, including specific requirements for tone, style, and content. If the prompt requests specific phrases or elements, integrate them naturally into the narrative.\n\nFor argumentative or expository essays, clearly state the thesis or main argument early on and then systematically develop supporting points with evidence and logical reasoning.\n\nWhen creating outlines or synopses, provide a clear structure, often starting with a title and logline, followed by a breakdown of key parts or plot points.\n\nFor tasks involving role-playing, maintain the specified persona throughout the response, reflecting their voice, mannerisms, and perspective.\n\nIf a task involves a specific format (e.g., a report, a letter, an essay), adhere to that format. For example, a letter should begin with a salutation and end with a closing.\n\nWhen a task requires a specific emotional tone (e.g., heartfelt, melancholic, suspenseful), ensure the language, imagery, and narrative choices consistently reflect that tone."
+      "skill": "---\nname: writing\ndescription: Strategies for producing high-quality writing across genres (letters, reviews, tutorials, ad copy, essays, and more).\n---\n\n# Writing\n\nRespond to the writing prompt directly with the piece itself -- no\npreamble, no meta-commentary about what you're about to write, no\nmarkdown headers unless the prompt specifically calls for structured\nformatting.\n\n## General Strategies\n\n### Focus on the Prompt and Task\n- Understand the core request of the prompt.\n- Identify the specific genre, tone, and required elements.\n- Ensure the output directly addresses all aspects of the prompt.\n\n### Incorporate Specific Details and Sensory Language\n- Use vivid descriptions that appeal to the senses (sight, sound, smell, taste, touch).\n- Employ concrete nouns and active verbs to create engaging prose.\n- For narrative tasks, develop characters with distinct traits and motivations.\n- For descriptive tasks, paint a clear picture for the reader.\n\n### Show, Don't Tell\n- Instead of stating a character is sad, describe their slumped shoulders or tear-filled eyes.\n- Instead of saying a place is beautiful, describe the sunlight on the water or the scent of flowers.\n- Use dialogue and actions to reveal personality and plot.\n\n### Maintain Tone and Style\n- Adhere to the requested tone (e.g., suspenseful, heartfelt, formal, conversational).\n- Use language appropriate for the genre and audience.\n- For essays, ensure logical flow and persuasive arguments.\n\n### Structure and Pacing\n- Organize content logically with clear beginnings, middles, and ends.\n- For stories, build suspense or emotional resonance through pacing.\n- For outlines or scripts, use clear formatting and scene breaks.\n\n### Learn from Examples\n- Analyze successful trajectories to identify effective techniques and recurring patterns.\n- Analyze failed trajectories to understand common pitfalls and avoid them.\n\n## Strategies for Specific Genres\n\n### Narrative (Stories, Novels, Scripts)\n- **Character Development:** Create believable characters with motivations, flaws, and arcs.\n- **Plot Progression:** Develop a clear narrative arc with rising action, climax, and resolution.\n- **Dialogue:** Write natural-sounding dialogue that reveals character and advances the plot.\n- **Setting:** Establish a vivid and immersive setting that contributes to the mood and atmosphere.\n- **Suspense/Tension:** Build anticipation and intrigue through foreshadowing, pacing, and conflict.\n\n### Argumentative/Persuasive Writing (Essays)\n- **Clear Thesis:** State a clear and concise thesis statement.\n- **Logical Reasoning:** Support claims with evidence, examples, and logical arguments.\n- **Counterarguments:** Acknowledge and address opposing viewpoints.\n- **Structure:** Organize arguments into clear paragraphs with topic sentences.\n\n### Technical/Professional Writing (Notes, Resumes)\n- **Clarity and Conciseness:** Use direct and unambiguous language.\n- **Accuracy:** Ensure all factual information and metrics are correct.\n- **Professional Tone:** Maintain a formal and respectful tone.\n- **Keywords:** Incorporate relevant industry-specific keywords.\n- **Metrics-Driven Language:** Quantify achievements whenever possible.\n\n### Reflective Writing (Journals, Essays)\n- **Personal Voice:** Use a sincere and introspective tone.\n- **Sensory Details:** Engage the reader's senses to evoke emotions and memories.\n- **Theme Exploration:** Delve into the core themes and underlying meanings.\n- **Passage of Time:** Reflect on the impact of time and memory.\n\n## Common Pitfalls to Avoid\n\n### Preamble and Meta-Commentary\n- Do not introduce the writing with phrases like \"Here is the story...\" or \"I will now write...\".\n- Avoid explaining your writing process or choices within the response itself.\n\n### Irrelevant Information\n- Stick strictly to the prompt. Do not include extraneous details or unrelated topics.\n\n### Lack of Specificity\n- Avoid vague statements. Provide concrete examples and details.\n\n### Inconsistent Tone or Style\n- Maintain the requested tone and style throughout the entire piece.\n\n### Ignoring Constraints\n- Pay close attention to all specified requirements, including length, format, and content."
     }
   ],
   "gated": [
     {
       "round": 0,
       "action": "baseline",
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.5,
       "accepted": true
     },
     {
       "round": 1,
-      "dev_success_rate": 0.016666666666666666,
+      "dev_success_rate": 0.5166666666666667,
       "accepted": true,
       "added": [
-        "When generating creative text, focus on establishing a strong narrative voice and tone that aligns with the prompt's requirements. This includes using specific vocabulary, sentence structures, and emotional registers to create the desired atmosphere and characterization."
+        "When encountering a novel situation or object, prioritize understanding its function and potential uses before attempting to interact with it."
       ],
-      "removed": []
+      "removed": [
+        "When encountering a novel situation or object, prioritize understanding its function and potential uses before attempting to interact with it."
+      ]
     },
     {
       "round": 2,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.5,
       "accepted": false,
       "added": [
-        "When generating creative text, adopt a persona that is distinct from the user's prompt and the expected output, and then translate the prompt's requirements into that persona's context."
+        "When a task involves multiple steps or sub-goals, break down the overall objective into smaller, manageable sub-tasks and address them sequentially."
       ],
-      "removed": []
+      "removed": [
+        "When encountering a novel situation or object, prioritize understanding its function and potential uses before attempting to interact with it."
+      ]
     },
     {
       "round": 3,
-      "dev_success_rate": 0.03333333333333333,
-      "accepted": true,
+      "dev_success_rate": 0.48333333333333334,
+      "accepted": false,
       "added": [
-        "When generating creative text, ensure the output adheres to the specified format and structure, even when adopting a particular voice or style."
+        "When generating creative text, consider the emotional arc of the narrative and ensure that the emotional beats are earned and impactful."
       ],
-      "removed": []
+      "removed": [
+        "When a task involves multiple steps or sub-goals, break down the overall objective into smaller, manageable sub-tasks and address them sequentially."
+      ]
     }
   ],
   "expel": [
@@ -46,28 +52,22 @@
       "round": 1,
       "accepted": true,
       "added": [
-        "When generating creative text, focus on sensory details to evoke atmosphere and emotion.",
-        "When writing a report or formal communication, adopt a professional and objective tone, using relevant jargon where appropriate."
+        "Recognize that the agent's primary goal is to extract general strategies, not task-specific details.",
+        "Prioritize concrete, procedural insights over vague advice.",
+        "Avoid mentioning specific objects, locations, or tasks from the trajectories."
       ],
       "removed": []
     },
     {
       "round": 2,
       "accepted": true,
-      "added": [
-        "When writing a report, clearly delineate sections with headings and use a formal structure (e.g., To, From, Subject, Date).",
-        "When describing emotional states, use sensory details and metaphors to convey the internal experience."
-      ],
-      "removed": [
-        "When generating creative text, focus on sensory details to evoke atmosphere and emotion."
-      ]
+      "added": [],
+      "removed": []
     },
     {
       "round": 3,
       "accepted": true,
-      "added": [
-        "When writing a report, use a formal structure including To, From, Subject, and Date fields."
-      ],
+      "added": [],
       "removed": []
     }
   ],
@@ -75,133 +75,121 @@
     {
       "generation": 0,
       "lineage": 1,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.625,
       "added": [
-        "When generating creative text, incorporate specific sensory details (scent, light, texture) to enhance atmosphere and emotional resonance.",
-        "When writing a story, establish a clear theme and ensure the narrative elements (plot, characters, setting) consistently support it."
-      ],
-      "removed": [
-        "The aroma of burnt popcorn hung heavy in the air, a fitting metaphor for the evening.",
-        "The weight of the armor was a familiar, comforting pressure."
-      ]
-    },
-    {
-      "generation": 0,
-      "lineage": 2,
-      "dev_success_rate": 0.0,
-      "added": [
-        "When generating a story, establish the core conflict and character motivations early in the narrative.",
-        "When writing a story, use sensory details to immerse the reader in the setting and emotional atmosphere."
+        "When encountering a task that requires creative writing, break down the prompt into key elements and ensure each element is addressed in the generated output.",
+        "When generating a story, focus on establishing a clear protagonist, setting, and conflict early on to guide the narrative."
       ],
       "removed": []
     },
     {
       "generation": 0,
-      "lineage": 3,
-      "dev_success_rate": 0.0,
+      "lineage": 2,
+      "dev_success_rate": 0.575,
       "added": [
-        "When generating creative text, explicitly state the desired tone and style (e.g., poetic, melancholic, formal, persuasive) to guide the output.",
-        "When creating a narrative, ensure the initial action directly addresses the core task or premise, avoiding tangential descriptions."
+        "When encountering a situation with conflicting information or ambiguity, prioritize seeking clarification or additional data over making assumptions.",
+        "When a task requires multiple steps, break it down into smaller, manageable sub-tasks and address them sequentially."
+      ],
+      "removed": [
+        "When a task requires multiple steps, break it down into smaller, manageable sub-tasks and address them sequentially."
+      ]
+    },
+    {
+      "generation": 0,
+      "lineage": 3,
+      "dev_success_rate": 0.5,
+      "added": [
+        "When encountering a task that requires creative generation, break down the request into smaller, manageable components and address each component sequentially.",
+        "When generating creative content, consider the emotional arc and thematic consistency required by the prompt, ensuring a cohesive narrative or message."
       ],
       "removed": []
     },
     {
       "generation": 1,
       "lineage": 1,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.575,
       "accepted": false,
       "added": [
-        "When describing a setting, use specific sensory details (sight, sound, smell, touch, taste) to create a vivid and immersive atmosphere.",
-        "When portraying internal conflict, focus on the character's thoughts, feelings, and physical reactions to illustrate their struggle."
+        "When a task requires creative writing, ensure all key elements of the prompt are addressed in the generated output."
       ],
-      "removed": [
-        "When generating creative text, incorporate specific sensory details (scent, light, texture) to enhance atmosphere and emotional resonance."
-      ],
+      "removed": [],
       "stagnation_intervention": false
     },
     {
       "generation": 1,
       "lineage": 2,
-      "dev_success_rate": 0.025,
-      "accepted": true,
-      "added": [
-        "When writing dialogue, ensure it reflects the character's background and emotional state.",
-        "When describing actions, focus on the physical movements and their immediate consequences."
-      ],
+      "dev_success_rate": 0.5,
+      "accepted": false,
+      "added": [],
       "removed": [
-        "When generating a story, establish the core conflict and character motivations early in the narrative.",
-        "When writing a story, use sensory details to immerse the reader in the setting and emotional atmosphere."
+        "When a task requires creative writing, ensure all key elements of the prompt are addressed in the generated output."
       ],
       "stagnation_intervention": false
     },
     {
       "generation": 1,
       "lineage": 3,
-      "dev_success_rate": 0.0,
-      "accepted": false,
+      "dev_success_rate": 0.55,
+      "accepted": true,
       "added": [
-        "When writing dialogue, ensure it reflects the character's background and emotional state.",
-        "When describing actions, focus on the physical movements and their immediate consequences."
+        "When generating creative content, ensure all prompt requirements are met, including specific elements, themes, and stylistic constraints."
       ],
       "removed": [
-        "When generating creative text, explicitly state the desired tone and style (e.g., poetic, melancholic, formal, persuasive) to guide the output.",
-        "When creating a narrative, ensure the initial action directly addresses the core task or premise, avoiding tangential descriptions."
+        "When encountering a task that requires creative generation, break down the request into smaller, manageable components and address each component sequentially."
       ],
       "stagnation_intervention": false
     },
     {
       "generation": 1,
       "lineage": "crossover",
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.475,
       "accepted": false,
       "parents": [
-        2,
-        1
+        1,
+        2
       ],
       "replaced": 3
     },
     {
       "generation": 2,
       "lineage": 1,
-      "dev_success_rate": 0.025,
+      "dev_success_rate": 0.65,
       "accepted": true,
       "added": [
-        "When writing dialogue, ensure it reflects the character's background and emotional state.",
-        "When describing actions, focus on the physical movements and their immediate consequences."
+        "When a task involves creative generation, break down the prompt into constituent parts and ensure each part is addressed in the output."
       ],
       "removed": [
-        "When generating creative text, incorporate specific sensory details (scent, light, texture) to enhance atmosphere and emotional resonance."
+        "When encountering a task that requires creative writing, break down the prompt into key elements and ensure each element is addressed in the generated output."
       ],
       "stagnation_intervention": false
     },
     {
       "generation": 2,
       "lineage": 2,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.45,
       "accepted": false,
-      "added": [
-        "When describing a character's internal state, use metaphors and similes to convey complex emotions.",
-        "When depicting a setting, establish the mood and atmosphere through descriptive language that appeals to multiple senses."
-      ],
+      "added": [],
       "removed": [
-        "When writing dialogue, ensure it reflects the character's background and emotional state.",
-        "When describing actions, focus on the physical movements and their immediate consequences."
+        "When a task requires creative writing, ensure all key elements of the prompt are addressed in the generated output.",
+        "When generating creative content, ensure all prompt requirements are met, including specific elements, themes, and stylistic constraints."
       ],
       "stagnation_intervention": false
     },
     {
       "generation": 2,
       "lineage": 3,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.4,
       "accepted": false,
       "added": [],
-      "removed": [],
+      "removed": [
+        "When generating creative content, ensure all prompt requirements are met, including specific elements, themes, and stylistic constraints."
+      ],
       "stagnation_intervention": false
     },
     {
       "generation": 2,
       "lineage": "crossover",
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.55,
       "accepted": false,
       "parents": [
         1,
@@ -212,47 +200,47 @@
     {
       "generation": 3,
       "lineage": 1,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.475,
       "accepted": false,
-      "added": [],
+      "added": [
+        "When generating creative content, ensure all prompt requirements are met, including specific elements, themes, and stylistic constraints."
+      ],
       "removed": [
-        "When writing dialogue, ensure it reflects the character's background and emotional state."
+        "When a task involves creative generation, break down the prompt into constituent parts and ensure each part is addressed in the output."
       ],
       "stagnation_intervention": false
     },
     {
       "generation": 3,
       "lineage": 2,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.425,
       "accepted": false,
       "added": [
-        "When describing a character's internal state, use metaphors and similes to convey complex emotions.",
-        "When depicting a setting, establish the mood and atmosphere through descriptive language that appeals to multiple senses."
+        "When faced with a task that requires a specific format or structure, adhere strictly to the requested format and include all specified components.",
+        "When generating text that requires a specific tone or style, maintain that tone and style consistently throughout the output."
       ],
       "removed": [
-        "When writing dialogue, ensure it reflects the character's background and emotional state.",
-        "When describing actions, focus on the physical movements and their immediate consequences."
+        "When a task requires multiple steps, break it down into smaller, manageable sub-tasks and address them sequentially."
       ],
       "stagnation_intervention": false
     },
     {
       "generation": 3,
       "lineage": 3,
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.425,
       "accepted": false,
       "added": [
-        "When a task involves role-playing a specific persona, maintain that persona's voice and vocabulary consistently throughout the output.",
-        "When generating creative text, adhere to the specified tone and style (e.g., poetic, melancholic, formal, persuasive) to guide the output."
+        "When generating creative content, ensure the output reflects a consistent emotional arc and thematic development."
       ],
       "removed": [
-        "When generating creative text, explicitly state the desired tone and style (e.g., poetic, melancholic, formal, persuasive) to guide the output."
+        "When generating creative content, ensure all prompt requirements are met, including specific elements, themes, and stylistic constraints."
       ],
       "stagnation_intervention": false
     },
     {
       "generation": 3,
       "lineage": "crossover",
-      "dev_success_rate": 0.0,
+      "dev_success_rate": 0.475,
       "accepted": false,
       "parents": [
         1,

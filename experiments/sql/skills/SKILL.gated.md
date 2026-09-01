@@ -11,4 +11,4 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- When filtering by a range of dates, use the BETWEEN operator.
+- When filtering by date, use the appropriate date functions for the specific SQL dialect.

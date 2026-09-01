@@ -16,6 +16,14 @@ conversation_judge:
     valid_seen: {offset: 0, count: 24}
     valid_unseen: {offset: 24, count: 23}
 
+model:
+  # Root config.yaml's default (64) was silently truncating the agent's
+  # fresh responses mid-word during dev_eval/evaluation (confirmed on the
+  # actual run this repo's numbers came from) -- added after the fact, see
+  # convert_conversation.py's CONFIG_TEMPLATE for the same fix applied to
+  # every future conversion.
+  agent_max_tokens: 1024
+
 experiment:
   seed: 42
   max_steps: 5

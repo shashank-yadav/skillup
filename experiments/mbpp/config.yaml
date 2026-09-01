@@ -7,6 +7,14 @@ mbpp:
   dataset_name: "google-research-datasets/mbpp"
   split_map: {train: "train", valid_seen: "validation", valid_unseen: "test"}
 
+model:
+  # Root config.yaml's default (64) is sized for ALFWorld/SearchQA/
+  # LiveMathematicianBench's short discrete answers -- silently truncates
+  # code mid-expression here otherwise (confirmed: real responses cut off
+  # like `string[first+`). util._deep_merge merges this into the root
+  # model: block, not replace it.
+  agent_max_tokens: 512
+
 experiment:
   seed: 42
   max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap

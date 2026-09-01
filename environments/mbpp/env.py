@@ -77,18 +77,22 @@ class MBPPEnvironment:
         program = "\n".join([row["test_setup_code"], code, *row["test_list"]])
 
         won = False
+        # Run in a throwaway cwd, not this repo's working directory -- some
+        # MBPP problems involve file I/O, and a candidate solution shouldn't
+        # be able to leave fixtures sitting in the repo root (confirmed as a
+        # real issue for BigCodeBench's tasks; MBPP's are simpler but the
+        # same risk exists in principle).
         try:
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
-                f.write(program)
-                tmp_path = f.name
-            result = subprocess.run(
-                [sys.executable, tmp_path], capture_output=True, text=True, timeout=_EXEC_TIMEOUT_S,
-            )
-            won = result.returncode == 0
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                tmp_path = Path(tmp_dir) / "candidate.py"
+                tmp_path.write_text(program)
+                result = subprocess.run(
+                    [sys.executable, str(tmp_path)], capture_output=True, text=True,
+                    timeout=_EXEC_TIMEOUT_S, cwd=tmp_dir,
+                )
+                won = result.returncode == 0
         except subprocess.TimeoutExpired:
             won = False
-        finally:
-            Path(tmp_path).unlink(missing_ok=True)
 
         info = {
             "admissible_commands": [],

@@ -11,7 +11,6 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- When a query involves multiple tables, join them using appropriate foreign keys.
-- When filtering by date, use date functions to extract the relevant parts of the date (e.g., year, month).
-- When filtering by a range of dates, use the BETWEEN operator.
-- When filtering by multiple values in a single column, use the IN operator.
+- When a query involves multiple tables, join them using appropriate keys.
+- When filtering by date ranges, use BETWEEN for inclusive ranges.
+- When filtering by multiple specific values, use IN for conciseness.

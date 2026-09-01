@@ -12,7 +12,4 @@ test code of your own.
 
 ## Insights
 
-- When processing lists of data, consider using `itertools.chain.from_iterable` to flatten nested iterables for easier processing.
-- When dealing with file system operations, always check for the existence of directories and files before attempting to operate on them to prevent `FileNotFoundError`.
-- Iterate over a dictionary's values and flatten them into a single list.
-- Count the occurrences of items in a list using a Counter object.
+- When processing data from files, ensure that the file path is validated before attempting to open or read it.

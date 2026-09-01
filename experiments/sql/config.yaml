@@ -11,6 +11,12 @@ sql:
     valid_seen: {hf_split: "test", offset: 0, count: 150}   # 5851 rows available
     valid_unseen: {hf_split: "test", offset: 150}            # count omitted -> rest of the split
 
+model:
+  # Root config.yaml's default (64) is usually enough for a single SELECT
+  # but not always (multi-join/subquery). See mbpp/config.yaml for why
+  # this needs overriding at all.
+  agent_max_tokens: 300
+
 experiment:
   seed: 42
   max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap

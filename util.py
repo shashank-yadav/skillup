@@ -11,6 +11,21 @@ def experiment_dir(env: str) -> Path:
     return REPO_ROOT / "experiments" / env
 
 
+def _deep_merge(base: dict, override: dict) -> dict:
+    """Recursive dict merge -- a bare `dict.update` would let an
+    environment config that sets e.g. `model: {agent_max_tokens: 1024}`
+    silently wipe out the rest of the root config's `model` block
+    (agent_model, api_key_env, ...) instead of overriding just that one
+    key."""
+    merged = dict(base)
+    for key, value in override.items():
+        if key in merged and isinstance(merged[key], dict) and isinstance(value, dict):
+            merged[key] = _deep_merge(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
+
+
 def load_config(env: str, root_config_path: str = "config.yaml") -> dict:
     """Merge the shared root config (model settings, parallelism) with the
     environment-specific config under experiments/<env>/config.yaml."""
@@ -23,8 +38,7 @@ def load_config(env: str, root_config_path: str = "config.yaml") -> dict:
         )
     with open(env_config_path) as f:
         env_config = yaml.safe_load(f)
-    config.update(env_config)
-    return config
+    return _deep_merge(config, env_config)
 
 
 def trainer_model_name(config: dict) -> str:

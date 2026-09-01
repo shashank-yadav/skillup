@@ -70,6 +70,14 @@ conversation_judge:
     valid_seen: {{offset: 0, count: {n_valid_seen}}}
     valid_unseen: {{offset: {n_valid_seen}, count: {n_valid_unseen}}}
 
+model:
+  # Root config.yaml's default (64) silently truncates free-form chat
+  # responses mid-word -- confirmed on a real run. Conversational replies
+  # vary a lot in needed length; 1024 is a general-purpose budget, not
+  # tuned to any specific corpus the way mbpp/bigcodebench/writing's
+  # overrides are.
+  agent_max_tokens: 1024
+
 experiment:
   seed: 42
   max_steps: 5
