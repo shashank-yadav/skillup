@@ -308,7 +308,7 @@ not just whether it works on one small model:
 | LiveMathematicianBench | 37.0% -> **74.0%** (+37.0pp, `reflact`) | 35.0% -> **64.0%** (+29.0pp, `reflact`) |
 | MBPP | 81.0% -> 85.0% (+4.0pp, `gated`) | 81.0% -> 83.0% (+2.0pp, `naive`) |
 | BigCodeBench | 40.0% -> 40.0% (+0.0pp, `avo`/`gated`) | 43.0% -> 41.0% (-2.0pp, `avo`, best case) |
-| SQL | 53.0% -> **59.0%** (+6.0pp, `avo`/`expel`/`naive`) | 62.0% -> 45.0% (-17.0pp, `expel`, see below) |
+| SQL | 53.0% -> **59.0%** (+6.0pp, `avo`/`expel`/`naive`) | 63.0% -> 61.0% (-2.0pp, `expel`/`naive`, see below) |
 | Writing | 50.0% -> **67.0%** (+17.0pp, `expel`) | 34.0% -> **53.0%** (+19.0pp, `naive`) |
 
 `reflact`'s LiveMathematicianBench result isn't a one-model fluke: both
@@ -325,22 +325,33 @@ once the baseline no longer needed the reminder, and for DeepSeek actively
 got in the way. Same shape as the cheap-model Writing result above: advice
 calibrated for a weaker model doesn't transfer to a stronger one for free.
 
-DeepSeek's SQL number needs a real caveat, not just a footnote. Every
-skill condition collapsed 17-21 percentage points below baseline, and
-investigating why (comparing real SQL syntax validity against the
-raw model responses, not just re-running the eval) found roughly half of
-the failures were genuine syntax errors -- responses cut off mid-string,
-e.g. `WHERE orbit = 'High Earth Orbit` with no closing quote. This is not
-a token-budget bug: completion length in every failing case was well
-under the configured limit, and `finish_reason` was `stop`, not `length`.
-Repeating the exact same prompt dozens of times concurrently, including
-the literal prompts that failed in the real run, reproduced it 0 times in
-isolation. The one pattern that held: baseline (short system prompt) sits
-near normal, every skill condition (system prompt lengthened with
-insights) collapses. That correlation, without a confirmed mechanism, is
-the honest result -- a real DeepSeek/OpenRouter reliability issue under
-longer system prompts on this task, not something in this repo's harness,
-and not something to paper over with a cleaner-looking number.
+DeepSeek's original SQL number was far worse (every skill condition
+17-21 percentage points below baseline) and turned out to be a real bug
+in this repo, not the model or OpenRouter. Every generated response goes
+through `core.agent.parse_action`, which strips leading/trailing quote
+characters to handle a model that wraps its whole answer in quotes (e.g.
+answering `"Margaret Atwood"` instead of `Margaret Atwood`). That logic
+did `.strip('"').strip("'")` -- stripping *any* leading/trailing run of
+either quote character independently, not just a matched wrapping pair.
+A generated SQL query ending in a closed string literal, like `WHERE
+city = 'Boston'`, ends in a quote character that's part of the query
+itself, not a wrapper -- and was getting its real closing quote silently
+stripped, turning valid SQL into invalid SQL missing it. Token budgets
+and provider-specific flakiness were both investigated and ruled out
+first (finish_reason was always `stop`, well under the completion
+limit; every OpenRouter provider serving this model individually showed
+the same low failure rate on retest) before finding this by comparing
+the actual `core.agent.run_episode` code path against manual
+reproduction attempts, which had been calling the API directly and
+missed it entirely. Fixed to only strip a matched quote pair wrapping
+the *entire* response, re-verified against both the intended case (a
+wrapped short answer) and ALFWorld's discrete-command matching before
+re-running. The fix alone closed nearly the entire gap: -17/-21pp
+before, -2 to -5pp after, the same modest range every other model's SQL
+result falls in. This is shared code (`core/agent.py`) that every
+free-form environment's response passes through; SQL was hit hardest
+because a query ending in a quoted string literal is common, but it
+wasn't re-verified against every other environment's numbers above yet.
 
 ## Use existing skills
 

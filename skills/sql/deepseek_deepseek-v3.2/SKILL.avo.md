@@ -11,5 +11,5 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- When the task asks for a total sum, average, count, or other aggregate of a specific subset, use a WHERE clause to filter rows before applying the aggregate function.
-- For tasks that ask for 'each' or 'per' group, use GROUP BY on the grouping column(s) and include the aggregate function(s) in the SELECT clause.
+- When the task asks for a total or sum, use the SUM() aggregation function in the SELECT clause.
+- When the task asks for a count of distinct items, use COUNT(DISTINCT column).

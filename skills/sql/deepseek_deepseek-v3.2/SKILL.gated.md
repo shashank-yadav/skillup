@@ -11,4 +11,4 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- When the task asks for a list of items or records that meet certain conditions, use a SELECT statement with WHERE to filter rows based on those conditions, and use DISTINCT if the question asks for unique items.
+(none yet)

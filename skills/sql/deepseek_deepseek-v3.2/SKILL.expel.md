@@ -11,11 +11,12 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- When the task asks for a single value (like total, count, average, max, min) for a specific condition, use a SELECT with an aggregate function (SUM, COUNT, AVG, MAX, MIN) and a WHERE clause to filter.
-- If the task requires grouping results by one or more categories, use GROUP BY with the appropriate column(s), often combined with aggregate functions.
-- For tasks that involve data from multiple tables, use JOIN to combine them, specifying the matching columns in the ON condition.
-- When filtering by date ranges or specific time periods, use appropriate date functions (e.g., strftime, DATE) and comparison operators (>=, <=, BETWEEN).
-- For tasks asking for the top N results (e.g., highest, lowest, top 3), use ORDER BY combined with LIMIT.
-- When the task asks for a list of items that meet a condition, use SELECT with a WHERE clause to filter rows.
-- When the task asks for a percentage or ratio, use a CASE statement inside an aggregate function (like COUNT) and divide by the total count.
-- When the task asks for items that are not present in another table or condition, use a subquery with NOT IN or a LEFT JOIN with a NULL check.
+- When the task asks for a single value (like total, average, maximum) from a filtered subset, use SELECT with an aggregate function (SUM, AVG, MAX, etc.) and a WHERE clause to filter.
+- For tasks that require grouping results by a category (e.g., 'per each', 'by each', 'for each'), use GROUP BY with the appropriate column(s).
+- If the task involves data from multiple tables that are related (e.g., joining information about entities), use JOIN to combine the tables on the matching key columns.
+- When the task asks for a specific number of top or bottom results (e.g., 'highest', 'lowest', 'top N'), use ORDER BY with LIMIT to retrieve them.
+- When the task involves filtering based on a condition that is not a simple equality (e.g., 'more than', 'above', 'after'), use comparison operators (<, >, <=, >=, !=) or date functions in the WHERE clause.
+- When the task asks for a count of distinct items or unique combinations, use COUNT(DISTINCT column) or SELECT DISTINCT.
+- When the task asks for a percentage or proportion, compute it using a CASE statement or conditional aggregation inside an aggregate function.
+- For tasks that involve date ranges (e.g., 'last N years', 'in Q1', 'between dates'), use date functions and comparison operators in the WHERE clause to filter.
+- If the task asks for items that meet multiple conditions across different tables, use JOIN with appropriate ON conditions and WHERE filters to combine and filter the data.

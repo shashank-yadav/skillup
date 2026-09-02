@@ -104,8 +104,26 @@ def format_step_prompt(
     return "\n".join(lines)
 
 
+def _strip_wrapping_quotes(text: str) -> str:
+    """Strip a matched pair of quotes wrapping the whole response (a model
+    answering "Margaret Atwood" instead of Margaret Atwood), without
+    touching a quote character that's just part of the content itself.
+    `.strip('"').strip("'")` looked equivalent but isn't: it strips *any*
+    leading/trailing run of either quote character independently, which
+    silently corrupts a free-form answer that legitimately ends in one --
+    confirmed as the actual cause of a severe, hard-to-diagnose SQL
+    accuracy collapse: a generated query ending in a closed string literal
+    like `WHERE city = 'Boston'` had its real closing quote stripped,
+    turned into invalid SQL missing it, at the same rate as the model's
+    own use of trailing string literals -- not a token-budget or
+    provider-reliability issue, both suspected and ruled out first."""
+    if len(text) >= 2 and text[0] == text[-1] and text[0] in ('"', "'"):
+        return text[1:-1].strip()
+    return text
+
+
 def parse_action(raw_text: str, admissible_commands: list[str]) -> str:
-    cleaned = raw_text.strip().strip('"').strip("'").strip()
+    cleaned = _strip_wrapping_quotes(raw_text.strip())
     if not admissible_commands:
         # Free-form task: nothing to match against, so the cleaned response is the answer.
         return cleaned

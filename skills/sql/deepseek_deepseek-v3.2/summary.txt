@@ -3,32 +3,32 @@ Model: deepseek/deepseek-v3.2
 Evaluation tasks: 100
 
 Without skill (baseline):
-  Success: 62/100 (62.0%)
+  Success: 63/100 (63.0%)
   Avg steps (successful tasks): 1.0
-  Avg tokens/task: 441
+  Avg tokens/task: 442
 
 With learned skill [avo]:
-  Success: 44/100 (44.0%)
+  Success: 58/100 (58.0%)
   Avg steps (successful tasks): 1.0
-  Avg tokens/task: 580
+  Avg tokens/task: 551
 
 With learned skill [expel]:
-  Success: 45/100 (45.0%)
+  Success: 61/100 (61.0%)
   Avg steps (successful tasks): 1.0
-  Avg tokens/task: 765
+  Avg tokens/task: 835
 
 With learned skill [gated]:
-  Success: 41/100 (41.0%)
+  Success: 60/100 (60.0%)
   Avg steps (successful tasks): 1.0
-  Avg tokens/task: 553
+  Avg tokens/task: 513
 
 With learned skill [naive]:
-  Success: 43/100 (43.0%)
+  Success: 61/100 (61.0%)
   Avg steps (successful tasks): 1.0
-  Avg tokens/task: 1277
+  Avg tokens/task: 920
 
 Improvement over baseline:
-  [avo]: -18.0 percentage points
-  [expel]: -17.0 percentage points
-  [gated]: -21.0 percentage points
-  [naive]: -19.0 percentage points
+  [avo]: -5.0 percentage points
+  [expel]: -2.0 percentage points
+  [gated]: -3.0 percentage points
+  [naive]: -2.0 percentage points
