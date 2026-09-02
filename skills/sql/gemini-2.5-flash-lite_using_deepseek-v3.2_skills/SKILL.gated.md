@@ -11,4 +11,4 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- When filtering by date, use the appropriate date functions for the specific SQL dialect (e.g., STRFTIME for SQLite).
+(none yet)

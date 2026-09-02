@@ -11,5 +11,7 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
+- When a query involves a date range, extract the year, month, or week from the date column using date formatting functions.
+- When a query requires filtering by multiple conditions, use the OR operator to combine them.
 - When filtering by date, use the appropriate date functions for the specific SQL dialect.
-- When filtering by date ranges, use the appropriate date functions for the specific SQL dialect and ensure the range is inclusive or exclusive as required.
+- When a query requires aggregation and filtering on a specific condition, use a WHERE clause before the GROUP BY clause.

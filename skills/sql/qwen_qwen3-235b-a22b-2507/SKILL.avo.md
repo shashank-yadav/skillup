@@ -11,7 +11,5 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- Use GROUP BY and aggregate functions (e.g. SUM, AVG, COUNT) when the task asks for totals, averages, or counts per category.
-- Use JOINs to combine data from multiple tables when the required information spans across them.
-- Use subqueries with aggregate functions like MAX or MIN in the WHERE clause to find records matching the extreme value.
-- When filtering by date ranges, use explicit comparisons or date functions to ensure correct temporal filtering.
+- Use GROUP BY and aggregate functions like SUM, AVG, COUNT when the task asks for totals, averages, or counts per category.
+- Use conditional aggregation with CASE statements to compute multiple aggregate metrics (e.g., counts, sums) across different categories within a single query when the task requires segmented analysis without filtering.

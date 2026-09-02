@@ -276,18 +276,22 @@ the same way, same cheap model:
 | Environment | Baseline | Best result | Best strategy |
 |---|---|---|---|
 | BigCodeBench (harder Python programming) | 28.0% | **34.0%** (+6.0pp) | `avo`/`expel` (tied) |
-| SQL (text-to-SQL) | 37.0% | **40.0%** (+3.0pp) | `expel` |
+| SQL (text-to-SQL) | 57.0% | **59.0%** (+2.0pp) | `gated` |
 | Writing (quality across genres) | 41.0% | 42.0% (+1.0pp) | `gated` |
 
 BigCodeBench shows the clearest gain of the three, with sound, specific
 insights behind it: validate a file path before opening it, check for
 empty inputs and zero denominators before dividing. SQL and Writing moved
-less. `expel`'s SQL insights are reasonable (join tables on their foreign
-keys, use BETWEEN for date ranges) but only edge out baseline by 3pp;
-part of that ceiling is the dataset itself, since roughly 7% of its gold
-queries have real data-quality issues, the known cost of a synthetic set
-traded for being fully self-contained (see `environments/sql/env.py`).
-Writing barely moved at all, and the "winning" insight isn't about
+less. `gated`'s SQL insight is reasonable (use BETWEEN for inclusive date
+ranges) but only edges out baseline by 2pp; part of that ceiling is the
+dataset itself, since roughly 7% of its gold queries have real
+data-quality issues, the known cost of a synthetic set traded for being
+fully self-contained (see `environments/sql/env.py`). SQL's number here
+also reflects a real bug fix -- see
+[Does it hold up on a bigger model?](#does-it-hold-up-on-a-bigger-model)
+below for what `core.agent.parse_action` was doing to every SQL query
+ending in a string literal, and why the baseline itself moved from 37%
+to 57% once fixed. Writing barely moved at all, and the "winning" insight isn't about
 writing at all -- a tell that +1pp here is noise, not signal, not a real
 effect to trust. Generic writing advice doesn't reliably beat a capable
 baseline once that baseline can finish its response; that's a believable
@@ -308,7 +312,7 @@ not just whether it works on one small model:
 | LiveMathematicianBench | 37.0% -> **74.0%** (+37.0pp, `reflact`) | 35.0% -> **64.0%** (+29.0pp, `reflact`) |
 | MBPP | 81.0% -> 85.0% (+4.0pp, `gated`) | 81.0% -> 83.0% (+2.0pp, `naive`) |
 | BigCodeBench | 40.0% -> 40.0% (+0.0pp, `avo`/`gated`) | 43.0% -> 41.0% (-2.0pp, `avo`, best case) |
-| SQL | 53.0% -> **59.0%** (+6.0pp, `avo`/`expel`/`naive`) | 63.0% -> 61.0% (-2.0pp, `expel`/`naive`, see below) |
+| SQL | 51.0% -> **60.0%** (+9.0pp, `avo`) | 63.0% -> 61.0% (-2.0pp, `expel`/`naive`, see below) |
 | Writing | 50.0% -> **67.0%** (+17.0pp, `expel`) | 34.0% -> **53.0%** (+19.0pp, `naive`) |
 
 `reflact`'s LiveMathematicianBench result isn't a one-model fluke: both
@@ -353,6 +357,39 @@ free-form environment's response passes through; SQL was hit hardest
 because a query ending in a quoted string literal is common, but it
 wasn't re-verified against every other environment's numbers above yet.
 
+The cheap model and Qwen's own SQL results predated this fix too, not
+just DeepSeek's -- both were re-run once it landed. The cheap model's
+baseline moved from 37% to 57% from the fix alone, with everything else
+about the run unchanged; Qwen's moved less (53% to 51%, within normal
+run-to-run noise) but its best result improved (+6pp before, +9pp
+after). Every SQL number in this README now reflects the fix.
+
+**Does a skill trained by a bigger model help a smaller one?** Took
+every skill DeepSeek trained above and ran the cheap model against the
+same held-out tasks using DeepSeek's skill text instead of its own:
+
+| Environment | Cheap model, own skill | Cheap model, using DeepSeek's skill |
+|---|---|---|
+| ALFWorld | 17.2% -> 27.6% (+10.4pp) | 18.7% -> 26.9% (+8.2pp) |
+| SearchQA | 50.0% -> 74.0% (+24.0pp) | 47.0% -> **74.0%** (+27.0pp) |
+| LiveMathematicianBench | 27.0% -> 32.0% (+5.0pp) | 28.0% -> **59.0%** (**+31.0pp**) |
+| MBPP | 81.0% -> 83.0% (+2.0pp) | 82.0% -> 83.0% (+1.0pp) |
+| BigCodeBench | 28.0% -> 34.0% (+6.0pp) | 34.0% -> 34.0% (+0.0pp) |
+| SQL | 57.0% -> 59.0% (+2.0pp) | 57.0% -> 58.0% (+1.0pp) |
+| Writing | 41.0% -> 42.0% (+1.0pp) | 44.0% -> 47.0% (+3.0pp) |
+
+Most environments land close to self-training, sometimes a little behind,
+sometimes (SearchQA) slightly ahead. LiveMathematicianBench is the
+outlier that matters: the cheap model training on its own attempts barely
+moves the needle (+5pp) -- it isn't capable enough to distill useful
+mathematical-reasoning insights from its own failures. Handed DeepSeek's
+insights instead, it jumps +31pp, larger than DeepSeek's own gain on
+itself. *Generating* a good insight and *following* one are different
+capabilities; a smaller model can be much better at the second than the
+first, and this is the clearest evidence in this repo of a skill
+transferring net-positive across that gap, not just working where it was
+made.
+
 ## Use existing skills
 
 Every skill trained here, including every number above, is published
@@ -382,7 +419,11 @@ Currently published, every environment under all three models
 (`google_gemini-2.5-flash-lite`, `qwen_qwen3-235b-a22b-2507`,
 `deepseek_deepseek-v3.2`): `alfworld`, `searchqa`, `mbpp`,
 `livemathbench`, `bigcodebench`, `sql`, `writing`. More models land
-alongside these, not replacing them.
+alongside these, not replacing them. A fourth label,
+`gemini-2.5-flash-lite_using_deepseek-v3.2_skills`, is also published for
+every environment -- the cheap model, unchanged, running DeepSeek's
+trained skill text instead of its own, for the
+[cross-model transfer results](#does-it-hold-up-on-a-bigger-model) above.
 
 ## Manage a skill
 

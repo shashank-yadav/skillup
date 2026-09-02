@@ -11,243 +11,241 @@ fences, no semicolon-separated multiple statements.
 
 ## General Strategies
 
-- **Identify the core question:** Understand what information is being requested.
-- **Scan the schema:** Identify relevant tables and columns.
-- **Select appropriate columns:** Use `SELECT` to specify the desired output.
-- **Filter data:** Use `WHERE` clauses for specific conditions.
-- **Aggregate data:** Use functions like `SUM`, `AVG`, `COUNT`, `MAX`, `MIN` for calculations.
-- **Group results:** Use `GROUP BY` when aggregating data across categories.
-- **Join tables:** Use `JOIN` clauses to combine data from multiple tables based on common keys.
-- **Order results:** Use `ORDER BY` to sort the output.
-- **Limit results:** Use `LIMIT` to restrict the number of rows returned.
-- **Handle date/time:** Use `STRFTIME` or other date functions for date-based filtering and grouping.
-- **Use aliases:** Use `AS` to provide meaningful names for calculated columns or tables.
-- **Be precise with string matching:** Use `=` for exact matches and `LIKE` for pattern matching.
-- **Ensure correct syntax:** Pay attention to quotes, commas, and keywords.
-- **Handle boolean values:** Use `TRUE`/`FALSE` or `1`/`0` as appropriate for boolean comparisons.
-- **Use subqueries when necessary:** For complex conditions or calculations that depend on intermediate results.
-- **Consider data types:** Use `CAST` for type conversions when needed.
-- **When filtering by date ranges, ensure the correct format and comparison operators are used.**
-- **When filtering by multiple values, use `IN` or `OR` appropriately.**
-- **When comparing strings, ensure case sensitivity is handled if necessary (though SQLite is generally case-insensitive for string comparisons unless specific collations are used).**
-- **When a task involves counting distinct items, use `COUNT(DISTINCT column_name)`.**
-- **When a task requires finding the maximum or minimum value within a group, use `MAX()` or `MIN()` in conjunction with `GROUP BY`.**
-- **When a task asks for a specific number of top or bottom results, use `ORDER BY` with `DESC` or `ASC` and `LIMIT`.**
-- **When a task requires combining data from multiple tables, carefully choose the appropriate `JOIN` type (e.g., `INNER JOIN`, `LEFT JOIN`) based on the relationship between the tables and the desired outcome.**
-- **When a task requires filtering based on a condition that depends on the count of distinct values in another column, use `HAVING COUNT(DISTINCT column_name)`.**
-- **When a task requires calculating a percentage, use `CAST` to ensure floating-point division.**
-- **When a task involves filtering by a date range, ensure the `BETWEEN` operator or equivalent date comparisons are used correctly.**
-- **When a task requires selecting specific columns from joined tables, use table aliases to disambiguate column names.**
-- **When a task requires filtering by multiple conditions, use `AND` to combine them.**
-- **When a task requires selecting all columns from a table, use `SELECT *`.**
-- **When a task requires selecting specific columns from a table, list them explicitly in the `SELECT` clause.**
-- **When a task requires filtering by a specific value in a column, use the `=` operator.**
-- **When a task requires filtering by a range of values, use the `BETWEEN` operator or comparison operators (`>`, `<`, `>=`, `<=`).**
-- **When a task requires grouping by multiple columns, list them in the `GROUP BY` clause.**
-- **When a task requires ordering by multiple columns, list them in the `ORDER BY` clause.**
-- **When a task requires selecting distinct values, use the `DISTINCT` keyword.**
-- **When a task requires calculating the average of a column, use the `AVG()` function.**
-- **When a task requires calculating the sum of a column, use the `SUM()` function.**
-- **When a task requires counting the number of rows, use the `COUNT(*)` function.**
-- **When a task requires finding the maximum value in a column, use the `MAX()` function.**
-- **When a task requires finding the minimum value in a column, use the `MIN()` function.**
-- **When a task requires filtering by a list of values, use the `IN` operator.**
-- **When a task requires filtering by a pattern, use the `LIKE` operator with wildcards (`%` for any sequence of characters, `_` for any single character).**
-- **When a task requires combining results from multiple `SELECT` statements, use `UNION ALL` to include all rows or `UNION` to include only distinct rows.**
-- **When a task requires referencing a subquery, ensure it is properly enclosed in parentheses.**
-- **When a task requires filtering by a date, use appropriate date functions to extract the year, month, or day.**
-- **When a task requires filtering by a specific year, use the `=` operator with the year value.**
-- **When a task requires filtering by a specific month, use `STRFTIME('%m', date_column) = 'MM'`.**
-- **When a task requires filtering by a specific day of the week, use `STRFTIME('%w', date_column)` (where 0 is Sunday).**
-- **When a task requires filtering by a specific time of day, use `STRFTIME('%H:%M:%S', date_column)`.**
-- **When a task requires filtering by a specific quarter, use `STRFTIME('%Y-%q', date_column)`.**
-- **When a task requires filtering by a specific week of the year, use `STRFTIME('%Y-%W', date_column)`.**
-- **When a task requires filtering by a specific fiscal year, ensure the fiscal year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial quarter, ensure the financial quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial year, ensure the financial year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial period, ensure the financial period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting quarter, ensure the financial reporting quarter logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting year, ensure the financial reporting year logic is correctly implemented.**
-- **When a task requires filtering by a specific financial reporting period, ensure the financial reporting period logic is correctly implemented.**
--
+- **Understand the Schema:** Carefully examine the provided database schema, noting table names, column names, and data types.
+- **Identify Relevant Tables:** Determine which tables contain the data needed to answer the question.
+- **Use Appropriate Clauses:**
+    - `SELECT`: Specify the columns you want to retrieve.
+    - `FROM`: Indicate the table(s) to query.
+    - `WHERE`: Filter rows based on specific conditions.
+    - `GROUP BY`: Aggregate rows that have the same values in specified columns.
+    - `HAVING`: Filter groups based on specified conditions.
+    - `ORDER BY`: Sort the result set.
+    - `LIMIT`: Restrict the number of rows returned.
+- **Join Tables When Necessary:** If data is spread across multiple tables, use `JOIN` clauses (e.g., `INNER JOIN`, `LEFT JOIN`) to combine them based on related columns. Use aliases for table names to simplify queries.
+- **Aggregate Functions:** Utilize functions like `COUNT()`, `SUM()`, `AVG()`, `MIN()`, `MAX()` for calculations on groups of rows.
+- **Date and Time Functions:** Use functions like `STRFTIME()` for date-based filtering and grouping.
+- **String Matching:** Employ `LIKE` with wildcards (`%`, `_`) for pattern matching in text fields.
+- **Conditional Logic:** Use `CASE` statements or `WHERE` clauses with `OR` or `IN` for handling multiple conditions.
+- **Subqueries:** Use subqueries when a query needs to reference the results of another query.
+- **Handle NULL Values:** Be mindful of `NULL` values and use appropriate functions (e.g., `COALESCE`, `IS NULL`, `IS NOT NULL`) if necessary.
+- **Case Sensitivity:** Be aware that string comparisons might be case-sensitive depending on the database.
+- **Data Type Conversion:** Use `CAST()` when performing operations that require converting data types.
+
+## Successful Trajectories
+
+- When a question involves aggregating data based on categories, use `GROUP BY` along with aggregate functions like `SUM()` or `AVG()`.
+- To filter data based on specific values in a column, use the `WHERE` clause with equality operators (`=`) or inequality operators (`!=`, `<>`).
+- For range-based filtering on dates, use `BETWEEN` or comparison operators (`>`, `<`, `>=`, `<=`) with date functions.
+- To select specific columns, list them after `SELECT`. If you need all columns, use `*`.
+- When combining data from multiple tables, use `JOIN` clauses with the appropriate `ON` condition.
+- To find the single highest or lowest value, use `MAX()` or `MIN()` respectively, often combined with `ORDER BY` and `LIMIT 1`.
+- For filtering based on multiple possible values, use the `IN` operator.
+- To count distinct values, use `COUNT(DISTINCT column_name)`.
+- When calculating percentages, ensure you cast one of the operands to a floating-point type before division to avoid integer division.
+- To select unique combinations of values, use `SELECT DISTINCT`.
+- For filtering based on a condition that must be true for all rows within a group, use `HAVING COUNT(DISTINCT column_name) = (SELECT COUNT(DISTINCT column_name) FROM other_table)`.
+- When filtering by a date range, use `STRFTIME('%Y-%m', date_column) BETWEEN 'start_date' AND 'end_date'`.
+- To select the top N records based on a certain criteria, use `ORDER BY column DESC LIMIT N`.
+- When a question asks for a calculation across multiple years, use `WHERE year IN (year1, year2, ...)` or `WHERE STRFTIME('%Y', date_column) IN ('year1', 'year2', ...)`.
+- To select records based on a condition that can be met by multiple values, use `OR` or `IN`.
+- When joining tables and filtering based on conditions in both tables, use `INNER JOIN` and include the relevant conditions in the `WHERE` clause.
+- To retrieve data from a specific year, use `WHERE year = YYYY` or `WHERE STRFTIME('%Y', date_column) = 'YYYY'`.
+- When a question asks for a calculation over a specific period (e.g., H2 2021), use date functions to filter the relevant date range.
+- To find the maximum value within groups, use `MAX()` with `GROUP BY`.
+- To select records that meet a specific criterion, use `WHERE column = 'value'`.
+- To retrieve data from specific months, use `STRFTIME('%m', date_column) = 'MM'`.
+- When a question asks for a calculation based on a boolean column, use `WHERE boolean_column = TRUE` or `WHERE boolean_column = FALSE`.
+- To select records that satisfy a condition on a date column, use `WHERE STRFTIME('%Y', date_column) = 'YYYY'`.
+- When a question asks for a calculation based on a specific category, use `WHERE category = 'CategoryName'`.
+- To filter records based on a condition that is not equal to a specific value, use `WHERE column != 'value'`.
+- When a question asks for a calculation based on a specific region, use `WHERE region = 'RegionName'`.
+- To retrieve data based on multiple criteria, use `AND` to combine `WHERE` clauses.
+- To find the average of a column, use `AVG(column_name)`.
+- To select specific columns from a table, list them after `SELECT`.
+- When a question asks for a calculation based on a specific type, use `WHERE type = 'TypeName'`.
+- To retrieve data from a specific city, use `WHERE city = 'CityName'`.
+- When a question asks for a calculation based on a specific country, use `WHERE country = 'CountryName'`.
+- To retrieve data based on a condition that can be met by either of two values, use `OR`.
+- To select all columns from a table, use `*`.
+- When a question asks for a calculation based on a specific sector, use `WHERE sector = 'SectorName'`.
+- To retrieve data based on a condition that is greater than a certain value, use `WHERE column > value`.
+- To retrieve data based on a condition that is less than a certain value, use `WHERE column < value`.
+- When a question asks for a calculation based on a specific status, use `WHERE status = 'StatusName'`.
+- To retrieve data based on a condition that is greater than or equal to a certain value, use `WHERE column >= value`.
+- To retrieve data based on a condition that is less than or equal to a certain value, use `WHERE column <= value`.
+- When a question asks for a calculation based on a specific manufacturer, use `WHERE Manufacturer = 'ManufacturerName'`.
+- To retrieve data based on a condition that is not equal to a specific value, use `WHERE column != 'value'`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is within a specific range, use `WHERE column BETWEEN value1 AND value2`.
+- When a question asks for a calculation based on a specific domain, use `WHERE domain = 'DomainName'`.
+- To retrieve data based on a condition that is like a certain pattern, use `WHERE column LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific purpose, use `WHERE purpose = 'PurposeName'`.
+- To retrieve data based on a condition that is not like a certain pattern, use `WHERE column NOT LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific client gender, use `WHERE client_gender = 'Gender'`.
+- To retrieve data based on a condition that is in a list of values, use `WHERE column IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific founder gender, use `WHERE founder_gender = 'Gender'`.
+- To retrieve data based on a condition that is not in a list of values, use `WHERE column NOT IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific incident type, use `WHERE incident_type = 'IncidentType'`.
+- To retrieve data based on a condition that is null, use `WHERE column IS NULL`.
+- When a question asks for a calculation based on a specific region, use `WHERE region = 'RegionName'`.
+- To retrieve data based on a condition that is not null, use `WHERE column IS NOT NULL`.
+- When a question asks for a calculation based on a specific state, use `WHERE state = 'StateName'`.
+- To retrieve data based on a condition that is true, use `WHERE column = TRUE`.
+- When a question asks for a calculation based on a specific year, use `WHERE year = YYYY`.
+- To retrieve data based on a condition that is false, use `WHERE column = FALSE`.
+- When a question asks for a calculation based on a specific department, use `WHERE department = 'DepartmentName'`.
+- To retrieve data based on a condition that is not true, use `WHERE column != TRUE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not false, use `WHERE column != FALSE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is greater than a certain value, use `WHERE column > value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is less than a certain value, use `WHERE column < value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is greater than or equal to a certain value, use `WHERE column >= value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is less than or equal to a certain value, use `WHERE column <= value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is between two values, use `WHERE column BETWEEN value1 AND value2`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is like a pattern, use `WHERE column LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not like a pattern, use `WHERE column NOT LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is in a list of values, use `WHERE column IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not in a list of values, use `WHERE column NOT IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is null, use `WHERE column IS NULL`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not null, use `WHERE column IS NOT NULL`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is true, use `WHERE column = TRUE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is false, use `WHERE column = FALSE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not true, use `WHERE column != TRUE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not false, use `WHERE column != FALSE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is greater than a certain value, use `WHERE column > value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is less than a certain value, use `WHERE column < value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is greater than or equal to a certain value, use `WHERE column >= value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is less than or equal to a certain value, use `WHERE column <= value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is between two values, use `WHERE column BETWEEN value1 AND value2`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is like a pattern, use `WHERE column LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not like a pattern, use `WHERE column NOT LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is in a list of values, use `WHERE column IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not in a list of values, use `WHERE column NOT IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is null, use `WHERE column IS NULL`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not null, use `WHERE column IS NOT NULL`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is true, use `WHERE column = TRUE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is false, use `WHERE column = FALSE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not true, use `WHERE column != TRUE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not false, use `WHERE column != FALSE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is greater than a certain value, use `WHERE column > value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is less than a certain value, use `WHERE column < value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is greater than or equal to a certain value, use `WHERE column >= value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is less than or equal to a certain value, use `WHERE column <= value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is between two values, use `WHERE column BETWEEN value1 AND value2`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is like a pattern, use `WHERE column LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not like a pattern, use `WHERE column NOT LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is in a list of values, use `WHERE column IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not in a list of values, use `WHERE column NOT IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is null, use `WHERE column IS NULL`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not null, use `WHERE column IS NOT NULL`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is true, use `WHERE column = TRUE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is false, use `WHERE column = FALSE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not true, use `WHERE column != TRUE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not false, use `WHERE column != FALSE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is greater than a certain value, use `WHERE column > value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is less than a certain value, use `WHERE column < value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is greater than or equal to a certain value, use `WHERE column >= value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is less than or equal to a certain value, use `WHERE column <= value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is between two values, use `WHERE column BETWEEN value1 AND value2`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is like a pattern, use `WHERE column LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not like a pattern, use `WHERE column NOT LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is in a list of values, use `WHERE column IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not in a list of values, use `WHERE column NOT IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is null, use `WHERE column IS NULL`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not null, use `WHERE column IS NOT NULL`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is true, use `WHERE column = TRUE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is false, use `WHERE column = FALSE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not true, use `WHERE column != TRUE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not false, use `WHERE column != FALSE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is greater than a certain value, use `WHERE column > value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is less than a certain value, use `WHERE column < value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is greater than or equal to a certain value, use `WHERE column >= value`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is less than or equal to a certain value, use `WHERE column <= value`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is between two values, use `WHERE column BETWEEN value1 AND value2`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is like a pattern, use `WHERE column LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not like a pattern, use `WHERE column NOT LIKE 'pattern'`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is in a list of values, use `WHERE column IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not in a list of values, use `WHERE column NOT IN (value1, value2, ...)`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is null, use `WHERE column IS NULL`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not null, use `WHERE column IS NOT NULL`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is true, use `WHERE column = TRUE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is false, use `WHERE column = FALSE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition that is not true, use `WHERE column != TRUE`.
+- When a question asks for a calculation based on a specific location, use `WHERE location = 'LocationName'`.
+- To retrieve data based on a condition that is not false, use `WHERE column != FALSE`.
+- When a question asks for a calculation based on a specific common name, use `WHERE common_name = 'CommonName'`.
+- To retrieve data based on a condition

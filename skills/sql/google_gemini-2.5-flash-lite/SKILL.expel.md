@@ -11,6 +11,6 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- When a query involves multiple tables, join them using appropriate keys.
-- When filtering by date ranges, use BETWEEN for inclusive ranges.
-- When filtering by multiple specific values, use IN for conciseness.
+- When a query requires aggregating data across multiple tables, join the tables on their common keys and then apply the aggregation function.
+- To filter data based on a date range, use date functions to extract the relevant year, month, or day and compare it to the desired range.
+- When a query asks for the top or bottom N records based on a certain criteria, use ORDER BY with DESC or ASC and LIMIT.

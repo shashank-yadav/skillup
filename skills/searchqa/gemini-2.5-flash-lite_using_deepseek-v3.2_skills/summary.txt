@@ -1,0 +1,40 @@
+Model: google/gemini-2.5-flash-lite
+
+Evaluation tasks: 100
+
+Without skill (baseline):
+  Success: 47/100 (47.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 214
+
+With learned skill [avo]:
+  Success: 73/100 (73.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 333
+
+With learned skill [expel]:
+  Success: 71/100 (71.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 506
+
+With learned skill [gated]:
+  Success: 72/100 (72.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 301
+
+With learned skill [naive]:
+  Success: 72/100 (72.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 529
+
+With learned skill [reflact]:
+  Success: 74/100 (74.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 497
+
+Improvement over baseline:
+  [avo]: +26.0 percentage points
+  [expel]: +24.0 percentage points
+  [gated]: +25.0 percentage points
+  [naive]: +25.0 percentage points
+  [reflact]: +27.0 percentage points

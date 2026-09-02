@@ -11,4 +11,5 @@ fences, no semicolon-separated multiple statements.
 
 ## Insights
 
-- When filtering by date, use the appropriate date functions for the specific SQL dialect (e.g., STRFTIME for SQLite).
+- When the task asks for a total or sum, use the SUM() aggregation function in the SELECT clause.
+- When the task asks for a count of distinct items, use COUNT(DISTINCT column).
