@@ -28,9 +28,14 @@ def main():
     parser.add_argument("--env", required=True, help="Registered environment name, e.g. 'alfworld'.")
     parser.add_argument("--harness", default="api", choices=["api", "cli"],
                          help="Backend for action selection: direct API, or an external harness's CLI.")
+    parser.add_argument("--model", default=None,
+                         help="Override config.yaml's agent_model AND trainer_model with this OpenRouter model id.")
     args = parser.parse_args()
 
     config = load_config(args.env)
+    if args.model:
+        config["model"]["agent_model"] = args.model
+        config["model"]["trainer_model"] = args.model
     exp = config["experiment"]
 
     env_factory = get_environment(config["environment"])

@@ -34,6 +34,7 @@ numbers below in [Does it work?](#does-it-work).
 - [Use it](#use-it)
 - [Train a skill](#train-a-skill)
 - [Does it work?](#does-it-work)
+- [Does it hold up on a bigger model?](#does-it-hold-up-on-a-bigger-model)
 - [Use existing skills](#use-existing-skills)
 - [Manage a skill](#manage-a-skill)
 - [Project structure](#project-structure)
@@ -204,7 +205,18 @@ token budgets; every number below is a clean re-run.)
 | ALFWorld (embodied household tasks) | 17.2% | **27.6%** (+10.4pp) | `expel` |
 | SearchQA (trivia QA) | 50.0% | **74.0%** (+24.0pp) | `naive` |
 | MBPP (Python programming) | 81.0% | 83.0% (+2.0pp) | `avo`/`reflact` (tied) |
-| LiveMathematicianBench (research-level math MCQ) | 29.0% | 31.0% (+2.0pp) | `naive` |
+| LiveMathematicianBench (research-level math MCQ) | 27.0% | 32.0% (+5.0pp) | `naive` |
+
+LiveMathematicianBench's numbers reflect a second, unrelated fix: the
+dataset's own `correct_choice` label is "A" for 100% of its 608 rows
+(confirmed directly), and an earlier version of this environment's
+option-assembly code sorted choices by that original label -- meaning the
+correct answer always rendered as option A, a 100%-reliable positional
+exploit, not a subtle bias. One trainer strategy (`reflact`) partially
+discovered it before the fix, inflating its measured gain on this
+benchmark without any real improvement in reasoning behind it. Options are
+now shuffled per-question with a reproducible seed and relabeled by their
+new position; see `environments/livemathbench/env.py`.
 
 `reflact` is a faithful port of Microsoft's published SkillOpt method (see
 [reflact and avo](#reflact-and-avo-the-two-non-obvious-strategies) below).
@@ -281,6 +293,55 @@ effect to trust. Generic writing advice doesn't reliably beat a capable
 baseline once that baseline can finish its response; that's a believable
 result, not a bug.
 
+## Does it hold up on a bigger model?
+
+Every benchmark above was re-run against two more capable models on
+OpenRouter -- `qwen/qwen3-235b-a22b-2507` and `deepseek/deepseek-v3.2`,
+both 40-70x cheaper per token than a frontier model like GPT-5.5 -- to
+check whether the story changes with more capability behind the wheel,
+not just whether it works on one small model:
+
+| Environment | Qwen: baseline -> best | DeepSeek: baseline -> best |
+|---|---|---|
+| ALFWorld | 41.8% -> **51.5%** (+9.7pp, `avo`/`naive`) | 29.1% -> **53.0%** (+23.9pp, `avo`) |
+| SearchQA | 51.0% -> **68.0%** (+17.0pp, `naive`) | 61.0% -> **80.0%** (+19.0pp, `expel`) |
+| LiveMathematicianBench | 37.0% -> **74.0%** (+37.0pp, `reflact`) | 35.0% -> **64.0%** (+29.0pp, `reflact`) |
+| MBPP | 81.0% -> 85.0% (+4.0pp, `gated`) | 81.0% -> 83.0% (+2.0pp, `naive`) |
+| BigCodeBench | 40.0% -> 40.0% (+0.0pp, `avo`/`gated`) | 43.0% -> 41.0% (-2.0pp, `avo`, best case) |
+| SQL | 53.0% -> **59.0%** (+6.0pp, `avo`/`expel`/`naive`) | 62.0% -> 45.0% (-17.0pp, `expel`, see below) |
+| Writing | 50.0% -> **67.0%** (+17.0pp, `expel`) | 34.0% -> **53.0%** (+19.0pp, `naive`) |
+
+`reflact`'s LiveMathematicianBench result isn't a one-model fluke: both
+bigger models show the same pattern the cheap model did (every simpler
+strategy flat or negative, `reflact` alone producing a large, real gain)
+-- now with the positional exploit fixed, this is the clearest evidence in
+this repo that on-policy rollout with iterative reflection earns its
+extra cost specifically on the hardest reasoning tasks, not everywhere.
+
+BigCodeBench flips from a clear win (cheap model, +6.0pp) to flat or
+negative on both bigger models. The insights themselves stayed sound
+(validate file paths, handle empty inputs) -- they just stopped helping
+once the baseline no longer needed the reminder, and for DeepSeek actively
+got in the way. Same shape as the cheap-model Writing result above: advice
+calibrated for a weaker model doesn't transfer to a stronger one for free.
+
+DeepSeek's SQL number needs a real caveat, not just a footnote. Every
+skill condition collapsed 17-21 percentage points below baseline, and
+investigating why (comparing real SQL syntax validity against the
+raw model responses, not just re-running the eval) found roughly half of
+the failures were genuine syntax errors -- responses cut off mid-string,
+e.g. `WHERE orbit = 'High Earth Orbit` with no closing quote. This is not
+a token-budget bug: completion length in every failing case was well
+under the configured limit, and `finish_reason` was `stop`, not `length`.
+Repeating the exact same prompt dozens of times concurrently, including
+the literal prompts that failed in the real run, reproduced it 0 times in
+isolation. The one pattern that held: baseline (short system prompt) sits
+near normal, every skill condition (system prompt lengthened with
+insights) collapses. That correlation, without a confirmed mechanism, is
+the honest result -- a real DeepSeek/OpenRouter reliability issue under
+longer system prompts on this task, not something in this repo's harness,
+and not something to paper over with a cleaner-looking number.
+
 ## Use existing skills
 
 Every skill trained here, including every number above, is published
@@ -298,16 +359,19 @@ didn't beat baseline (BigCodeBench and SQL above), that's visible right
 in its own directory, not hidden.
 
 The model shows up in the path on purpose: a skill trained by one model
-doesn't necessarily transfer to another. Everything published so far
-comes from one small, cheap model (`google/gemini-2.5-flash-lite`); more
-models will be added later, landing alongside it, not replacing it.
-`publish_skills.py --env <name>` is the command that writes this
-directory -- run once after `evaluate_skill.py`, so nothing gets
-published without real numbers behind it first.
+doesn't necessarily transfer to another -- see
+[Does it hold up on a bigger model?](#does-it-hold-up-on-a-bigger-model)
+above, where the same skill that helps a small model sometimes does
+nothing or actively hurts a bigger one. `publish_skills.py --env <name>
+--model <id>` is the command that writes each one -- run once after
+`evaluate_skill.py`, so nothing gets published without real numbers
+behind it first.
 
-Currently published, all under `google_gemini-2.5-flash-lite`:
-`alfworld`, `searchqa`, `mbpp`, `livemathbench`, `bigcodebench`, `sql`,
-`writing`.
+Currently published, every environment under all three models
+(`google_gemini-2.5-flash-lite`, `qwen_qwen3-235b-a22b-2507`,
+`deepseek_deepseek-v3.2`): `alfworld`, `searchqa`, `mbpp`,
+`livemathbench`, `bigcodebench`, `sql`, `writing`. More models land
+alongside these, not replacing them.
 
 ## Manage a skill
 
@@ -381,15 +445,15 @@ trainers/                one module per training algorithm; each self-registers
   naive.py / gated.py / expel.py / avo.py / reflact.py
   prompts/                  each strategy's LLM prompt template
 
-experiments/<env>/       one environment's config + generated artifacts
+experiments/<env>/       one environment's config + generated scratch state
   config.yaml               task counts, split sizes, per-strategy knobs
-  skills/                   SKILL.initial.md (pristine v0) + each trained variant
-  data/                     generated trajectories (gitignored -- regenerable)
-  results/                  summary.json / summary.txt from evaluate_skill.py
+  skills/, data/, results/  gitignored -- whichever model last ran train_skill.py/
+                            evaluate_skill.py against this environment, unlabeled
+                            by model, fully regenerable
 
-skills/<env>/<model>/    published, curated skills + the results that validated them
-                          (see Use existing skills above) -- distinct from the
-                          experiments/ copies above, which are scratch working state
+skills/<env>/<model>/    published, labeled, committed: skills + the results
+                          that validated them (see Use existing skills above) --
+                          the real reference, unlike the scratch copies above
 
 collect_trajectories.py, train_skill.py, evaluate_skill.py    entry points
 install_skill.py                                               drop a trained skill into any harness's skill dir

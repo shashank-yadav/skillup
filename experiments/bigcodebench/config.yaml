@@ -15,7 +15,12 @@ bigcodebench:
 model:
   # Root config.yaml's default (64) silently truncates code mid-function --
   # canonical solutions run up to ~480 tokens. See mbpp/config.yaml for why.
-  agent_max_tokens: 1024
+  #
+  # 1024 was still too small for bigger models: confirmed truncating
+  # DeepSeek's code on the majority of its failures (52/66 in one run) once
+  # a skill nudged toward more thorough solutions. Given generous headroom
+  # instead of a tight per-model fit -- see mbpp/config.yaml.
+  agent_max_tokens: 2500
 
 experiment:
   seed: 42

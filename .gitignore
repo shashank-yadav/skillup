@@ -13,9 +13,13 @@ __pycache__/
 *.env
 .env.*
 
-# Generated experiment data: trajectories are large, regenerable, and
-# environment-specific -- not framework material. Skills and results
-# (experiments/*/skills/, experiments/*/results/) are intentionally NOT
-# ignored: they're small, human-readable, and useful as real examples of
-# what the framework produces.
+# Generated experiment data, trajectories, trained skills, and results --
+# all regenerable scratch state for whichever model last ran train_skill.py/
+# evaluate_skill.py against a given environment, with no label indicating
+# which model produced them. Trained skills + the results that validated
+# them are published instead, per model, under skills/<env>/<model-slug>/
+# (see publish_skills.py and the README's "Use existing skills") -- THAT
+# directory is the real, labeled, human-readable reference, not this one.
 experiments/*/data/
+experiments/*/skills/
+experiments/*/results/

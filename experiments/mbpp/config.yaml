@@ -13,7 +13,13 @@ model:
   # code mid-expression here otherwise (confirmed: real responses cut off
   # like `string[first+`). util._deep_merge merges this into the root
   # model: block, not replace it.
-  agent_max_tokens: 512
+  #
+  # 512 was still too small for bigger models: confirmed truncating
+  # DeepSeek's code mid-function on ~70% of its failures once a skill
+  # nudged toward more thorough solutions. Sized against the cheap model
+  # this was first calibrated for, not the range of models this framework
+  # now runs -- given generous headroom instead of a tight per-model fit.
+  agent_max_tokens: 1500
 
 experiment:
   seed: 42

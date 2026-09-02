@@ -1,0 +1,40 @@
+Model: qwen/qwen3-235b-a22b-2507
+
+Evaluation tasks: 100
+
+Without skill (baseline):
+  Success: 37/100 (37.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 1564
+
+With learned skill [avo]:
+  Success: 34/100 (34.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 1716
+
+With learned skill [expel]:
+  Success: 35/100 (35.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 1741
+
+With learned skill [gated]:
+  Success: 30/100 (30.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 1681
+
+With learned skill [naive]:
+  Success: 31/100 (31.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 1657
+
+With learned skill [reflact]:
+  Success: 74/100 (74.0%)
+  Avg steps (successful tasks): 1.0
+  Avg tokens/task: 2821
+
+Improvement over baseline:
+  [avo]: -3.0 percentage points
+  [expel]: -2.0 percentage points
+  [gated]: -7.0 percentage points
+  [naive]: -6.0 percentage points
+  [reflact]: +37.0 percentage points

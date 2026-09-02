@@ -16,11 +16,29 @@ The HF dataset ships a single physical "train" split (608 rows: a
 config.yaml carves disjoint offset ranges out of that one physical split --
 same idea as hf_dataset's dict-form split_map, just local to this plugin
 since there's no separate adapter config schema to reuse here.
+
+The dataset's own `correct_choice`/`choices` labels are NOT meaningful
+final positions -- confirmed directly: `correct_choice["label"]` is "A"
+for 100% of all 608 rows, and the four distractors are always "B"/"C"/
+"D"/"E". An earlier version of this file sorted by that original label,
+which put the correct answer in position A every single time -- a
+100%-reliable positional exploit, not a subtle bias. One trainer strategy
+(reflact) partially discovered it (a hedged "prefer A" insight, not a
+blind rule), inflating its measured gain on this benchmark without any
+real improvement in mathematical reasoning behind it. Options are now
+shuffled with a seed derived from the row's own index, deterministic
+across runs (so the same task always renders the same way) but
+uncorrelated with correctness, and relabeled A-E by the new order --
+the label a candidate answer refers to is only meaningful post-shuffle.
 """
+
+import random
 
 import datasets
 
 from core.environment import register
+
+_LETTERS = ["A", "B", "C", "D", "E"]
 
 
 class LiveMathBenchEnvironment:
@@ -43,13 +61,19 @@ class LiveMathBenchEnvironment:
         self.rows = []
         for i, row in enumerate(rows):
             mcq = row["mcq"]
-            choices = sorted([mcq["correct_choice"], *mcq["choices"]], key=lambda c: c["label"])
-            options_text = "\n".join(f"{c['label']}. {c['text']}" for c in choices)
+            absolute_index = lo + i
+            texts = [c["text"] for c in [mcq["correct_choice"], *mcq["choices"]]]
+            order = list(range(len(texts)))
+            random.Random(absolute_index).shuffle(order)
+            shuffled_texts = [texts[j] for j in order]
+            correct_position = order.index(0)  # texts[0] was the correct choice before shuffling
+
+            options_text = "\n".join(f"{letter}. {text}" for letter, text in zip(_LETTERS, shuffled_texts))
             prompt = f"{mcq['question']}\n\nOptions:\n{options_text}"
             self.rows.append({
                 "prompt": prompt,
-                "answer": mcq["correct_choice"]["label"],
-                "id": f"{split}[{lo + i}]",
+                "answer": _LETTERS[correct_position],
+                "id": f"{split}[{absolute_index}]",
             })
         self.num_tasks = len(self.rows)
         self._cursor = -1

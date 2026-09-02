@@ -12,10 +12,13 @@ sql:
     valid_unseen: {hf_split: "test", offset: 150}            # count omitted -> rest of the split
 
 model:
-  # Root config.yaml's default (64) is usually enough for a single SELECT
-  # but not always (multi-join/subquery). See mbpp/config.yaml for why
-  # this needs overriding at all.
-  agent_max_tokens: 300
+  # 300 was still too small: confirmed truncating mid-string-literal for
+  # DeepSeek once a skill nudged it toward multi-clause queries (GROUP BY,
+  # CASE WHEN) -- a bigger/more verbose model needs more headroom than the
+  # cheap model this was originally sized against, not just what a typical
+  # single SELECT needs. See mbpp/config.yaml for why this needs
+  # overriding from the root default (64) at all.
+  agent_max_tokens: 800
 
 experiment:
   seed: 42

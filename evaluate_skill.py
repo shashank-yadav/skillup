@@ -241,9 +241,14 @@ def main():
                          help="Override config.yaml's max_parallel_workers.")
     parser.add_argument("--harness", default="api", choices=["api", "cli"],
                          help="Backend for action selection: direct API, or an external harness's CLI.")
+    parser.add_argument("--model", default=None,
+                         help="Override config.yaml's agent_model AND trainer_model with this OpenRouter model id.")
     args = parser.parse_args()
 
     config = load_config(args.env)
+    if args.model:
+        config["model"]["agent_model"] = args.model
+        config["model"]["trainer_model"] = args.model
     max_workers = args.max_workers or config.get("max_parallel_workers", 10)
     total_tasks = config["experiment"]["num_eval_tasks"]
     skill_variants = discover_skill_files(args.env, config)
