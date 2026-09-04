@@ -5,26 +5,44 @@
 ![No weight updates](https://img.shields.io/badge/model%20weights-untouched-orange)
 ![MIT license](https://img.shields.io/badge/license-MIT-lightgrey)
 
-**A framework for training and managing skills for AI agents.**
+**Train portable `SKILL.md` files that make your agent measurably better
+at a task -- no weight updates, no new harness to adopt.**
 
-Point SkillUp at an existing dataset, environment, or your own past
-conversations, and it trains a `SKILL.md` -- a portable strategy document
-your agent loads next session -- and validates that it helps before
-keeping it. Once trained, skills are managed like anything else you
-maintain: versioned, diffed, rolled back, merged, and installed into
-whatever harness you already use.
+![Installing and using a trained skill](docs/demo.gif)
 
-**Not a new agent, harness, or model.** It doesn't replace Claude Code,
-Codex, OpenCode, Cursor, or whatever you already use -- it plugs into
-them. Skills produced here are plain `SKILL.md` files in the same Agent
-Skills convention those tools already read
-(`<skills-dir>/<name>/SKILL.md`). Installing one is a file copy.
+Point SkillUp at a dataset, an environment, or your own past
+conversations. It rolls out episodes, distills what worked into a skill,
+and keeps the result only if it beats baseline on held-out tasks it never
+trained on. The output is a plain `SKILL.md` -- the same file format
+Claude Code, Codex, and OpenCode already read -- so installing one is a
+file copy, not a new dependency.
 
-On a small, cheap model (`google/gemini-2.5-flash-lite`, not a frontier
-one), a skill trained here took SearchQA from 50% to 74% and ALFWorld
-from 17.2% to 27.6%, measured on held-out tasks never seen during
-training. Full
-numbers below in [Does it work?](#does-it-work).
+**Validated, not just claimed.** 10 environments, 3 models (one cheap,
+two mid-tier), every result measured on data the skill never trained on,
+reported honestly where it didn't help: 7 of 10 environments show a real
+gain, 3 don't, and that's stated plainly in [Does it
+work?](#does-it-work) instead of cherry-picked. Two real bugs in this
+repo's own code were found and fixed along the way by trusting a
+suspicious result over a convenient one -- the postmortems are in there
+too, not swept out of the numbers.
+
+```bash
+git clone https://github.com/shashank-yadav/skillup && cd skillup
+./install.sh
+export OPENROUTER_API_KEY=sk-or-...                          # https://openrouter.ai/keys
+python install_skill.py --env frontend --best --target ~/.claude/skills
+# -> installs a skill that took real-Jest-graded React component
+#    pass rate from 85% to 91%. See "Use existing skills" for more.
+```
+
+**Not a new agent, harness, or model, and not a runtime library
+either.** It doesn't replace Claude Code, Codex, OpenCode, Cursor, or
+whatever you already use, and unlike DSPy/TextGrad-style prompt
+optimizers, there's no SDK to call into. Skills produced here are plain
+`SKILL.md` files in the same Agent Skills convention those tools already
+read (`<skills-dir>/<name>/SKILL.md`) -- installing one is a file copy,
+and it works as a plain system-prompt paste for anything with no native
+skill-loading at all.
 
 ---
 
