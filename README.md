@@ -1,9 +1,10 @@
 # SkillUp
 
-![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)
-![Agent Skills compatible](https://img.shields.io/badge/Agent%20Skills-compatible-brightgreen)
-![No weight updates](https://img.shields.io/badge/model%20weights-untouched-orange)
-![MIT license](https://img.shields.io/badge/license-MIT-lightgrey)
+![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white&labelColor=3776AB)
+![License](https://img.shields.io/github/license/shashank-yadav/skillup?style=for-the-badge&logo=opensourceinitiative&logoColor=white&label=license&labelColor=4a4a4a&color=2f6f63)
+![Agent Skills compatible](https://img.shields.io/badge/agent%20skills-compatible-2FAE73?style=for-the-badge&labelColor=14532d)
+![OpenRouter powered](https://img.shields.io/badge/openrouter-powered-101828?style=for-the-badge&logo=openrouter&logoColor=white&labelColor=101828)
+![Weights untouched](https://img.shields.io/badge/weights-untouched-B5552E?style=for-the-badge&labelColor=B5552E)
 
 **Train portable `SKILL.md` files that make your agent measurably better
 at a task.** The model's weights stay exactly as they are, and the skill
