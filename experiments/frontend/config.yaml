@@ -1,0 +1,44 @@
+# Frontend development -- via onekq-ai/WebApp1K-React, real-world React UI
+# scenarios (a success case + a failure case per scenario, e.g. "add alt
+# text to an image" succeeding vs. erroring on a server 500). Graded by
+# actually running the candidate component through Jest, not an LLM judge --
+# see environments/frontend/env.py for the harness (per-episode temp dir,
+# node_modules symlinked from a one-time npm install) and why the original
+# test files' header/import identifier had to be standardized rather than
+# reproduced verbatim.
+environment: frontend
+
+frontend:
+  dataset_name: "onekq-ai/WebApp1K-React"
+  split_ranges:
+    train: {offset: 0, count: 700}
+    valid_seen: {offset: 700, count: 150}
+    valid_unseen: {offset: 850, count: 150}
+
+model:
+  # A full React component plus JSX runs long; give real headroom rather
+  # than assume brevity. See mbpp/config.yaml for why this needs
+  # overriding from the root default (64) at all.
+  agent_max_tokens: 1500
+
+experiment:
+  seed: 42
+  max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap
+  num_train_success: 30
+  num_train_fail: 30
+  max_train_episodes: 300
+  num_eval_tasks: 100
+  num_dev_tasks: 60
+  avo_dev_tasks_per_candidate: 40
+  trainer_rounds: 3
+
+paths:
+  training_trajectories: "data/training/trajectories.jsonl"
+  eval_baseline_trajectories: "data/evaluation/baseline_trajectories.jsonl"
+  eval_skill_trajectories: "data/evaluation/skill_trajectories.jsonl"
+  skill_dir: "skills"
+  skill_file: "skills/SKILL.md"
+  initial_skill_file: "skills/SKILL.initial.md"
+  trainer_rounds_log: "results/trainer_rounds.json"
+  results_summary: "results/summary.json"
+  results_table: "results/summary.txt"

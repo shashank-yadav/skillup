@@ -1,0 +1,43 @@
+# Code review -- via fasterinnerlooper/codereviewer (a re-host of
+# Microsoft's real CodeReviewer corpus: actual GitHub PR diffs paired
+# with the actual human reviewer's comment). See
+# environments/code_review/env.py for why this reads a single parquet
+# shard directly (downloaded once, atomically) instead of going through
+# datasets.load_dataset -- that raced and crashed under this framework's
+# parallel per-episode worker processes.
+environment: code_review
+
+code_review:
+  buffer_size: 2000          # rows pulled from the parquet shard once, at init
+  split_ranges:
+    train: {offset: 0, count: 700}
+    valid_seen: {offset: 700, count: 200}
+    valid_unseen: {offset: 900, count: 300}
+
+model:
+  # A diff + a review comment can run long; give real headroom. See
+  # mbpp/config.yaml for why this needs overriding from the root default
+  # (64) at all.
+  agent_max_tokens: 800
+
+experiment:
+  seed: 42
+  max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap
+  num_train_success: 30
+  num_train_fail: 30
+  max_train_episodes: 300
+  num_eval_tasks: 100
+  num_dev_tasks: 60
+  avo_dev_tasks_per_candidate: 40
+  trainer_rounds: 3
+
+paths:
+  training_trajectories: "data/training/trajectories.jsonl"
+  eval_baseline_trajectories: "data/evaluation/baseline_trajectories.jsonl"
+  eval_skill_trajectories: "data/evaluation/skill_trajectories.jsonl"
+  skill_dir: "skills"
+  skill_file: "skills/SKILL.md"
+  initial_skill_file: "skills/SKILL.initial.md"
+  trainer_rounds_log: "results/trainer_rounds.json"
+  results_summary: "results/summary.json"
+  results_table: "results/summary.txt"

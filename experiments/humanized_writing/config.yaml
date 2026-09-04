@@ -1,0 +1,44 @@
+# Humanized writing -- via Hello-SimpleAI/HC3, matched human-vs-AI answer
+# pairs for the same real question, judged on whether a response reads
+# like the human answer rather than the AI one. See
+# environments/humanized_writing/env.py for the HF loading quirk (only
+# loads through the auto-converted parquet branch) and the judge
+# criteria (drawn from well-known AI-writing tells: em dashes, hedging,
+# listicle structure, vague attribution, rule-of-three, ...).
+environment: humanized_writing
+
+humanized_writing:
+  dataset_name: "Hello-SimpleAI/HC3"
+  hf_split: "train"          # the dataset's only physical split (~48.6k rows)
+  split_ranges:
+    train: {offset: 0, count: 700}
+    valid_seen: {offset: 700, count: 200}
+    valid_unseen: {offset: 900, count: 300}
+
+model:
+  # Free-form answers here run long (some HC3 answers are multi-paragraph);
+  # give real headroom rather than assume brevity. See mbpp/config.yaml
+  # for why this needs overriding from the root default (64) at all.
+  agent_max_tokens: 1500
+
+experiment:
+  seed: 42
+  max_steps: 5                          # single-turn task -- always done after step 1; just a safety cap
+  num_train_success: 30
+  num_train_fail: 30
+  max_train_episodes: 300
+  num_eval_tasks: 100
+  num_dev_tasks: 60
+  avo_dev_tasks_per_candidate: 40
+  trainer_rounds: 3
+
+paths:
+  training_trajectories: "data/training/trajectories.jsonl"
+  eval_baseline_trajectories: "data/evaluation/baseline_trajectories.jsonl"
+  eval_skill_trajectories: "data/evaluation/skill_trajectories.jsonl"
+  skill_dir: "skills"
+  skill_file: "skills/SKILL.md"
+  initial_skill_file: "skills/SKILL.initial.md"
+  trainer_rounds_log: "results/trainer_rounds.json"
+  results_summary: "results/summary.json"
+  results_table: "results/summary.txt"

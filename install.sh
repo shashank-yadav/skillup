@@ -10,7 +10,11 @@
 #                                       conversation distillation)
 #   ./install.sh --with-alfworld       also installs ALFWorld's extra dependencies
 #   ./install.sh --with-bigcodebench   also installs BigCodeBench's extra dependencies
-#   ./install.sh --with-alfworld --with-bigcodebench   both
+#   ./install.sh --with-frontend       also installs the frontend environment's
+#                                       Node.js/npm test harness (requires Node.js
+#                                       already on PATH -- this doesn't install Node
+#                                       itself)
+#   any combination of the above, e.g. --with-alfworld --with-bigcodebench
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
@@ -46,6 +50,14 @@ for arg in "$@"; do
         --with-bigcodebench)
             echo "Installing BigCodeBench dependencies..."
             pip install -q -r requirements-bigcodebench.txt
+            ;;
+        --with-frontend)
+            if ! command -v npm >/dev/null 2>&1; then
+                echo "npm not found on PATH -- install Node.js first (https://nodejs.org), then re-run with --with-frontend." >&2
+                exit 1
+            fi
+            echo "Installing the frontend environment's Jest/React test harness (one-time npm install)..."
+            (cd environments/frontend/js_project && npm install --no-fund --no-audit)
             ;;
     esac
 done

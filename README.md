@@ -297,6 +297,56 @@ effect to trust. Generic writing advice doesn't reliably beat a capable
 baseline once that baseline can finish its response; that's a believable
 result, not a bug.
 
+**Three more environments were added specifically to be practical --
+skills people might actually want to install, not just benchmark**:
+`frontend` (React component implementation, graded by really running Jest,
+not an LLM judge -- see below), `code_review` (real GitHub PR diffs from
+Microsoft's CodeReviewer corpus, judged on whether the candidate's comment
+raises the same substantive concern the real human reviewer did), and
+`humanized_writing` (matched human-vs-AI answer pairs from HC3, judged on
+whether a response reads like the human one). Same cheap model, same
+methodology:
+
+| Environment | Baseline | Best result | Best strategy |
+|---|---|---|---|
+| Frontend (React + real Jest tests) | 85.0% | **91.0%** (+6.0pp) | `gated` |
+| Code review (real PR diffs, LLM judge) | 45.0% | 46.0% (+1.0pp) | `expel` |
+| Humanized writing (HC3, LLM judge) | 89.0% | 88.0% (-1.0pp) | `avo` (still worse than baseline) |
+
+Only `frontend` is a clear win, and it's reported honestly as such: it's
+the one graded by something other than an LLM judge (a real
+`npm test`/Jest run against the candidate's actual component code), and
+the trained skill's advice is concrete and checkable (match the test's
+exact label text and success/error strings, don't assume a prop or route
+that isn't in the test). Code review barely moves -- LLM-judging "does
+this raise the same concern" against real, messy PR diffs is a genuinely
+hard, high-variance target, and +1pp on n=100 is closer to noise than
+signal. Humanized writing is a real negative result: baseline
+(the model's own unprompted writing) is already 89%, leaving little
+headroom, and every trained strategy made it worse.
+
+A pattern worth naming plainly across all three: trained skills
+consistently push toward *longer* output without reliably helping, and
+sometimes while actively hurting. Code review's `naive` skill is the
+extreme case -- avg tokens/task went from 574 (baseline) to 6582 (11x)
+while success dropped to the worst score of any condition (36%, vs. 45%
+baseline). Humanized writing showed the same shape at smaller scale
+(422 -> 881 tokens, -4pp). For judge-graded free-form tasks specifically,
+"say more" is an easy local optimum for a training loop to find and a bad
+one for a judge to reward -- treat any trained skill that inflates token
+count without a matching accuracy gain as overfit, not improved.
+
+Install the actual best-performing skill directly (reads each
+environment's published `summary.json`, refuses instead of installing a
+skill that measured worse than no skill at all):
+
+```bash
+python install_skill.py --env frontend --best --target ~/.claude/skills
+python install_skill.py --env code_review --best --target ~/.claude/skills
+python install_skill.py --env humanized_writing --best --target ~/.claude/skills
+# -> refuses: no trained strategy beat baseline for humanized_writing
+```
+
 ## Does it hold up on a bigger model?
 
 Every benchmark above was re-run against two more capable models on
@@ -424,6 +474,11 @@ alongside these, not replacing them. A fourth label,
 every environment -- the cheap model, unchanged, running DeepSeek's
 trained skill text instead of its own, for the
 [cross-model transfer results](#does-it-hold-up-on-a-bigger-model) above.
+`frontend`, `code_review`, and `humanized_writing` are published for
+`google_gemini-2.5-flash-lite` only so far -- see
+[the practical-skills results](#does-it-work) above before installing any
+of them; `install_skill.py --best` (below) won't install one that
+measured worse than no skill at all.
 
 ## Manage a skill
 
@@ -441,7 +496,17 @@ shared `~/.agents/skills` convention already read. No conversion step:
 python install_skill.py --env mbpp --strategy naive --target ~/.claude/skills
 python install_skill.py --env mbpp --strategy gated --target ~/.codex/skills --name mbpp-gated
 python install_skill.py --env mbpp --strategy naive --target ./.claude/skills   # project-level
+python install_skill.py --env frontend --best --target ~/.claude/skills        # whichever strategy scored highest
 ```
+
+It looks first for a freshly local-trained skill under
+`experiments/<env>/skills/`, then falls back to this repo's own published
+copy under `skills/<env>/<model>/` -- so this works right after a fresh
+clone too, no training required. `--best` reads the published
+`summary.json` and picks the strategy with the highest measured
+improvement over baseline, refusing outright if none beat it (see
+`humanized_writing` above) rather than installing a worse-than-nothing
+skill just because it was asked for "the best."
 
 For a harness with no native skill-loading at all, the file still works --
 paste its body into a system prompt, the way
@@ -491,6 +556,9 @@ environments/            one subpackage per environment; each self-registers
   bigcodebench/env.py       harder Python problems, same grading shape as mbpp
   sql/env.py                text-to-SQL, graded by real SQLite execution
   writing/env.py            writing quality, LLM-judge graded against chosen/rejected pairs
+  humanized_writing/env.py  writing style, LLM-judge graded against human-vs-AI answer pairs
+  code_review/env.py        real PR-diff review comments, LLM-judge graded against the real reviewer's
+  frontend/env.py           React components, graded by really running Jest (js_project/ -- see below)
   conversation_judge/env.py LLM-as-judge plugin for convert_conversation.py's held-out episodes
 
 trainers/                one module per training algorithm; each self-registers
@@ -514,6 +582,9 @@ distill_conversation.py, convert_conversation.py               build skills from
 skill_manager.py                                               list/show/log/diff/rollback/merge deployed skills
 install.sh, requirements.txt, requirements-alfworld.txt,
   requirements-bigcodebench.txt                                 one-shot setup (see Install above)
+  environments/frontend/js_project/                             one-time `npm install` for the frontend
+                                                                    environment's Jest/React harness
+                                                                    (`install.sh --with-frontend`)
 ```
 
 ## Adding a new environment

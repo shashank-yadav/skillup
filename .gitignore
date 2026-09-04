@@ -3,6 +3,15 @@
 __pycache__/
 *.pyc
 
+# Node -- installed by install.sh --with-frontend, into
+# environments/frontend/js_project/. package-lock.json is still committed
+# so the install is reproducible; only the installed tree itself isn't.
+node_modules/
+
+# Downloaded dataset shard for environments/code_review/env.py -- fetched
+# once on first use, not part of the repo.
+environments/code_review/.cache/
+
 # Claude Code session-local state -- not part of the project. Note this is
 # scoped to the specific lock file, not all of .claude/: .claude/skills/ is
 # legitimate project config (this repo's own meta-skill) and should ship.

@@ -15,6 +15,9 @@ try:
     from environments import bigcodebench  # noqa: F401
     from environments import sql  # noqa: F401
     from environments import writing  # noqa: F401
+    from environments import humanized_writing  # noqa: F401
+    from environments import code_review  # noqa: F401
+    from environments import frontend  # noqa: F401
 except ImportError:
     # Optional: needs `pip install datasets`. Not required for ALFWorld or
     # any other environment that doesn't use these plugins.
